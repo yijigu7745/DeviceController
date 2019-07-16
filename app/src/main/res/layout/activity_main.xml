@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.MainActivity">
+
+    <TextView
+        android:id="@+id/pavilion_manage"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
+        android:layout_marginTop="24dp"
+        android:drawableTop="@drawable/tingzi"
+        android:gravity="center"
+        android:text="@string/tv_manage_kiosk"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toStartOf="@+id/device_manage"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/device_manage"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
+        android:drawableTop="@drawable/shebei"
+        android:gravity="center"
+        android:text="@string/tv_manager_device"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/pavilion_manage"
+        app:layout_constraintEnd_toStartOf="@+id/other_manage"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/pavilion_manage"
+        app:layout_constraintTop_toTopOf="@+id/pavilion_manage"
+        app:layout_constraintVertical_bias="0.518"
+        />
+
+    <TextView
+        android:id="@+id/other_manage"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
+        android:drawableTop="@drawable/other"
+        android:gravity="center"
+        android:text="@string/tv_other"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/device_manage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/device_manage"
+        app:layout_constraintTop_toTopOf="@+id/device_manage"
+        />
+
+    <View
+        android:id="@+id/view2"
+        style="@style/lineStyle2"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/pavilion_manage"/>
+
+    <TextView
+        android:id="@+id/area_manage"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
+        android:layout_marginTop="24dp"
+        android:drawableTop="@drawable/quyuguanli"
+        android:gravity="center"
+        android:text="@string/tv_manage_area"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/pavilion_manage"
+        app:layout_constraintStart_toStartOf="@+id/pavilion_manage"
+        app:layout_constraintTop_toBottomOf="@+id/view2"/>
+
+</android.support.constraint.ConstraintLayout>

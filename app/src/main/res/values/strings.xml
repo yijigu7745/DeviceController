@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name" translatable="false">控制器管理</string>
+    <string name="btn_search" translatable="false">查询控制器</string>
+    <string name="btn_get_time" translatable="false">批量获取控制器时间</string>
+    <string name="linestatus" translatable="false">控制器状态</string>
+    <string name="device_id">设备编码：</string>
+    <string name="device_name">设备名字：</string>
+    <string name="host">网络地址：</string>
+    <string name="install_time">安装时间：</string>
+    <string name="bind_kiosk">关联警银亭：</string>
+    <string name="select_time">选择时间</string>
+    <string name="select_kiosk">选择警银亭</string>
+    <string name="add_device">添加设备</string>
+    <string name="hint_host">请填写网络地址</string>
+    <string name="hint_device_name">请填写设备名</string>
+    <string name="hint_device_id">请填写设备id</string>
+    <string name="tv_kiosk_name">未绑定</string>
+    <string name="menu_add_device">添加设备</string>
+    <string name="menu_search">查询在线设备</string>
+    <string name="menu_send_command">发送指令</string>
+    <string name="menu_send_command_batch">批量发送指令</string>
+    <string name="load_data">加载数据</string>
+    <string name="kiosk_address">"亭体位置：  "</string>
+    <string name="hint_kiosk_addr">请填写亭体位置</string>
+    <string name="hint_kiosk_name">请填写亭体名字</string>
+    <string name="kiosk_name">警银亭名称：</string>
+    <string name="kiosk_addr">警银亭位置：</string>
+    <string name="add_device_and_kiosk">添加设备及警银亭</string>
+    <string name="add_device_and_bind_kiosk">添加并绑定警银亭</string>
+    <string name="num1_desc">方式一</string>
+    <string name="num2_desc">方式二</string>
+    <string name="select_all">全选</string>
+    <string name="invert_all">反选</string>
+    <string name="switch_line">更改电路状态</string>
+    <string name="switch_1">1</string>
+    <string name="switch_2">2</string>
+    <string name="switch_3">3</string>
+    <string name="switch_4">4</string>
+    <string name="switch_5">5</string>
+    <string name="switch_6">6</string>
+    <string name="switch_7">7</string>
+    <string name="switch_8">8</string>
+    <string name="get_time">获取时间</string>
+    <string name="hint_delay_time">延时时长</string>
+    <string name="delay_switch">延时操作</string>
+    <string name="text_time_unit">(秒/s)</string>
+    <string name="get_line_status">获取电路状态</string>
+    <string name="hint_enter_time">请输入时间</string>
+    <string name="set_time">设置设备时间</string>
+    <string name="time_format">时间格式：年-月-日-时-分-秒-星期</string>
+    <string name="add_kiosk">添加警银亭</string>
+    <string name="todo">TODO</string>
+    <string name="string_button_desc">开关描述</string>
+    <string name="menu_manage_device">设备管理</string>
+    <string name="device_list">设备列表</string>
+    <string name="null_string"/>
+    <string name="no_data">暂无数据</string>
+    <string name="error_data">网络请求失败</string>
+    <string name="pull_up_loading">上拉加载</string>
+    <string name="pull_down_refresh">下拉刷新</string>
+    <string name="pull_loose_refreshing">松开刷新</string>
+    <string name="pull_loose_load_more">松开加载更多</string>
+    <string name="loading">加载中…</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="prompt">提示</string>
+    <string name="tv_manage_kiosk">警银亭管理</string>
+    <string name="tv_manager_device">设备管理</string>
+    <string name="tv_other">其他</string>
+    <string name="tv_manage_area">区域管理</string>
+    <string name="pavilion_list">警银亭列表</string>
+    <string name="area_list">区域列表</string>
+</resources>

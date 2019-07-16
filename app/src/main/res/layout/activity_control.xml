@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.gh_hitech.devicecontroller.view.ControlActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_switch_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/switch_line"
+                app:layout_constraintStart_toEndOf="@+id/btn_get_line_status"
+                app:layout_constraintTop_toBottomOf="@+id/ll1"/>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_time_unit"
+                app:layout_constraintBottom_toBottomOf="@+id/et_delay_time"
+                app:layout_constraintStart_toEndOf="@+id/et_delay_time"
+                app:layout_constraintTop_toTopOf="@+id/et_delay_time"/>
+
+            <LinearLayout
+                android:id="@+id/ll1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="@+id/tv1"
+                app:layout_constraintStart_toStartOf="@+id/tv1"
+                app:layout_constraintTop_toBottomOf="@+id/tv1">
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <com.gh_hitech.devicecontroller.ui.SwitchButton
+                    android:id="@+id/switch8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_set_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_time"
+                app:layout_constraintBottom_toBottomOf="@+id/et_enter_time"
+                app:layout_constraintEnd_toEndOf="@+id/btn_delay_switch"
+                app:layout_constraintStart_toStartOf="@+id/btn_delay_switch"
+                app:layout_constraintTop_toTopOf="@+id/et_enter_time"/>
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/get_time"
+                android:textSize="@dimen/text_size_medium"
+                app:layout_constraintStart_toStartOf="@+id/ll1"
+                app:layout_constraintTop_toBottomOf="@+id/btn_switch_line"/>
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/time_format"
+                app:layout_constraintStart_toStartOf="@+id/et_enter_time"
+                app:layout_constraintTop_toBottomOf="@+id/et_delay_time"/>
+
+            <EditText
+                android:id="@+id/et_enter_time"
+                android:layout_width="@dimen/et_text_size_great"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/hint_enter_time"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="@+id/et_delay_time"
+                app:layout_constraintTop_toBottomOf="@+id/textView9"
+                tools:targetApi="o"/>
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
+                android:layout_marginLeft="64dp"
+                android:spinnerMode="dropdown"
+                app:layout_constraintBottom_toBottomOf="@+id/et_delay_time"
+                app:layout_constraintStart_toStartOf="@+id/textView"
+                app:layout_constraintTop_toTopOf="@+id/et_delay_time"/>
+
+            <Button
+                android:id="@+id/btn_get_line_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/get_line_status"
+                app:layout_constraintStart_toStartOf="@+id/ll1"
+                app:layout_constraintTop_toBottomOf="@+id/ll1"/>
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/linestatus"
+                android:textSize="@dimen/head_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"/>
+
+            <EditText
+                android:id="@+id/et_delay_time"
+                android:layout_width="@dimen/edit_text_size_small"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:hint="@string/hint_delay_time"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="@+id/tv_time"
+                app:layout_constraintTop_toBottomOf="@+id/btn_get_time"
+                tools:targetApi="o"/>
+
+            <Button
+                android:id="@+id/btn_get_time"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/get_time"
+                app:layout_constraintStart_toStartOf="@+id/tv_time"
+                app:layout_constraintTop_toBottomOf="@+id/tv_time"/>
+
+            <Button
+                android:id="@+id/btn_delay_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginRight="32dp"
+                android:text="@string/delay_switch"
+                app:layout_constraintBottom_toBottomOf="@+id/et_delay_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/spinner"
+                app:layout_constraintTop_toTopOf="@+id/et_delay_time"
+                app:layout_constraintVertical_bias="0.0"/>
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

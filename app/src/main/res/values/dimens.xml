@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="edit_text_size">144dp</dimen>
+    <dimen name="divide_height_1">1dp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="head_size">32sp</dimen>
+    <dimen name="text_size_great">24sp</dimen>
+    <dimen name="edit_text_size_small">84dp</dimen>
+    <dimen name="et_text_size_great">196dp</dimen>
+    <dimen name="divide_height_10dp">10dp</dimen>
+    <dimen name="switch_button_width">150dp</dimen>
+    <dimen name="switch_button_height">140dp</dimen>
+    <dimen name="padding_top">24dp</dimen>
+    <dimen name="divide_height_15dp">15dp</dimen>
+    <dimen name="spacing_5dp">5dp</dimen>
+    <dimen name="spacing_1dp">1dp</dimen>
+    <dimen name="image_button_size">72dp</dimen>
+</resources>

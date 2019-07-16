@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.AddDeviceActivity">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/tv_kiosk_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/kiosk_addr"
+        app:layout_constraintEnd_toEndOf="@+id/tv_kiosk_name"
+        app:layout_constraintStart_toStartOf="@+id/tv_kiosk_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_kiosk_name"/>
+
+    <EditText
+        android:id="@+id/et_device_name"
+        android:layout_width="@dimen/edit_text_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/hint_device_name"
+        android:inputType="textPersonName"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_device_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/tv_device_name"
+        tools:targetApi="o"/>
+
+    <EditText
+        android:id="@+id/et_kiosk_name"
+        android:layout_width="@dimen/edit_text_size"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/hint_kiosk_name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_kiosk_name"
+        app:layout_constraintEnd_toEndOf="@+id/et_device_name"
+        app:layout_constraintStart_toStartOf="@+id/et_device_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_kiosk_name"
+        tools:targetApi="o"/>
+
+    <EditText
+        android:id="@+id/et_kiosk_address"
+        android:layout_width="@dimen/edit_text_size"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/hint_kiosk_addr"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_kiosk_address"
+        app:layout_constraintEnd_toEndOf="@+id/et_kiosk_name"
+        app:layout_constraintStart_toStartOf="@+id/et_kiosk_name"
+        app:layout_constraintTop_toTopOf="@+id/tv_kiosk_address"
+        tools:targetApi="o"/>
+
+    <TextView
+        android:id="@+id/tv_device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
+        android:text="@string/device_name"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_kiosk_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
+        android:text="@string/kiosk_name"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_binded_kiosk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/kiosk_name"
+        app:layout_constraintEnd_toEndOf="@+id/tv_device_name2"
+        app:layout_constraintStart_toStartOf="@+id/tv_device_name2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_device_name2"/>
+
+    <TextView
+        android:id="@+id/tv_bind_kiosk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/select_kiosk"
+        app:layout_constraintEnd_toEndOf="@+id/tv_binded_kiosk"
+        app:layout_constraintStart_toStartOf="@+id/tv_binded_kiosk"
+        app:layout_constraintTop_toBottomOf="@+id/tv_binded_kiosk"/>
+
+    <TextView
+        android:id="@+id/tv_kiosk_name3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_kiosk"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_binded_kiosk"
+        app:layout_constraintEnd_toEndOf="@+id/et_device_name2"
+        app:layout_constraintStart_toStartOf="@+id/et_device_name2"
+        app:layout_constraintTop_toTopOf="@+id/tv_binded_kiosk"/>
+
+    <EditText
+        android:id="@+id/et_device_name2"
+        android:layout_width="@dimen/edit_text_size"
+        android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="@string/hint_device_name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_device_name2"
+        app:layout_constraintEnd_toEndOf="@+id/et_kiosk_address"
+        app:layout_constraintStart_toStartOf="@+id/et_kiosk_address"
+        app:layout_constraintTop_toTopOf="@+id/tv_device_name2"
+        tools:targetApi="o"/>
+
+    <Button
+        android:id="@+id/btn_add_device_and_kiosk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_kiosk"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35000002"/>
+
+    <Button
+        android:id="@+id/btn_add_device_and_bind_kiosk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_device_and_bind_kiosk"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9"/>
+
+    <TextView
+        android:id="@+id/tv_device_name2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/device_name"
+        app:layout_constraintEnd_toEndOf="@+id/tv_kiosk_address"
+        app:layout_constraintStart_toStartOf="@+id/tv_kiosk_address"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"/>
+
+    <View
+        style="@style/lineStyle"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"/>
+
+    <Button
+        android:id="@+id/btn_select_kiosk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_kiosk"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_bind_kiosk"
+        app:layout_constraintEnd_toEndOf="@+id/tv_kiosk_name3"
+        app:layout_constraintStart_toStartOf="@+id/tv_kiosk_name3"
+        app:layout_constraintTop_toTopOf="@+id/tv_bind_kiosk"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/num1_desc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/num_1"/>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/num2_desc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:srcCompat="@drawable/num_2"/>
+
+</android.support.constraint.ConstraintLayout>
