@@ -62,10 +62,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     Button btnGetTime;
     @BindView(R.id.btn_delay_switch)
     Button btnDelaySwitch;
-    @BindView(R.id.btn_switch_line)
-    Button btnSwitchLine;
-    @BindView(R.id.btn_get_line_status)
-    Button btnGetLineStatus;
     @BindView(R.id.btn_set_time)
     Button btnSetTime;
     @BindView(R.id.switch1)
@@ -164,8 +160,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     private void register() {
         btnDelaySwitch.setOnClickListener(this);
         btnGetTime.setOnClickListener(this);
-        btnSwitchLine.setOnClickListener(this);
-        btnGetLineStatus.setOnClickListener(this);
         btnSetTime.setOnClickListener(this);
         switch1.setOnCheckedChangeListener(this);
         switch2.setOnCheckedChangeListener(this);
@@ -194,9 +188,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
             commandBean.setCommand(Command.READ.getCommand());
             commandBean.setDeviceName(deviceBean.getName());
             commandPresenter.getDeviceLineStatus(commandBean)
-                    .subscribeOn(Schedulers.io())
-                    .unsubscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(resultModel -> {
                         String result = ((ResultModel<String>) resultModel).getData();
                         Log.e(TAG, "getDeviceLineStatus: " + result.trim());
@@ -218,7 +209,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                     "开关7",
                     "开关8"
             };
-//            initSwitchStatus("relay00001111");
         }
     }
 
@@ -256,8 +246,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         switch7.setButtonDesc(lineDesc[6]);
         switch8.setButtonDesc(lineDesc[7]);
         ArrayUtils.copyIntArray(lineStatusDevice, lineStatusLocal);
-        btnGetLineStatus.setClickable(true);
-        btnSwitchLine.setClickable(true);
     }
 
     @Override
@@ -270,14 +258,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
             case R.id.btn_delay_switch:
                 btnDelaySwitch.setClickable(false);
                 delaySwitch();
-                break;
-            case R.id.btn_switch_line:
-                btnSwitchLine.setClickable(false);
-                switchLine();
-                break;
-            case R.id.btn_get_line_status:
-                btnGetLineStatus.setClickable(false);
-                getDeviceLineStatus();
                 break;
             case R.id.btn_set_time:
                 btnSetTime.setClickable(false);
@@ -299,10 +279,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         }
         commandBean.setCommand(commandContent.append(Command.SETTIME.getCommand()+time).toString());
         commandBean.setDeviceName(deviceBean.getName());
-        commandPresenter.switchAllLineStatus(commandBean)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        commandPresenter.setDeviceTime(commandBean)
                 .subscribe(resultModel -> {
                     String result = ((ResultModel<String>) resultModel).getData();
                     Log.e(TAG, "getDeviceLineStatus: " + result.trim());
@@ -320,10 +297,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         StringBuilder commandContent = new StringBuilder();
         commandBean.setCommand(commandContent.append(Command.READTIME.getCommand()).toString());
         commandBean.setDeviceName(deviceBean.getName());
-        commandPresenter.switchAllLineStatus(commandBean)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        commandPresenter.getDeviceTime(commandBean)
                 .subscribe(resultModel -> {
                     String result = ((ResultModel<String>) resultModel).getData();
                     Log.e(TAG, "getDeviceLineStatus: " + result.trim());
@@ -363,10 +337,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                 .toString();
         commandBean.setCommand(commandContent.toString());
         commandBean.setDeviceName(deviceBean.getName());
-        commandPresenter.switchAllLineStatus(commandBean)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        commandPresenter.delayTurnLine(commandBean)
                 .subscribe(resultModel -> {
                     String result = ((ResultModel<String>) resultModel).getData();
                     Log.e(TAG, "getDeviceLineStatus: " + result.trim());
@@ -379,48 +350,79 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                 });
     }
 
-    private void switchLine(){
+    private void switchLine(int line){
         CommandBean commandBean = new CommandBean();
         StringBuilder commandContent = new StringBuilder();
-        commandContent.append(Command.ALL.getCommand())
-                .append(lineStatusLocal[7])
-                .append(lineStatusLocal[6])
-                .append(lineStatusLocal[5])
-                .append(lineStatusLocal[4])
-                .append(lineStatusLocal[3])
-                .append(lineStatusLocal[2])
-                .append(lineStatusLocal[1])
-                .append(lineStatusLocal[0])
-                .toString();
-        commandBean.setCommand(commandContent.toString());
-        commandBean.setDeviceName(deviceBean.getName());
-        commandPresenter.switchAllLineStatus(commandBean)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(resultModel -> {
-                    String result = ((ResultModel<String>) resultModel).getData();
-                    Log.e(TAG, "getDeviceLineStatus: " + result.trim());
-                    getDeviceLineStatus();
-                }, error -> {
-                    Log.e(TAG, "getDeviceLineStatus: " + error);
-                    sweetDialog.error("加载失败!").show();
-                    btnSwitchLine.setClickable(true);
-                });
+        switch (lineStatusLocal[line-1]){
+            case 0:
+                commandContent.append(Command.ON.getCommand()).append(line);
+                commandBean.setCommand(commandContent.toString());
+                commandBean.setDeviceName(deviceBean.getName());
+                commandPresenter.turnOnLine(commandBean)
+                        .subscribe(resultModel -> {
+                            String result = ((ResultModel<String>) resultModel).getData();
+                            Log.e(TAG, "getDeviceLineStatus: " + result.trim());
+                            getDeviceLineStatus();
+                        }, error -> {
+                            Log.e(TAG, "getDeviceLineStatus: " + error);
+                            sweetDialog.error("加载失败!").show();
+                        });
+                break;
+            case 1:
+                commandContent.append(Command.OFF.getCommand()).append(line);
+                commandBean.setCommand(commandContent.toString());
+                commandBean.setDeviceName(deviceBean.getName());
+                commandPresenter.turnOffLine(commandBean)
+                        .subscribe(resultModel -> {
+                            String result = ((ResultModel<String>) resultModel).getData();
+                            Log.e(TAG, "getDeviceLineStatus: " + result.trim());
+                            getDeviceLineStatus();
+                        }, error -> {
+                            Log.e(TAG, "getDeviceLineStatus: " + error);
+                            sweetDialog.error("加载失败!").show();
+                        });
+                break;
+                default:
+        }
+//        commandContent.append(Command.ALL.getCommand())
+//                .append(lineStatusLocal[7])
+//                .append(lineStatusLocal[6])
+//                .append(lineStatusLocal[5])
+//                .append(lineStatusLocal[4])
+//                .append(lineStatusLocal[3])
+//                .append(lineStatusLocal[2])
+//                .append(lineStatusLocal[1])
+//                .append(lineStatusLocal[0])
+//                .toString();
+//        commandBean.setCommand(commandContent.toString());
+//        commandBean.setDeviceName(deviceBean.getName());
+//        commandPresenter.switchAllLineStatus(commandBean)
+//                .subscribeOn(Schedulers.io())
+//                .unsubscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(resultModel -> {
+//                    String result = ((ResultModel<String>) resultModel).getData();
+//                    Log.e(TAG, "getDeviceLineStatus: " + result.trim());
+//                    getDeviceLineStatus();
+//                }, error -> {
+//                    Log.e(TAG, "getDeviceLineStatus: " + error);
+//                    sweetDialog.error("加载失败!").show();
+//                });
     }
 
-    private boolean checkSwitchStatus(int line, int[] lineStatusDevice, int[] lineStatusLocal) {
-        return lineStatusDevice[line-1] == lineStatusLocal[line-1];
-    }
+//    private boolean checkSwitchStatus(int line, int[] lineStatusDevice, int[] lineStatusLocal) {
+//        return lineStatusDevice[line-1] == lineStatusLocal[line-1];
+//    }
 
     private void onSwitchClick(SwitchButton switchButton, int line) {
         switchButton.toggle();
         lineStatusLocal[line-1] = switchButton.isChecked() ? 1 : 0;
-        if (checkSwitchStatus(line, lineStatusDevice, lineStatusLocal)) {
-            switchButton.setTextColor(Color.BLACK);
-        } else {
-            switchButton.setTextColor(Color.GREEN);
-        }
+        switchLine(line);
+//        if (checkSwitchStatus(line, lineStatusDevice, lineStatusLocal)) {
+//            switchButton.setTextColor(Color.BLACK);
+//        } else {
+//            switchButton.setTextColor(Color.GREEN);
+//        }
     }
 
     @Override

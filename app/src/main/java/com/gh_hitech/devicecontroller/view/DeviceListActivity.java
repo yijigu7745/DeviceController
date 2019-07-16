@@ -163,9 +163,6 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
 
     private void deleteDevice(DeviceBean deviceBean) {
         devicePresenter.deleteDevice(deviceBean.getId())
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(resultModel -> {
                     sweetDialog.success("删除成功").show();
                     loadData();
@@ -176,9 +173,7 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
 
     private void loadData(){
         sweetDialog.progress("正在加载中...").show();
-        devicePresenter.getDeviceList().subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        devicePresenter.getDeviceList()
                 .subscribe(resultModel -> {
                             deviceList.clear();
                             deviceList.addAll(((ResultModel<List<DeviceBean>>) resultModel).getData());

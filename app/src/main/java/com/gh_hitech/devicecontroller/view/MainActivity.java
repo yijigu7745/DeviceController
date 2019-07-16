@@ -51,19 +51,13 @@ public class MainActivity extends BaseActivity implements IView, View.OnClickLis
     @Override
     public void onCreateCustomToolBar(Toolbar toolbar) {
         super.onCreateCustomToolBar(toolbar);
-
         getLayoutInflater().inflate(R.layout.toobar_layout, toolbar);
-
         //设置回退按钮
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
-
-        // toolbar返回事件
-        toolbar.setNavigationOnClickListener(view -> MainActivity.this.finish());
-
+        toolbar.setNavigationIcon(R.color.blue);
         // 设置标题
         tvTitle = toolbar.findViewById(R.id.tv_title);
         tvTitle.setText("控制器管理");
-
         // 右键点击
         layoutRight = toolbar.findViewById(R.id.right_layout);
         layoutRight.setVisibility(View.GONE);

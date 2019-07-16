@@ -10,6 +10,8 @@ import java.util.List;
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author yijigu
@@ -24,28 +26,34 @@ public class DevicePresenter implements DeviceContract.Presenter {
 
     @Override
     public Observable getDeviceList() {
-        Observable<ResultModel<List<DeviceBean>>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, DeviceContract.Model.class)
-                .getDeviceList();
-        return observable;
+                .getDeviceList()
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable addDevice(DeviceBean deviceBean) {
-        Observable<ResultModel<DeviceBean>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, DeviceContract.Model.class)
-                .addDevice(deviceBean);
-        return observable;
+                .addDevice(deviceBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable deleteDevice(Long id) {
-        Observable<ResultModel<Void>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, DeviceContract.Model.class)
-                .deleteDevice(id);
-        return observable;
+                .deleteDevice(id)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

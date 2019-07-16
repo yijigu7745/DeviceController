@@ -9,6 +9,8 @@ import com.gh_hitech.devicecontroller.utils.Constants;
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author yijigu
@@ -25,7 +27,10 @@ public class DeviceCommandPresenter implements DeviceCommandContract.Presenter {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView,DeviceCommandContract.Model.class)
-                .getDeviceTime(commandBean);
+                .getDeviceTime(commandBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -33,7 +38,10 @@ public class DeviceCommandPresenter implements DeviceCommandContract.Presenter {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView,DeviceCommandContract.Model.class)
-                .getDeviceLineStatus(commandBean);
+                .getDeviceLineStatus(commandBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -41,7 +49,10 @@ public class DeviceCommandPresenter implements DeviceCommandContract.Presenter {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView,DeviceCommandContract.Model.class)
-                .setDeviceTime(commandBean);
+                .setDeviceTime(commandBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -50,34 +61,43 @@ public class DeviceCommandPresenter implements DeviceCommandContract.Presenter {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView,DeviceCommandContract.Model.class)
-                .turnOnLine(commandBean);
+                .turnOnLine(commandBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable turnOffLine(CommandBean commandBean) {
-        Observable<ResultModel<String>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView,DeviceCommandContract.Model.class)
-                .turnOffLine(commandBean);
-        return observable;
+                .turnOffLine(commandBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable delayTurnLine(CommandBean commandBean) {
-        Observable<ResultModel<String>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView,DeviceCommandContract.Model.class)
-                .delayTurnLine(commandBean);
-        return observable;
+                .delayTurnLine(commandBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable switchAllLineStatus(CommandBean commandBean) {
-        Observable<ResultModel<String>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView,DeviceCommandContract.Model.class)
-                .switchAllLineStatus(commandBean);
-        return observable;
+                .switchAllLineStatus(commandBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

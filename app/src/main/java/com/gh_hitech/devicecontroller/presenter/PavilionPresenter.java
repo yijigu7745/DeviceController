@@ -11,6 +11,8 @@ import java.util.List;
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author yijigu
@@ -25,42 +27,56 @@ public class PavilionPresenter implements PavilionContract.Presenter {
 
     @Override
     public Observable getPavilionList() {
-        Observable<ResultModel<List<DeviceBean.PavilionBean>>> observable = RetrofitUtils
+        return RetrofitUtils
                 .getInterface(Constants.getServerUrl(),iView,
-                PavilionContract.Model.class).getPavilionList();
-        return observable;
+                PavilionContract.Model.class).getPavilionList()
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable selectPavilionListByName(String name) {
-        Observable<ResultModel<List<DeviceBean.PavilionBean>>> observable = RetrofitUtils
+        return RetrofitUtils
                 .getInterface(Constants.getServerUrl(),iView,
-                        PavilionContract.Model.class).selectPavilionListByName(name);
-        return observable;
+                        PavilionContract.Model.class)
+                .selectPavilionListByName(name)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable selectPavilionListById(int id) {
-        Observable<ResultModel<DeviceBean.PavilionBean>> observable = RetrofitUtils
+        return RetrofitUtils
                 .getInterface(Constants.getServerUrl(),iView,
-                        PavilionContract.Model.class).selectPavilionListById(id);
-        return observable;
+                        PavilionContract.Model.class)
+                .selectPavilionListById(id)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable<ResultModel<Void>> addPavilion(DeviceBean.PavilionBean pavilionBean) {
-        Observable<ResultModel<Void>> observable = RetrofitUtils
+        return RetrofitUtils
                 .getInterface(Constants.getServerUrl(),iView,
-                        PavilionContract.Model.class).addPavilion(pavilionBean);
-        return observable;
+                        PavilionContract.Model.class)
+                .addPavilion(pavilionBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable deletePavilion(Long pavilionId) {
-        Observable<ResultModel<Void>> observable = RetrofitUtils
+        return RetrofitUtils
                 .getInterface(Constants.getServerUrl(),iView,
-                        PavilionContract.Model.class).deletePavilion(pavilionId);
-        return observable;
+                        PavilionContract.Model.class)
+                .deletePavilion(pavilionId)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

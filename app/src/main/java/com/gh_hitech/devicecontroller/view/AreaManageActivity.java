@@ -146,9 +146,7 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
 
     private void loadData(){
         sweetDialog.progress("正在加载中...").show();
-        areaPresenter.getAreaListByParentCodeLike("3501").subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        areaPresenter.getAreaListByParentCodeLike("3501")
                 .subscribe(resultModel -> {
                             areaList.clear();
                             areaList.addAll(((ResultModel<List<AreaBean>>) resultModel).getData());

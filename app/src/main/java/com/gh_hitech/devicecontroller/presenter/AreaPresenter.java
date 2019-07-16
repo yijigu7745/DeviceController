@@ -10,6 +10,8 @@ import java.util.List;
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author yijigu
@@ -24,28 +26,34 @@ public class AreaPresenter implements AreaContract.Presenter {
 
     @Override
     public Observable getAreaList() {
-        Observable<ResultModel<List<AreaBean>>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, AreaContract.Model.class)
-                .getAreaList();
-        return observable;
+                .getAreaList()
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable getAreaListByParentCodeLike(String parentCode) {
-        Observable<ResultModel<List<AreaBean>>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, AreaContract.Model.class)
-                .getAreaListByParentCodeLike(parentCode);
-        return observable;
+                .getAreaListByParentCodeLike(parentCode)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable getAreaListByAreaCode(String areaCode) {
-        Observable<ResultModel<List<AreaBean>>> observable = RetrofitUtils.getInterface(
+        return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, AreaContract.Model.class)
-                .getAreaListByAreaCode(areaCode);
-        return observable;
+                .getAreaListByAreaCode(areaCode)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

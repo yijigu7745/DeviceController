@@ -135,9 +135,6 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                 }
                 sweetDialog.progress("正在加载...").show();
                 pavilionPresenter.addPavilion(pavilionBean)
-                        .subscribeOn(Schedulers.io())
-                        .unsubscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(resultModel -> {
                             sweetDialog.success("添加成功").show();
                         },error ->{
@@ -161,9 +158,6 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                 deviceBean.setPavilion(pavilionBean);
                 sweetDialog.progress("正在加载...").show();
                 addPresenter.addDevice(deviceBean)
-                        .subscribeOn(Schedulers.io())
-                        .unsubscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(resultModel -> {
                             sweetDialog.success("添加成功").show();
                             Log.i(TAG, "msg: " +resultModel.toString());
@@ -175,9 +169,6 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                 case R.id.btn_select_kiosk:
                     //选择警银亭并将名称显示在前台
                     pavilionPresenter.getPavilionList()
-                            .subscribeOn(Schedulers.io())
-                            .unsubscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(resultModel -> {
                                 pavilionBeanList = ((ResultModel<List<DeviceBean.PavilionBean>>)resultModel).getData();
                                 Log.i(TAG, "msg: " +resultModel.toString());

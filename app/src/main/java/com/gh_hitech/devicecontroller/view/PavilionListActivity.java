@@ -156,9 +156,6 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
 
     private void deletePavilion(DeviceBean.PavilionBean pavilionBean) {
         pavilionPresenter.deletePavilion(pavilionBean.getId())
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(resultModel -> {
                     sweetDialog.success("删除成功").show();
                     loadData();
@@ -169,9 +166,7 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
 
     private void loadData(){
         sweetDialog.progress("正在加载中...").show();
-        pavilionPresenter.getPavilionList().subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        pavilionPresenter.getPavilionList()
                 .subscribe(resultModel -> {
                             pavilionList.clear();
                             pavilionList.addAll(((ResultModel<List<DeviceBean.PavilionBean>>) resultModel).getData());
