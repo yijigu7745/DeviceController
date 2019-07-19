@@ -2,6 +2,7 @@ package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,8 @@ import com.gh_hitech.devicecontroller.holder.PavilionListHolder;
 import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.PavilionPresenter;
+import com.gh_hitech.devicecontroller.ui.DialogFactory;
+import com.gh_hitech.devicecontroller.ui.SheetPopUpWindow;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
 import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
@@ -49,6 +52,7 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
+    private SheetPopUpWindow popUpWindow;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -119,6 +123,16 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
                         }
                     }
                 });
+
+        final List<String> menu = new ArrayList<>();
+        menu.add("");
+        popUpWindow = DialogFactory.createTimeSelectDialog(context,menu,(pos,value)->{
+            switch(value){
+                case "":
+                    break;
+                    default:
+            }
+        });
     }
 
     private void init() {
