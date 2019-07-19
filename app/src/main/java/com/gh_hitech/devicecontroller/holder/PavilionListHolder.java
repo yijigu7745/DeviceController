@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.gh_hitech.devicecontroller.R;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.PavilionBean;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,7 +17,7 @@ import cn.com.yijigu.rxnetwork.utils.StringUtils;
 /**
  * @author yijigu
  */
-public class PavilionListHolder extends BaseHolder<DeviceBean.PavilionBean> {
+public class PavilionListHolder extends BaseHolder<PavilionBean> {
 
     @BindView(R.id.pavilion_name) TextView pavilionName;
     @BindView(R.id.switchButton)

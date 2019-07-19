@@ -6,6 +6,8 @@ import com.gh_hitech.devicecontroller.model.CommandBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.utils.Constants;
 
+import java.util.concurrent.TimeUnit;
+
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
 import io.reactivex.Observable;

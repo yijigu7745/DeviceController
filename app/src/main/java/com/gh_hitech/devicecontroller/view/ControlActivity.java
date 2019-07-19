@@ -2,8 +2,6 @@ package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,7 +21,6 @@ import com.gh_hitech.devicecontroller.model.CommandBean;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DeviceCommandPresenter;
-import com.gh_hitech.devicecontroller.ui.ImageAndTextView;
 import com.gh_hitech.devicecontroller.ui.SwitchButton;
 import com.gh_hitech.devicecontroller.utils.ArrayUtils;
 import com.gh_hitech.devicecontroller.utils.Constants;
@@ -31,13 +28,15 @@ import com.gh_hitech.devicecontroller.utils.DecodeByteArrayUtils;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.com.yijigu.rxnetwork.utils.StringUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * 控制面板
@@ -106,7 +105,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     private int selectLine = -1;
 
     private DeviceCommandPresenter commandPresenter;
-
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
@@ -191,7 +189,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                     .subscribe(resultModel -> {
                         String result = ((ResultModel<String>) resultModel).getData();
                         Log.e(TAG, "getDeviceLineStatus: " + result.trim());
-                        sweetDialog.success("加载成功").show();
                         initSwitchStatus(result.trim());
                     }, error -> {
                         Log.e(TAG, "getDeviceLineStatus: " + error);
@@ -301,7 +298,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                 .subscribe(resultModel -> {
                     String result = ((ResultModel<String>) resultModel).getData();
                     Log.e(TAG, "getDeviceLineStatus: " + result.trim());
-                    sweetDialog.success("加载成功").show();
                     refreshTime(result);
                 }, error -> {
                     Log.e(TAG, "getDeviceLineStatus: " + error);
@@ -353,12 +349,12 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     private void switchLine(int line){
         CommandBean commandBean = new CommandBean();
         StringBuilder commandContent = new StringBuilder();
+        commandBean.setDeviceName(deviceBean.getName());
         switch (lineStatusLocal[line-1]){
-            case 0:
-                commandContent.append(Command.ON.getCommand()).append(line);
+            case Constants.LINE_OFF:
+                commandContent.append(Command.OFF.getCommand()).append(line);
                 commandBean.setCommand(commandContent.toString());
-                commandBean.setDeviceName(deviceBean.getName());
-                commandPresenter.turnOnLine(commandBean)
+                commandPresenter.turnOffLine(commandBean)
                         .subscribe(resultModel -> {
                             String result = ((ResultModel<String>) resultModel).getData();
                             Log.e(TAG, "getDeviceLineStatus: " + result.trim());
@@ -368,11 +364,10 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                             sweetDialog.error("加载失败!").show();
                         });
                 break;
-            case 1:
-                commandContent.append(Command.OFF.getCommand()).append(line);
+            case Constants.LINE_ON:
+                commandContent.append(Command.ON.getCommand()).append(line);
                 commandBean.setCommand(commandContent.toString());
-                commandBean.setDeviceName(deviceBean.getName());
-                commandPresenter.turnOffLine(commandBean)
+                commandPresenter.turnOnLine(commandBean)
                         .subscribe(resultModel -> {
                             String result = ((ResultModel<String>) resultModel).getData();
                             Log.e(TAG, "getDeviceLineStatus: " + result.trim());
@@ -384,45 +379,12 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                 break;
                 default:
         }
-//        commandContent.append(Command.ALL.getCommand())
-//                .append(lineStatusLocal[7])
-//                .append(lineStatusLocal[6])
-//                .append(lineStatusLocal[5])
-//                .append(lineStatusLocal[4])
-//                .append(lineStatusLocal[3])
-//                .append(lineStatusLocal[2])
-//                .append(lineStatusLocal[1])
-//                .append(lineStatusLocal[0])
-//                .toString();
-//        commandBean.setCommand(commandContent.toString());
-//        commandBean.setDeviceName(deviceBean.getName());
-//        commandPresenter.switchAllLineStatus(commandBean)
-//                .subscribeOn(Schedulers.io())
-//                .unsubscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(resultModel -> {
-//                    String result = ((ResultModel<String>) resultModel).getData();
-//                    Log.e(TAG, "getDeviceLineStatus: " + result.trim());
-//                    getDeviceLineStatus();
-//                }, error -> {
-//                    Log.e(TAG, "getDeviceLineStatus: " + error);
-//                    sweetDialog.error("加载失败!").show();
-//                });
     }
-
-//    private boolean checkSwitchStatus(int line, int[] lineStatusDevice, int[] lineStatusLocal) {
-//        return lineStatusDevice[line-1] == lineStatusLocal[line-1];
-//    }
 
     private void onSwitchClick(SwitchButton switchButton, int line) {
         switchButton.toggle();
         lineStatusLocal[line-1] = switchButton.isChecked() ? 1 : 0;
         switchLine(line);
-//        if (checkSwitchStatus(line, lineStatusDevice, lineStatusLocal)) {
-//            switchButton.setTextColor(Color.BLACK);
-//        } else {
-//            switchButton.setTextColor(Color.GREEN);
-//        }
     }
 
     @Override
@@ -455,5 +417,17 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                 default:
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        timeSchedulers();
+    }
+
+//    private void timeSchedulers(){
+//        Flowable.interval(1, TimeUnit.SECONDS)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(aLong -> getTime());
+//    }
 
 }

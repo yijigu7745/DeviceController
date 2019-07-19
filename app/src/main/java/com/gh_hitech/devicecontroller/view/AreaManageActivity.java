@@ -21,6 +21,7 @@ import com.gh_hitech.devicecontroller.model.AreaBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.AreaPresenter;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
+import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +152,8 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
                             areaList.clear();
                             areaList.addAll(((ResultModel<List<AreaBean>>) resultModel).getData());
                             areaListAdaptor.notifyDataSetChanged();
-                            sweetDialog.success("数据加载成功").show();
+                            sweetDialog.close();
+                            ToastUtils.longTimeText(context,"加载成功");
                             swipeRefreshLayout.setRefreshing(false);
                         },error ->{
                             sweetDialog.error("加载失败!").show();

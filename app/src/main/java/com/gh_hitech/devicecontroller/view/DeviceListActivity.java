@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AbsListView;
@@ -23,6 +22,7 @@ import com.gh_hitech.devicecontroller.model.DeviceBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DevicePresenter;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
+import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.com.yijigu.rxnetwork.view.IView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 设备列表
@@ -178,7 +176,8 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
                             deviceList.clear();
                             deviceList.addAll(((ResultModel<List<DeviceBean>>) resultModel).getData());
                             deviceListAdaptor.notifyDataSetChanged();
-                            sweetDialog.success("数据加载成功").show();
+                            sweetDialog.close();
+                            ToastUtils.longTimeText(context,"加载成功");
                             swipeRefreshLayout.setRefreshing(false);
                         },error ->{
                             sweetDialog.error("加载失败!").show();

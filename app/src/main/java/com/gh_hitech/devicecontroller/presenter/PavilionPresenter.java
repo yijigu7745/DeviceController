@@ -1,12 +1,9 @@
 package com.gh_hitech.devicecontroller.presenter;
 
-import com.gh_hitech.devicecontroller.contract.DeviceContract;
 import com.gh_hitech.devicecontroller.contract.PavilionContract;
-import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.utils.Constants;
-
-import java.util.List;
 
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
@@ -58,7 +55,7 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     }
 
     @Override
-    public Observable<ResultModel<Void>> addPavilion(DeviceBean.PavilionBean pavilionBean) {
+    public Observable<ResultModel<Void>> addPavilion(PavilionBean pavilionBean) {
         return RetrofitUtils
                 .getInterface(Constants.getServerUrl(),iView,
                         PavilionContract.Model.class)

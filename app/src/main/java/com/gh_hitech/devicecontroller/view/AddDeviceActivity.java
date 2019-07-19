@@ -18,6 +18,7 @@ import com.gh_hitech.devicecontroller.contract.PavilionContract;
 import com.gh_hitech.devicecontroller.dialog.CheckboxDialog;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
 import com.gh_hitech.devicecontroller.model.IBaseName;
+import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DevicePresenter;
 import com.gh_hitech.devicecontroller.presenter.PavilionPresenter;
@@ -72,7 +73,7 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
     TextView bindKioskName;
 
     SweetDialog sweetDialog;
-    List<DeviceBean.PavilionBean> pavilionBeanList;
+    List<PavilionBean> pavilionBeanList;
     Long checkId = Constants.NO_KIOSK;
 
     private TextView tvTitle;
@@ -122,7 +123,7 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_add_device_and_kiosk:
-                DeviceBean.PavilionBean pavilionBean = new DeviceBean.PavilionBean();
+                PavilionBean pavilionBean = new PavilionBean();
                 pavilionBean.setAddress(etKioskAddress.getText().toString());
                 pavilionBean.setName(etKioskName.getText().toString());
                 if(StringUtils.isBlank(etKioskName.getText().toString())){
@@ -143,7 +144,7 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                         });
                 break;
             case R.id.btn_add_device_and_bind_kiosk:
-                pavilionBean = new DeviceBean.PavilionBean();
+                pavilionBean = new PavilionBean();
                 pavilionBean.setId(checkId);
                 DeviceBean deviceBean = new DeviceBean();
                 if(StringUtils.isBlank(etDeviceName2.getText().toString())){
@@ -155,7 +156,7 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                     return;
                 }
                 deviceBean.setName(etDeviceName2.getText().toString());
-                deviceBean.setPavilion(pavilionBean);
+                deviceBean.setPavilionId(pavilionBean.getId()+"");
                 sweetDialog.progress("正在加载...").show();
                 addPresenter.addDevice(deviceBean)
                         .subscribe(resultModel -> {
@@ -170,7 +171,7 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                     //选择警银亭并将名称显示在前台
                     pavilionPresenter.getPavilionList()
                             .subscribe(resultModel -> {
-                                pavilionBeanList = ((ResultModel<List<DeviceBean.PavilionBean>>)resultModel).getData();
+                                pavilionBeanList = ((ResultModel<List<PavilionBean>>)resultModel).getData();
                                 Log.i(TAG, "msg: " +resultModel.toString());
                                 showPavilionSelectDialog();
                             },error ->{

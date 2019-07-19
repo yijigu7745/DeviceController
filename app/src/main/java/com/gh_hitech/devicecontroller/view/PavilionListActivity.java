@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AbsListView;
@@ -17,12 +16,12 @@ import com.gh_hitech.devicecontroller.R;
 import com.gh_hitech.devicecontroller.adapter.CommonAdaptor;
 import com.gh_hitech.devicecontroller.base.BaseActivity;
 import com.gh_hitech.devicecontroller.holder.BaseHolder;
-import com.gh_hitech.devicecontroller.holder.DeviceListHolder;
 import com.gh_hitech.devicecontroller.holder.PavilionListHolder;
-import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.PavilionPresenter;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
+import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +29,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.com.yijigu.rxnetwork.view.IView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 设备列表
@@ -43,8 +40,8 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     GridView gridView;
     @BindView(R.id.reload_data)
     SwipeRefreshLayout swipeRefreshLayout;
-    private CommonAdaptor<DeviceBean.PavilionBean> pavilionListAdaptor;
-    List<DeviceBean.PavilionBean> pavilionList = new ArrayList<>();
+    private CommonAdaptor<PavilionBean> pavilionListAdaptor;
+    List<PavilionBean> pavilionList = new ArrayList<>();
     SweetDialog sweetDialog;
     private Context context;
     PavilionPresenter pavilionPresenter;
@@ -125,7 +122,7 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     }
 
     private void init() {
-        pavilionListAdaptor = new CommonAdaptor<DeviceBean.PavilionBean>(gridView,pavilionList) {
+        pavilionListAdaptor = new CommonAdaptor<PavilionBean>(gridView,pavilionList) {
             @Override
             protected BaseHolder getHolder() {
                 return new PavilionListHolder(context);
@@ -154,7 +151,7 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
                 .setConfirmClickListener(sweetAlertDialog -> deletePavilion(pavilionList.get(selectPosition))).show();
     }
 
-    private void deletePavilion(DeviceBean.PavilionBean pavilionBean) {
+    private void deletePavilion(PavilionBean pavilionBean) {
         pavilionPresenter.deletePavilion(pavilionBean.getId())
                 .subscribe(resultModel -> {
                     sweetDialog.success("删除成功").show();
@@ -169,9 +166,10 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         pavilionPresenter.getPavilionList()
                 .subscribe(resultModel -> {
                             pavilionList.clear();
-                            pavilionList.addAll(((ResultModel<List<DeviceBean.PavilionBean>>) resultModel).getData());
+                            pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
                             pavilionListAdaptor.notifyDataSetChanged();
-                            sweetDialog.success("数据加载成功").show();
+                            sweetDialog.close();
+                            ToastUtils.longTimeText(context,"加载成功");
                             swipeRefreshLayout.setRefreshing(false);
                         },error ->{
                             sweetDialog.error("加载失败!").show();

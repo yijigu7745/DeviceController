@@ -1,6 +1,6 @@
 package com.gh_hitech.devicecontroller.contract;
 
-import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public interface PavilionContract {
          * @return
          */
         @GET("/pavilion/all")
-        Observable<ResultModel<List<DeviceBean.PavilionBean>>> getPavilionList();
+        Observable<ResultModel<List<PavilionBean>>> getPavilionList();
 
         /**
          * 添加警银亭
@@ -31,7 +31,7 @@ public interface PavilionContract {
          * @return
          */
         @POST("/pavilion")
-        Observable<ResultModel<Void>> addPavilion(@Body DeviceBean.PavilionBean pavilionBean);
+        Observable<ResultModel<Void>> addPavilion(@Body PavilionBean pavilionBean);
 
         /**
          * 删除警银亭
@@ -47,7 +47,7 @@ public interface PavilionContract {
          * @return
          */
         @GET("/pavilion/id")
-        Observable<ResultModel<DeviceBean.PavilionBean>> selectPavilionListById(@Query("id") int id);
+        Observable<ResultModel<PavilionBean>> selectPavilionListById(@Query("id") int id);
 
         /**
          * 查找警银亭
@@ -55,7 +55,7 @@ public interface PavilionContract {
          * @return
          */
         @GET("/pavilion/name")
-        Observable<ResultModel<List<DeviceBean.PavilionBean>>> selectPavilionListByName(@Query("name") String name);
+        Observable<ResultModel<List<PavilionBean>>> selectPavilionListByName(@Query("name") String name);
     }
 
     interface View {
@@ -87,7 +87,7 @@ public interface PavilionContract {
          * @param pavilionBean
          * @return
          */
-        Observable addPavilion(DeviceBean.PavilionBean pavilionBean);
+        Observable addPavilion(PavilionBean pavilionBean);
 
         /**
          * 删除警银亭
