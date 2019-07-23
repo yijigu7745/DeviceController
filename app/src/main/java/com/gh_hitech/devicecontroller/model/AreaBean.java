@@ -22,6 +22,7 @@ public class AreaBean extends IBaseName implements Serializable {
     private String city;
     private String district;
     private String areaCode;
+    private int pavilionCount;
 
     public int getId() {
         return id;
@@ -61,6 +62,14 @@ public class AreaBean extends IBaseName implements Serializable {
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    public int getPavilionCount() {
+        return pavilionCount;
+    }
+
+    public void setPavilionCount(int pavilionCount) {
+        this.pavilionCount = pavilionCount;
     }
 
     @Override

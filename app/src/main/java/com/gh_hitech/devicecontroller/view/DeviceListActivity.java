@@ -17,9 +17,13 @@ import android.widget.TextView;
 import com.gh_hitech.devicecontroller.R;
 import com.gh_hitech.devicecontroller.adapter.DeviceRecyclerAdapter;
 import com.gh_hitech.devicecontroller.base.BaseActivity;
+import com.gh_hitech.devicecontroller.dialog.CheckboxDialog;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.IBaseName;
+import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DevicePresenter;
+import com.gh_hitech.devicecontroller.presenter.PavilionPresenter;
 import com.gh_hitech.devicecontroller.ui.DialogFactory;
 import com.gh_hitech.devicecontroller.ui.SheetPopUpWindow;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
@@ -30,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.com.yijigu.rxnetwork.utils.StringUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
 
 /**
@@ -44,11 +49,15 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
     @BindView(R.id.reload_data)
     SwipeRefreshLayout swipeRefreshLayout;
     DeviceRecyclerAdapter deviceRecyclerAdapter;
+    PavilionPresenter pavilionPresenter;
     List<DeviceBean> deviceList = new ArrayList<>();
+    List<PavilionBean> pavilionList = new ArrayList<>();
     SweetDialog sweetDialog;
     private Context context;
     DevicePresenter devicePresenter;
     private int selectPosition = -1;
+    private PavilionBean pavilionFromIntent;
+    private long selectPavilionId;
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
@@ -79,6 +88,7 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
         ButterKnife.bind(this);
         context = this;
         devicePresenter = new DevicePresenter(this);
+        pavilionPresenter = new PavilionPresenter(this);
         sweetDialog = SweetDialog.builder(this);
         init();
         register();
@@ -89,6 +99,7 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
     }
 
     private void init() {
+        pavilionFromIntent = (PavilionBean) getIntent().getSerializableExtra("pavilion");
         final List<String> menu = new ArrayList<>();
         menu.add("控制面板");
         menu.add("修改设备所属警银亭");
@@ -101,7 +112,7 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
                     startActivity(intent);
                     break;
                 case "修改设备所属警银亭":
-//                    selectAreaDialog();
+                    selectPavilionDialog();
                     break;
                 case "删除设备":
                     deleteConfirm();
@@ -141,7 +152,16 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
         devicePresenter.getDeviceList()
                 .subscribe(resultModel -> {
                             deviceList.clear();
-                            deviceList.addAll(((ResultModel<List<DeviceBean>>) resultModel).getData());
+                            if(pavilionFromIntent != null){
+                                for (DeviceBean d:((ResultModel<List<DeviceBean>>) resultModel).getData()) {
+                                    if((d.getPavilionBean() != null)
+                                            && (pavilionFromIntent.getId().equals(d.getPavilionBean().getId()))){
+                                        deviceList.add(d);
+                                    }
+                                }
+                            }else {
+                                deviceList.addAll(((ResultModel<List<DeviceBean>>) resultModel).getData());
+                            }
                             deviceRecyclerAdapter.notifyDataSetChanged();
                             sweetDialog.close();
                             ToastUtils.longTimeText(context,"加载成功");
@@ -152,6 +172,56 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
                             swipeRefreshLayout.setRefreshing(false);
                         }
                 );
+        pavilionPresenter.getPavilionList()
+                .subscribe(resultModel -> {
+                            pavilionList.clear();
+                            pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
+                        },error ->{
+                            sweetDialog.error("加载警银亭失败!").show();
+                        }
+                );
+    }
+
+
+    private void selectPavilionDialog(){
+        List<IBaseName> pavilion = new ArrayList<>();
+        pavilion.addAll(pavilionList);
+        final CheckboxDialog checkboxDialog = new CheckboxDialog(context);
+        checkboxDialog.setSingleListBean(pavilion,selectPavilionId);
+        checkboxDialog.setOnButtonClickListener(new CheckboxDialog.OnButtonClickListener() {
+            @Override
+            public void onConfirmationClick() {
+                checkboxDialog.setConfirmation();
+                if(StringUtils.isNotBlank(checkboxDialog.getId())) {
+                    selectPavilionId = Long.parseLong(checkboxDialog.getId());
+                }
+                updateDevicePavilion();
+            }
+
+            @Override
+            public void onCancelClick() {
+
+            }
+        });
+        checkboxDialog.show();
+    }
+
+    private void updateDevicePavilion(){
+        if(pavilionList != null){
+            for (PavilionBean pavilionBean:pavilionList) {
+                if(pavilionBean.getIid().longValue() == selectPavilionId){
+                    DeviceBean deviceBean = deviceList.get(selectPosition);
+                    deviceBean.setPavilionBean(pavilionBean);
+                    devicePresenter.updateDevice(deviceBean)
+                            .subscribe(resultModel -> {
+                                sweetDialog.success("修改成功").show();
+                                loadData();
+                            },error ->{
+                                sweetDialog.success("修改失败").show();
+                            });
+                }
+            }
+        }
     }
 
     @Override

@@ -23,6 +23,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.050000012"/>
 
+    <TextView
+        android:id="@+id/pavilion_count"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/LOADING"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/area_name"/>
+
     <View
         android:id="@+id/line_view"
         style="@style/lineStyle"
@@ -31,7 +42,7 @@
         android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="@+id/area_name"
         app:layout_constraintStart_toStartOf="@+id/area_name"
-        app:layout_constraintTop_toBottomOf="@+id/area_name"/>
+        app:layout_constraintTop_toBottomOf="@+id/pavilion_count"/>
 
     <ImageView
         android:id="@+id/switchButton"

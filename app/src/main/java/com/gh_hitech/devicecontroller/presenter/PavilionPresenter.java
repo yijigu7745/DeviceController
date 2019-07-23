@@ -87,4 +87,15 @@ public class PavilionPresenter implements PavilionContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
+    public Observable countByArea(String areaCode) {
+        return RetrofitUtils
+                .getInterface(Constants.getServerUrl(),iView,
+                        PavilionContract.Model.class)
+                .countByArea(areaCode)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 }

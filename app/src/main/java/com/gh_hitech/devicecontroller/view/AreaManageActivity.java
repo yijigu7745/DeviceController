@@ -19,6 +19,7 @@ import com.gh_hitech.devicecontroller.base.BaseActivity;
 import com.gh_hitech.devicecontroller.model.AreaBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.AreaPresenter;
+import com.gh_hitech.devicecontroller.presenter.PavilionPresenter;
 import com.gh_hitech.devicecontroller.ui.DialogFactory;
 import com.gh_hitech.devicecontroller.ui.SheetPopUpWindow;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
@@ -26,6 +27,7 @@ import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,10 +49,12 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
 
     AreaRecyclerAdapter areaRecyclerAdapter;
     List<AreaBean> areaList = new ArrayList<>();
+    List<Map<String,Integer>> countByAreaList = new ArrayList<>();
     SweetDialog sweetDialog;
     private Context context;
     private int selectPosition = -1;
     AreaPresenter areaPresenter;
+    PavilionPresenter pavilionPresenter;
     SheetPopUpWindow popUpWindow;
 
     @SuppressLint("RestrictedApi")
@@ -77,6 +81,7 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
         context = this;
         ButterKnife.bind(this);
         areaPresenter = new AreaPresenter(this);
+        pavilionPresenter = new PavilionPresenter(this);
         sweetDialog = SweetDialog.builder(this);
         init();
         register();
@@ -125,6 +130,21 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
                             swipeRefreshLayout.setRefreshing(false);
                         }
                 );
+        pavilionPresenter.countByArea("350100")
+                .subscribe(resultModel -> {
+                    countByAreaList.clear();
+                    countByAreaList.addAll(((ResultModel<List<Map<String,Integer>>>)resultModel).getData());
+                    for (AreaBean a:areaList) {
+                        for (Map<String,Integer> m: countByAreaList) {
+                            if(m.containsKey(a.getAreaCode())){
+                                a.setPavilionCount(m.get(a.getAreaCode()));
+                            }
+                        }
+                    }
+                    areaRecyclerAdapter.notifyDataSetChanged();
+                },error ->{
+                    sweetDialog.error("加载区域详情失败!").show();
+                });
     }
 
     @Override

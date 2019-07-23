@@ -99,12 +99,18 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         swipeRefreshLayout.setOnRefreshListener(this);
         final List<String> menu = new ArrayList<>();
         menu.add("添加控制器");
+        menu.add("查看控制器");
         menu.add("修改区域分组");
         menu.add("删除警银亭");
         popUpWindow = DialogFactory.createSheetPopUpWindow(context,menu,(pos,value)->{
             switch(value){
                 case "添加控制器":
                     Intent intent = new Intent(this,AddDeviceActivity.class);
+                    startActivity(intent);
+                    break;
+                case "查看控制器":
+                    intent = new Intent(this,DeviceListActivity.class);
+                    intent.putExtra("pavilion",pavilionList.get(selectPosition));
                     startActivity(intent);
                     break;
                 case "修改区域分组":

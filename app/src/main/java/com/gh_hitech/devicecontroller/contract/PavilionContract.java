@@ -4,6 +4,7 @@ import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
@@ -59,6 +60,14 @@ public interface PavilionContract {
         Observable<ResultModel<List<PavilionBean>>> selectPavilionListByName(@Query("name") String name);
 
         /**
+         * 统计区域内警银亭数量
+         * @param areaCode
+         * @return
+         */
+        @GET("/pavilion/countByArea/{areaCode}")
+        Observable<ResultModel<List<Map<String,Integer>>>> countByArea(@Path("areaCode") String areaCode);
+
+        /**
          * 修改警银亭所属区域
          * @param pavilionBean
          * @return
@@ -111,5 +120,12 @@ public interface PavilionContract {
          * @return
          */
         Observable updatePavilion(PavilionBean pavilionBean);
+
+        /**
+         * 统计区域内警银亭数量
+         * @param areaCode
+         * @return
+         */
+        Observable countByArea(String areaCode);
     }
 }

@@ -56,4 +56,15 @@ public class DevicePresenter implements DeviceContract.Presenter {
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    @Override
+    public Observable updateDevice(DeviceBean deviceBean) {
+        return RetrofitUtils.getInterface(
+                Constants.getServerUrl(),
+                iView, DeviceContract.Model.class)
+                .updateDevice(deviceBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }

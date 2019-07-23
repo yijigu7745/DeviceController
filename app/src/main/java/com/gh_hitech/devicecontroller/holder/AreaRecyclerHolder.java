@@ -18,6 +18,8 @@ import cn.com.yijigu.rxnetwork.utils.StringUtils;
 public class AreaRecyclerHolder extends RvHolder<AreaBean> {
     @BindView(R.id.area_name)
     TextView areaName;
+    @BindView(R.id.pavilion_count)
+    TextView pavilionCount;
     public AreaRecyclerHolder(View itemView, int type, RvListener listener) {
         super(itemView, type, listener);
         ButterKnife.bind(this,itemView);
@@ -34,6 +36,12 @@ public class AreaRecyclerHolder extends RvHolder<AreaBean> {
         } else if(StringUtils.isNotBlank(areaBean.getProvince())){
             areaName.setVisibility(View.VISIBLE);
             areaName.setText("区域： "+areaBean.getProvince());
+        }
+        if(areaBean.getPavilionCount() != 0 ){
+            pavilionCount.setVisibility(View.VISIBLE);
+            pavilionCount.setText("亭体数量："+areaBean.getPavilionCount());
+        }else{
+            pavilionCount.setVisibility(View.GONE);
         }
     }
 }

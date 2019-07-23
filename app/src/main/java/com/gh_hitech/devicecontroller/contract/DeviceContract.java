@@ -10,6 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
@@ -39,6 +40,14 @@ public interface DeviceContract {
          */
         @DELETE("/device/{id}")
         Observable<ResultModel<Void>> deleteDevice(@Path("id") Long id);
+
+        /**
+         * 更新设备
+         * @param deviceBean
+         * @return
+         */
+        @PUT("/device/{id}")
+        Observable<ResultModel<Void>> updateDevice(@Body DeviceBean deviceBean);
     }
 
     interface View {
@@ -64,5 +73,12 @@ public interface DeviceContract {
          * @return
          */
         Observable deleteDevice(Long id);
+
+        /**
+         * 更新设备
+         * @param deviceBean
+         * @return
+         */
+        Observable updateDevice(DeviceBean deviceBean);
     }
 }
