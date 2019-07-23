@@ -421,13 +421,12 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     @Override
     protected void onResume() {
         super.onResume();
-//        timeSchedulers();
     }
 
-//    private void timeSchedulers(){
-//        Flowable.interval(1, TimeUnit.SECONDS)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(aLong -> getTime());
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
+    }
 
 }

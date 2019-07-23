@@ -207,4 +207,10 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
         });
         checkboxDialog.show();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
+    }
 }

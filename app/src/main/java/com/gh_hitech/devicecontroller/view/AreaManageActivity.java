@@ -2,9 +2,13 @@ package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -13,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gh_hitech.devicecontroller.R;
+import com.gh_hitech.devicecontroller.adapter.AreaRecyclerAdapter;
 import com.gh_hitech.devicecontroller.adapter.CommonAdaptor;
 import com.gh_hitech.devicecontroller.base.BaseActivity;
 import com.gh_hitech.devicecontroller.holder.AreaListHolder;
@@ -20,6 +25,8 @@ import com.gh_hitech.devicecontroller.holder.BaseHolder;
 import com.gh_hitech.devicecontroller.model.AreaBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.AreaPresenter;
+import com.gh_hitech.devicecontroller.ui.DialogFactory;
+import com.gh_hitech.devicecontroller.ui.SheetPopUpWindow;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
 import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
@@ -38,8 +45,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class AreaManageActivity extends BaseActivity implements IView, SwipeRefreshLayout.OnRefreshListener{
 
-    @BindView(R.id.gridview_1)
-    GridView gridView;
+    @BindView(R.id.recyclerview_1)
+    RecyclerView recyclerView;
     @BindView(R.id.reload_data)
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -47,32 +54,29 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
     private RelativeLayout layoutRight;
 
     private CommonAdaptor<AreaBean> areaListAdaptor;
+    AreaRecyclerAdapter areaRecyclerAdapter;
     List<AreaBean> areaList = new ArrayList<>();
     SweetDialog sweetDialog;
     private Context context;
+    private int selectPosition = -1;
     AreaPresenter areaPresenter;
+    SheetPopUpWindow popUpWindow;
 
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreateCustomToolBar(Toolbar toolbar) {
         super.onCreateCustomToolBar(toolbar);
-
         getLayoutInflater().inflate(R.layout.toobar_layout, toolbar);
-
         //设置回退按钮
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
-
         // toolbar返回事件
         toolbar.setNavigationOnClickListener(view -> AreaManageActivity.this.finish());
-
         // 设置标题
         tvTitle = toolbar.findViewById(R.id.tv_title);
         tvTitle.setText("区域管理");
-
         // 右键点击
         layoutRight = toolbar.findViewById(R.id.right_layout);
         layoutRight.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -89,60 +93,30 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
 
 
     private void init() {
-        areaListAdaptor = new CommonAdaptor<AreaBean>(gridView,areaList) {
-            @Override
-            protected BaseHolder getHolder() {
-                return new AreaListHolder(context);
+        final List<String> menu = new ArrayList<>();
+        menu.add("查看警银亭");
+        popUpWindow = DialogFactory.createSheetPopUpWindow(context,menu,(pos, value)->{
+            switch(value){
+                case "查看警银亭":
+                    Intent intent = new Intent(AreaManageActivity.this,PavilionListActivity.class);
+                    intent.putExtra("area",areaList.get(selectPosition));
+                    startActivity(intent);
+                    break;
+                default:
             }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                return super.onItemLongClick(parent, view, position, id);
-            }
-
-        };
-        gridView.setNumColumns(2);
-        gridView.setAdapter(areaListAdaptor);
+        });
+        areaRecyclerAdapter = new AreaRecyclerAdapter(context,areaList,(id, position)->{
+            selectPosition = position;
+            popUpWindow.showAtLocation(getCurrentActivity()
+                            .findViewById(R.id.area_list),
+                    Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        });
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(areaRecyclerAdapter);
     }
 
     private void register() {
         swipeRefreshLayout.setOnRefreshListener(this);
-        //GridView与SwipeRefreshLayout下拉冲突解决
-        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getCheckedItemPosition() == 0) {
-
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                if (firstVisibleItem == 0) {
-                    View firstVisibleItemView = gridView.getChildAt(0);
-                    if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
-                        swipeRefreshLayout.setEnabled(true);
-                    } else {
-                        swipeRefreshLayout.setEnabled(false);
-                    }
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-
-                // 判断滚动到底部
-                if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-
-                }
-            }
-        });
     }
 
     private void loadData(){
@@ -151,7 +125,7 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
                 .subscribe(resultModel -> {
                             areaList.clear();
                             areaList.addAll(((ResultModel<List<AreaBean>>) resultModel).getData());
-                            areaListAdaptor.notifyDataSetChanged();
+                            areaRecyclerAdapter.notifyDataSetChanged();
                             sweetDialog.close();
                             ToastUtils.longTimeText(context,"加载成功");
                             swipeRefreshLayout.setRefreshing(false);
@@ -171,5 +145,11 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
     @Override
     public void onRefresh() {
         loadData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
     }
 }

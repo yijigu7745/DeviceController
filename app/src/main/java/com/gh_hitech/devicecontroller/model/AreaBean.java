@@ -1,11 +1,13 @@
 package com.gh_hitech.devicecontroller.model;
 
+import java.io.Serializable;
+
 import cn.com.yijigu.rxnetwork.utils.StringUtils;
 
 /**
  * @author yijigu
  */
-public class AreaBean extends IBaseName{
+public class AreaBean extends IBaseName implements Serializable {
 
     /**
      * id : 1

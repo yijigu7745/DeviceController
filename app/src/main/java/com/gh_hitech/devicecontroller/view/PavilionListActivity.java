@@ -57,6 +57,7 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     List<AreaBean> areaList = new ArrayList<>();
     private long selectAreaId;
     private int selectPosition = -1;
+    private AreaBean areaFromIntent;
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
@@ -89,6 +90,7 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         pavilionPresenter = new PavilionPresenter(this);
         areaPresenter = new AreaPresenter(this);
         sweetDialog = SweetDialog.builder(this);
+        areaFromIntent = (AreaBean) getIntent().getSerializableExtra("area");
         init();
         register();
     }
@@ -150,14 +152,23 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         pavilionPresenter.getPavilionList()
                 .subscribe(resultModel -> {
                             pavilionList.clear();
-                            pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
+                            if(areaFromIntent != null){
+                                for (PavilionBean p:((ResultModel<List<PavilionBean>>) resultModel).getData()) {
+                                    if((p.getPavilionArea() != null)
+                                            && (areaFromIntent.getId() == p.getPavilionArea().getId())){
+                                        pavilionList.add(p);
+                                    }
+                                }
+                            }else {
+                                pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
+                            }
                             pavilionRecyclerAdapter.notifyDataSetChanged();
                             sweetDialog.close();
                             ToastUtils.longTimeText(context,"加载成功");
                             swipeRefreshLayout.setRefreshing(false);
                         },error ->{
                             sweetDialog.error("加载警银亭列表失败!").show();
-                            Log.e(TAG, "loadData: "+error);
+                            Log.e(TAG, "loadData: "+error+" areaBean:"+areaFromIntent +"    areaBean:"+(StringUtils.isNotBlank(areaFromIntent.getAreaName())? "null":areaFromIntent.getAreaName()));
                             swipeRefreshLayout.setRefreshing(false);
                         }
                 );
@@ -220,5 +231,11 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     @Override
     public void onRefresh() {
         loadData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
     }
 }

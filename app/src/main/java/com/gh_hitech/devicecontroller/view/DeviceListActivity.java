@@ -164,4 +164,10 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
     public void onRefresh() {
         loadData();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
+    }
 }

@@ -95,4 +95,10 @@ public class MainActivity extends BaseActivity implements IView, View.OnClickLis
             default:
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
+    }
 }
