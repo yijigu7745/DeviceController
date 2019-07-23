@@ -5,22 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gh_hitech.devicecontroller.R;
-import com.gh_hitech.devicecontroller.adapter.CommonAdaptor;
+import com.gh_hitech.devicecontroller.adapter.DeviceRecyclerAdapter;
 import com.gh_hitech.devicecontroller.base.BaseActivity;
-import com.gh_hitech.devicecontroller.holder.BaseHolder;
-import com.gh_hitech.devicecontroller.holder.DeviceListHolder;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DevicePresenter;
+import com.gh_hitech.devicecontroller.ui.DialogFactory;
+import com.gh_hitech.devicecontroller.ui.SheetPopUpWindow;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
 import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
@@ -37,11 +38,12 @@ import cn.com.yijigu.rxnetwork.view.IView;
  */
 public class DeviceListActivity extends BaseActivity implements IView, SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.gridview_1)
-    GridView gridView;
+    private static final String TAG = "DeviceListActivity";
+    @BindView(R.id.recycleview_1)
+    RecyclerView recyclerView;
     @BindView(R.id.reload_data)
     SwipeRefreshLayout swipeRefreshLayout;
-    private CommonAdaptor<DeviceBean> deviceListAdaptor;
+    DeviceRecyclerAdapter deviceRecyclerAdapter;
     List<DeviceBean> deviceList = new ArrayList<>();
     SweetDialog sweetDialog;
     private Context context;
@@ -50,6 +52,7 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
+    private SheetPopUpWindow popUpWindow;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -57,22 +60,16 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
         super.onCreateCustomToolBar(toolbar);
 
         getLayoutInflater().inflate(R.layout.toobar_layout, toolbar);
-
         //设置回退按钮
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
-
         // toolbar返回事件
         toolbar.setNavigationOnClickListener(view -> DeviceListActivity.this.finish());
-
         // 设置标题
         tvTitle = toolbar.findViewById(R.id.tv_title);
         tvTitle.setText("设备管理");
-
         // 右键点击
         layoutRight = toolbar.findViewById(R.id.right_layout);
         layoutRight.setVisibility(View.GONE);
-
-
     }
 
     @Override
@@ -89,66 +86,37 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
 
     private void register() {
         swipeRefreshLayout.setOnRefreshListener(this);
-        //GridView与SwipeRefreshLayout下拉冲突解决
-        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getCheckedItemPosition() == 0) {
-
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-                if (firstVisibleItem == 0) {
-                    View firstVisibleItemView = gridView.getChildAt(0);
-                    if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
-                        swipeRefreshLayout.setEnabled(true);
-                    } else {
-                        swipeRefreshLayout.setEnabled(false);
-                    }
-                } else {
-                    swipeRefreshLayout.setEnabled(false);
-                }
-
-                // 判断滚动到底部
-                if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-
-                }
-            }
-        });
     }
 
     private void init() {
-        deviceListAdaptor = new CommonAdaptor<DeviceBean>(gridView,deviceList) {
-            @Override
-            protected BaseHolder getHolder() {
-                return new DeviceListHolder(context);
+        final List<String> menu = new ArrayList<>();
+        menu.add("控制面板");
+        menu.add("修改设备所属警银亭");
+        menu.add("删除设备");
+        popUpWindow = DialogFactory.createSheetPopUpWindow(context,menu,(pos, value)->{
+            switch(value){
+                case "控制面板":
+                    Intent intent = new Intent(DeviceListActivity.this,ControlActivity.class);
+                    intent.putExtra("deviceBean",deviceList.get(selectPosition));
+                    startActivity(intent);
+                    break;
+                case "修改设备所属警银亭":
+//                    selectAreaDialog();
+                    break;
+                case "删除设备":
+                    deleteConfirm();
+                    break;
+                default:
             }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(DeviceListActivity.this,ControlActivity.class);
-                intent.putExtra("deviceBean",deviceList.get(position));
-                startActivity(intent);
-            }
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                selectPosition = position;
-                deleteConfirm();
-//                if(deviceList.get(selectPosition).getId() != -1L){
-//                }
-                return super.onItemLongClick(parent, view, position, id);
-            }
-
-        };
-        gridView.setNumColumns(2);
-        gridView.setAdapter(deviceListAdaptor);
+        });
+        deviceRecyclerAdapter = new DeviceRecyclerAdapter(context,deviceList,(id, position) ->{
+            selectPosition = position;
+            popUpWindow.showAtLocation(getCurrentActivity()
+                            .findViewById(R.id.device_list),
+                    Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        });
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(deviceRecyclerAdapter);
     }
 
     private void deleteConfirm() {
@@ -157,7 +125,6 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
                 false,true)
                 .setConfirmClickListener(sweetAlertDialog -> deleteDevice(deviceList.get(selectPosition))).show();
     }
-
 
     private void deleteDevice(DeviceBean deviceBean) {
         devicePresenter.deleteDevice(deviceBean.getId())
@@ -175,11 +142,12 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
                 .subscribe(resultModel -> {
                             deviceList.clear();
                             deviceList.addAll(((ResultModel<List<DeviceBean>>) resultModel).getData());
-                            deviceListAdaptor.notifyDataSetChanged();
+                            deviceRecyclerAdapter.notifyDataSetChanged();
                             sweetDialog.close();
                             ToastUtils.longTimeText(context,"加载成功");
                             swipeRefreshLayout.setRefreshing(false);
                         },error ->{
+                            Log.e(TAG, "loadData: "+error);
                             sweetDialog.error("加载失败!").show();
                             swipeRefreshLayout.setRefreshing(false);
                         }

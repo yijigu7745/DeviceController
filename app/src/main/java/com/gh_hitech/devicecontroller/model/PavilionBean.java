@@ -1,9 +1,11 @@
 package com.gh_hitech.devicecontroller.model;
 
+import java.io.Serializable;
+
 /**
  * @author yijigu
  */
-public class PavilionBean extends IBaseName {
+public class PavilionBean extends IBaseName implements Serializable {
     /**
      * id : 1
      * name : p2
