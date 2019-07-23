@@ -53,17 +53,17 @@ public class DialogFactory {
         }
     }
 
-//    public static TimeDialog createTimeSelectDialog(Context context, TimeDialog.OnTimeSelectListener linstener){
+//    public static TimeDialog createTimeSelectDialog(Context context, TimeDialog.OnTimeSelectListener listener){
 //        TimeDialog dialog = new TimeDialog(context);
 //        if (linstener != null){
-//            dialog.setOnTimeSelectListener(linstener);
+//            dialog.setOnTimeSelectListener(listener);
 //        }
 //        return dialog;
 //    }
 
-    public static SheetPopUpWindow createTimeSelectDialog(Context context, List<String> data,
-                                                          SheetPopUpWindow.OnItemSelectListener linstener){
-        SheetPopUpWindow popUpWindow =SheetPopUpWindow.createSheetPopUpWindow(context,data,linstener);
+    public static SheetPopUpWindow createSheetPopUpWindow(Context context, List<String> data,
+                                                          SheetPopUpWindow.OnItemSelectListener listener){
+        SheetPopUpWindow popUpWindow =SheetPopUpWindow.createSheetPopUpWindow(context,data,listener);
         return popUpWindow;
     }
 

@@ -18,17 +18,17 @@ public class DeviceBean implements Serializable {
     private Long id;
     private String name;
     private String host;
-    private String pavilionId;
+    private PavilionBean pavilion;
     private String startTime;
 
     public DeviceBean() {
     }
 
-    public DeviceBean(Long id, String name, String host, String pavilionId, String startTime) {
+    public DeviceBean(Long id, String name, String host, PavilionBean pavilion, String startTime) {
         this.id = id;
         this.name = name;
         this.host = host;
-        this.pavilionId = pavilionId;
+        this.pavilion = pavilion;
         this.startTime = startTime;
     }
 
@@ -56,12 +56,12 @@ public class DeviceBean implements Serializable {
         this.host = host;
     }
 
-    public String getPavilionId() {
-        return pavilionId;
+    public PavilionBean getPavilionBean() {
+        return pavilion;
     }
 
-    public void setPavilionId(String pavilionId) {
-        this.pavilionId = pavilionId;
+    public void setPavilionBean(PavilionBean pavilion) {
+        this.pavilion = pavilion;
     }
 
     public String getStartTime() {

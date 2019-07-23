@@ -76,4 +76,15 @@ public class PavilionPresenter implements PavilionContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
+    public Observable updatePavilion(PavilionBean pavilionBean) {
+        return RetrofitUtils
+                .getInterface(Constants.getServerUrl(),iView,
+                        PavilionContract.Model.class)
+                .updatePavilion(pavilionBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 }

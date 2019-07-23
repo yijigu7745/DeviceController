@@ -18,6 +18,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ImmersionBar mImmersionBar;
     private ToolBarHelper mToolBarHelper ;
     public Toolbar toolbar;
+    private static BaseActivity mForegroundActivity = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +49,16 @@ public abstract class BaseActivity extends AppCompatActivity {
             mImmersionBar.statusBarColor(color);
         }
         mImmersionBar.init();
+    }
+
+    @Override
+    protected void onResume() {
+        mForegroundActivity = this;
+        super.onResume();
+    }
+
+    public static BaseActivity getCurrentActivity(){
+        return mForegroundActivity;
     }
 
     @Override

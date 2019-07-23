@@ -10,6 +10,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -56,6 +57,14 @@ public interface PavilionContract {
          */
         @GET("/pavilion/name")
         Observable<ResultModel<List<PavilionBean>>> selectPavilionListByName(@Query("name") String name);
+
+        /**
+         * 修改警银亭所属区域
+         * @param pavilionBean
+         * @return
+         */
+        @PUT("/pavilion/area")
+        Observable<ResultModel<Void>> updatePavilion(@Body PavilionBean pavilionBean);
     }
 
     interface View {
@@ -95,5 +104,12 @@ public interface PavilionContract {
          * @return
          */
         Observable deletePavilion(Long pavilionId);
+
+        /**
+         * 修改警银亭所属区域
+         * @param pavilionBean
+         * @return
+         */
+        Observable updatePavilion(PavilionBean pavilionBean);
     }
 }

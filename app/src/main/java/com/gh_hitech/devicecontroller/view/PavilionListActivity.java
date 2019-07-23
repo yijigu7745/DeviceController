@@ -2,24 +2,27 @@ package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gh_hitech.devicecontroller.R;
-import com.gh_hitech.devicecontroller.adapter.CommonAdaptor;
+import com.gh_hitech.devicecontroller.adapter.PavilionRecyclerAdapter;
 import com.gh_hitech.devicecontroller.base.BaseActivity;
-import com.gh_hitech.devicecontroller.holder.BaseHolder;
-import com.gh_hitech.devicecontroller.holder.PavilionListHolder;
+import com.gh_hitech.devicecontroller.dialog.CheckboxDialog;
+import com.gh_hitech.devicecontroller.model.AreaBean;
+import com.gh_hitech.devicecontroller.model.IBaseName;
 import com.gh_hitech.devicecontroller.model.PavilionBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
+import com.gh_hitech.devicecontroller.presenter.AreaPresenter;
 import com.gh_hitech.devicecontroller.presenter.PavilionPresenter;
 import com.gh_hitech.devicecontroller.ui.DialogFactory;
 import com.gh_hitech.devicecontroller.ui.SheetPopUpWindow;
@@ -31,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.com.yijigu.rxnetwork.utils.StringUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
 
 /**
@@ -39,15 +43,19 @@ import cn.com.yijigu.rxnetwork.view.IView;
  */
 public class PavilionListActivity extends BaseActivity implements IView, SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.gridview_1)
-    GridView gridView;
+    private static final String TAG = "PavilionListActivity";
+    @BindView(R.id.recycler_1)
+    RecyclerView recyclerView;
     @BindView(R.id.reload_data)
     SwipeRefreshLayout swipeRefreshLayout;
-    private CommonAdaptor<PavilionBean> pavilionListAdaptor;
+    PavilionRecyclerAdapter pavilionRecyclerAdapter;
     List<PavilionBean> pavilionList = new ArrayList<>();
     SweetDialog sweetDialog;
     private Context context;
     PavilionPresenter pavilionPresenter;
+    AreaPresenter areaPresenter;
+    List<AreaBean> areaList = new ArrayList<>();
+    private long selectAreaId;
     private int selectPosition = -1;
 
     private TextView tvTitle;
@@ -58,19 +66,14 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     @Override
     public void onCreateCustomToolBar(Toolbar toolbar) {
         super.onCreateCustomToolBar(toolbar);
-
         getLayoutInflater().inflate(R.layout.toobar_layout, toolbar);
-
         //设置回退按钮
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
-
         // toolbar返回事件
         toolbar.setNavigationOnClickListener(view -> PavilionListActivity.this.finish());
-
         // 设置标题
         tvTitle = toolbar.findViewById(R.id.tv_title);
         tvTitle.setText("警银亭管理");
-
         // 右键点击
         layoutRight = toolbar.findViewById(R.id.right_layout);
         layoutRight.setVisibility(View.GONE);
@@ -84,6 +87,7 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         ButterKnife.bind(this);
         context = this;
         pavilionPresenter = new PavilionPresenter(this);
+        areaPresenter = new AreaPresenter(this);
         sweetDialog = SweetDialog.builder(this);
         init();
         register();
@@ -91,44 +95,21 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
 
     private void register() {
         swipeRefreshLayout.setOnRefreshListener(this);
-        //GridView与SwipeRefreshLayout下拉冲突解决
-        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-
-                    }
-
-                    @Override
-                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                        if (view.getCheckedItemPosition() == 0) {
-
-                        } else {
-                            swipeRefreshLayout.setEnabled(false);
-                        }
-                        if (firstVisibleItem == 0) {
-                            View firstVisibleItemView = gridView.getChildAt(0);
-                            if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
-                                swipeRefreshLayout.setEnabled(true);
-                            } else {
-                                swipeRefreshLayout.setEnabled(false);
-                            }
-                        } else {
-                            swipeRefreshLayout.setEnabled(false);
-                        }
-
-                        // 判断滚动到底部
-                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-
-                        }
-                    }
-                });
-
         final List<String> menu = new ArrayList<>();
-        menu.add("");
-        popUpWindow = DialogFactory.createTimeSelectDialog(context,menu,(pos,value)->{
+        menu.add("添加控制器");
+        menu.add("修改区域分组");
+        menu.add("删除警银亭");
+        popUpWindow = DialogFactory.createSheetPopUpWindow(context,menu,(pos,value)->{
             switch(value){
-                case "":
+                case "添加控制器":
+                    Intent intent = new Intent(this,AddDeviceActivity.class);
+                    startActivity(intent);
+                    break;
+                case "修改区域分组":
+                    selectAreaDialog();
+                    break;
+                case "删除警银亭":
+                    deleteConfirm();
                     break;
                     default:
             }
@@ -136,26 +117,15 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     }
 
     private void init() {
-        pavilionListAdaptor = new CommonAdaptor<PavilionBean>(gridView,pavilionList) {
-            @Override
-            protected BaseHolder getHolder() {
-                return new PavilionListHolder(context);
-            }
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            }
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                selectPosition = position;
-                deleteConfirm();
-                return super.onItemLongClick(parent, view, position, id);
-            }
-
-        };
-        gridView.setNumColumns(2);
-        gridView.setAdapter(pavilionListAdaptor);
+        pavilionRecyclerAdapter = new PavilionRecyclerAdapter(this, pavilionList,
+                (id, position) -> {
+                    selectPosition = position;
+                    popUpWindow.showAtLocation(getCurrentActivity()
+                            .findViewById(R.id.pavilion_list),
+                            Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        });
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(pavilionRecyclerAdapter);
     }
 
     private void deleteConfirm() {
@@ -181,21 +151,70 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
                 .subscribe(resultModel -> {
                             pavilionList.clear();
                             pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
-                            pavilionListAdaptor.notifyDataSetChanged();
+                            pavilionRecyclerAdapter.notifyDataSetChanged();
                             sweetDialog.close();
                             ToastUtils.longTimeText(context,"加载成功");
                             swipeRefreshLayout.setRefreshing(false);
                         },error ->{
-                            sweetDialog.error("加载失败!").show();
+                            sweetDialog.error("加载警银亭列表失败!").show();
+                            Log.e(TAG, "loadData: "+error);
                             swipeRefreshLayout.setRefreshing(false);
                         }
                 );
+        areaPresenter.getAreaListByParentCodeLike("3501")
+                .subscribe(resultModel ->{
+                    areaList.clear();
+                    areaList.addAll(((ResultModel<List<AreaBean>>)resultModel).getData());
+                },error -> {
+                    sweetDialog.error("加载区域失败!").show();
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadData();
+    }
+
+    private void selectAreaDialog(){
+        List<IBaseName> area = new ArrayList<>();
+        area.addAll(areaList);
+        final CheckboxDialog checkboxDialog = new CheckboxDialog(context);
+        checkboxDialog.setSingleListBean(area,selectAreaId);
+        checkboxDialog.setOnButtonClickListener(new CheckboxDialog.OnButtonClickListener() {
+            @Override
+            public void onConfirmationClick() {
+                checkboxDialog.setConfirmation();
+                if(StringUtils.isNotBlank(checkboxDialog.getId())) {
+                    selectAreaId = Long.parseLong(checkboxDialog.getId());
+                }
+                updatePavilionArea();
+            }
+
+            @Override
+            public void onCancelClick() {
+
+            }
+        });
+        checkboxDialog.show();
+    }
+
+    private void updatePavilionArea(){
+        if(areaList != null){
+            for (AreaBean areaBean:areaList) {
+                if(areaBean.getIid().longValue() == selectAreaId){
+                    PavilionBean pavilionBean = pavilionList.get(selectPosition);
+                    pavilionBean.setPavilionArea(areaBean);
+                    pavilionPresenter.updatePavilion(pavilionBean)
+                            .subscribe(resultModel ->{
+                                sweetDialog.success("修改成功").show();
+                                loadData();
+                            },error ->{
+                                sweetDialog.success("修改失败").show();
+                            });
+                }
+            }
+        }
     }
 
     @Override

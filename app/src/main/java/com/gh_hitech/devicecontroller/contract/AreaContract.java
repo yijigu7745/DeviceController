@@ -30,7 +30,7 @@ public interface AreaContract {
          * @return
          */
         @GET("/area/{code}")
-        Observable<ResultModel<List<AreaBean>>> getAreaListByAreaCode(@Path("code") String areaCode);
+        Observable<ResultModel<AreaBean>> getAreaByAreaCode(@Path("code") String areaCode);
 
         /**
          * 模糊查询区域列表
@@ -56,7 +56,7 @@ public interface AreaContract {
          * @param areaCode
          * @return
          */
-        Observable getAreaListByAreaCode(String areaCode);
+        Observable getAreaByAreaCode(String areaCode);
 
         /**
          * 模糊查询区域列表

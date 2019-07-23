@@ -1,10 +1,12 @@
 package com.gh_hitech.devicecontroller.adapter;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.gh_hitech.devicecontroller.holder.BaseHolder;
@@ -14,11 +16,12 @@ import java.util.List;
 /**
  * @author yijigu
  */
-public abstract class CommonAdaptor<Data> extends BaseAdapter implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public abstract class GridViewAdaptor<Data> extends BaseAdapter implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+    private static final String TAG = "GridViewAdaptor";
     protected List<Data> mDatas;
     private AbsListView mListView;
 
-    public CommonAdaptor(AbsListView listView, List<Data> mDatas) {
+    public GridViewAdaptor(AbsListView listView, List<Data> mDatas) {
         this.mDatas = mDatas;
         mListView = listView;
         if (null != listView) {
@@ -62,6 +65,10 @@ public abstract class CommonAdaptor<Data> extends BaseAdapter implements Adapter
         } else {
             holder = getHolder();
         }
+        Log.e(TAG, "position："+position+"   getMeasuredHeight: "
+                +mListView.getMeasuredHeight()+"    getMeasuredHeightAndState："
+                +mListView.getMeasuredHeightAndState() +"   holderHeight："
+                +holder);
         holder.setPosition(position);
         holder.setData(mDatas.get(position));
         return holder.getRootView();

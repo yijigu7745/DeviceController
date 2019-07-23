@@ -1,9 +1,11 @@
 package com.gh_hitech.devicecontroller.model;
 
+import cn.com.yijigu.rxnetwork.utils.StringUtils;
+
 /**
  * @author yijigu
  */
-public class AreaBean {
+public class AreaBean extends IBaseName{
 
     /**
      * id : 1
@@ -17,7 +19,7 @@ public class AreaBean {
     private String province;
     private String city;
     private String district;
-    private Object areaCode;
+    private String areaCode;
 
     public int getId() {
         return id;
@@ -51,11 +53,41 @@ public class AreaBean {
         this.district = district;
     }
 
-    public Object getAreaCode() {
+    public String getAreaCode() {
         return areaCode;
     }
 
-    public void setAreaCode(Object areaCode) {
+    public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    @Override
+    public String getIName() {
+        if(StringUtils.isNotBlank(getDistrict())){
+            return getDistrict();
+        }else if(StringUtils.isNotBlank(getCity())){
+            return getCity();
+        }else if(StringUtils.isNotBlank(getProvince())){
+            return getProvince();
+        }else{
+            return "错误的地区";
+        }
+    }
+
+    public String getAreaName(){
+        if(StringUtils.isNotBlank(getDistrict())){
+            return getDistrict();
+        }else if(StringUtils.isNotBlank(getCity())){
+            return getCity();
+        }else if(StringUtils.isNotBlank(getProvince())){
+            return getProvince();
+        }else{
+            return "错误的地区";
+        }
+    }
+
+    @Override
+    public Long getIid() {
+        return new Long((long)id);
     }
 }

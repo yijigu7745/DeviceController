@@ -13,6 +13,15 @@ public class PavilionBean extends IBaseName {
     private Long id;
     private String name;
     private String address;
+    private AreaBean administrative;
+
+    public AreaBean getPavilionArea() {
+        return administrative;
+    }
+
+    public void setPavilionArea(AreaBean pavilionArea) {
+        this.administrative = pavilionArea;
+    }
 
     public Long getId() {
         return id;

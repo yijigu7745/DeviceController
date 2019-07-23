@@ -47,11 +47,11 @@ public class AreaPresenter implements AreaContract.Presenter {
     }
 
     @Override
-    public Observable getAreaListByAreaCode(String areaCode) {
+    public Observable getAreaByAreaCode(String areaCode) {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, AreaContract.Model.class)
-                .getAreaListByAreaCode(areaCode)
+                .getAreaByAreaCode(areaCode)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

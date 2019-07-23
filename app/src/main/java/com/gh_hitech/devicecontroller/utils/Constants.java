@@ -4,8 +4,8 @@ package com.gh_hitech.devicecontroller.utils;
  * @author yijigu
  */
 public class Constants {
-    public static final String TEST_SERVER_URL = "http://192.168.1.164:3001";
-//    public static final String TEST_SERVER_URL = "http://192.168.1.205:3001";
+//    public static final String TEST_SERVER_URL = "http://192.168.1.164:3001";
+    public static final String TEST_SERVER_URL = "http://192.168.1.205:3001";
     public static final String RELEASE_SERVER_URL = "http://47.107.181.229:3001";
     public static final boolean TEST_MODE = true;
     public static final Long NO_KIOSK = -1L;

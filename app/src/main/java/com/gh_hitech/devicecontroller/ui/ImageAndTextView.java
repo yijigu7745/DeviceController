@@ -116,7 +116,6 @@ public class ImageAndTextView extends View {
         mPaint.setColor(mTextColor);
         mPaint.setTextSize(mTextSize);
         mPaint.setStyle(Paint.Style.FILL);
-//        canvas.drawText(mText,mWidth/2-textRect.width()/2,mHeight/2-getPaddingBottom()-SPACING/2,mPaint);
         canvas.drawText(mText,mWidth/2-textRect.width()/2,(textRect.height()+SPACING)*2+mImage.getHeight(),mPaint);
 
         imageRect.left = mWidth/2-mImage.getWidth()/2;

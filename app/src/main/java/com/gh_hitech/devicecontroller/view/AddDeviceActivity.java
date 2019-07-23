@@ -156,7 +156,7 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                     return;
                 }
                 deviceBean.setName(etDeviceName2.getText().toString());
-                deviceBean.setPavilionId(pavilionBean.getId()+"");
+                deviceBean.setPavilionBean(pavilionBean);
                 sweetDialog.progress("正在加载...").show();
                 addPresenter.addDevice(deviceBean)
                         .subscribe(resultModel -> {

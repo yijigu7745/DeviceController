@@ -20,6 +20,7 @@ import cn.com.yijigu.rxnetwork.utils.StringUtils;
 public class PavilionListHolder extends BaseHolder<PavilionBean> {
 
     @BindView(R.id.pavilion_name) TextView pavilionName;
+    @BindView(R.id.pavilion_area) TextView pavilionArea;
     @BindView(R.id.switchButton)
     ImageView deviceStatus;
 
@@ -44,6 +45,12 @@ public class PavilionListHolder extends BaseHolder<PavilionBean> {
             pavilionName.setText("警银亭： "+mData.getName());
         }else{
             pavilionName.setVisibility(View.GONE);
+        }
+        if(mData.getPavilionArea() != null && StringUtils.isNotBlank(mData.getPavilionArea().getAreaName())){
+            pavilionArea.setVisibility(View.VISIBLE);
+            pavilionArea.setText("所属区域： "+mData.getPavilionArea().getAreaName());
+        }else{
+            pavilionArea.setVisibility(View.GONE);
         }
     }
 }
