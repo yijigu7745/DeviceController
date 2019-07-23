@@ -10,18 +10,12 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gh_hitech.devicecontroller.R;
 import com.gh_hitech.devicecontroller.adapter.AreaRecyclerAdapter;
-import com.gh_hitech.devicecontroller.adapter.CommonAdaptor;
 import com.gh_hitech.devicecontroller.base.BaseActivity;
-import com.gh_hitech.devicecontroller.holder.AreaListHolder;
-import com.gh_hitech.devicecontroller.holder.BaseHolder;
 import com.gh_hitech.devicecontroller.model.AreaBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.AreaPresenter;
@@ -36,8 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.com.yijigu.rxnetwork.view.IView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 区域管理
@@ -53,7 +45,6 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
     private TextView tvTitle;
     private RelativeLayout layoutRight;
 
-    private CommonAdaptor<AreaBean> areaListAdaptor;
     AreaRecyclerAdapter areaRecyclerAdapter;
     List<AreaBean> areaList = new ArrayList<>();
     SweetDialog sweetDialog;
