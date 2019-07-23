@@ -281,9 +281,15 @@ public class CheckboxDialog extends Dialog {
 
 
     public interface OnButtonClickListener {
-        public void onConfirmationClick();
+        /**
+         * 确定按钮
+         */
+        void onConfirmationClick();
 
-        public void onCancelClick();
+        /**
+         * 取消按钮
+         */
+        void onCancelClick();
     }
 
 }

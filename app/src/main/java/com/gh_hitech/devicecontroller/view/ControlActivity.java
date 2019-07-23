@@ -1,8 +1,11 @@
 package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -21,6 +25,7 @@ import com.gh_hitech.devicecontroller.model.CommandBean;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DeviceCommandPresenter;
+import com.gh_hitech.devicecontroller.ui.ConfirmationDialog;
 import com.gh_hitech.devicecontroller.ui.SwitchButton;
 import com.gh_hitech.devicecontroller.utils.ArrayUtils;
 import com.gh_hitech.devicecontroller.utils.Constants;
@@ -28,15 +33,11 @@ import com.gh_hitech.devicecontroller.utils.DecodeByteArrayUtils;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
 
 import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.com.yijigu.rxnetwork.utils.StringUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 
 /**
  * 控制面板
@@ -103,34 +104,57 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     private String[] lineDesc;
     private DeviceBean deviceBean;
     private int selectLine = -1;
-
+    private String deviceTime;
+    ConfirmationDialog confirmationDialog;
     private DeviceCommandPresenter commandPresenter;
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
+    private ImageView imageView;
 
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreateCustomToolBar(Toolbar toolbar) {
         super.onCreateCustomToolBar(toolbar);
-
         getLayoutInflater().inflate(R.layout.toobar_layout, toolbar);
-
         //设置回退按钮
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
-
         // toolbar返回事件
         toolbar.setNavigationOnClickListener(view -> ControlActivity.this.finish());
-
         // 设置标题
         tvTitle = toolbar.findViewById(R.id.tv_title);
         tvTitle.setText("控制面板");
-
         // 右键点击
         layoutRight = toolbar.findViewById(R.id.right_layout);
+        imageView = toolbar.findViewById(R.id.iv_add);
         layoutRight.setVisibility(View.GONE);
-
     }
+
+    final Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
+
+    final Runnable runnable = () -> {
+        CommandBean commandBean = new CommandBean();
+        StringBuilder commandContent = new StringBuilder();
+        commandBean.setCommand(commandContent.append(Command.READTIME.getCommand()).toString());
+        commandBean.setDeviceName(deviceBean.getName());
+        commandPresenter.getDeviceTime(commandBean)
+                .subscribe(resultModel -> {
+                    String result = ((ResultModel<String>) resultModel).getData();
+                    Log.e(TAG, "getDeviceLineStatus: " + result.trim());
+                    deviceTime = refreshTime(result);
+                    confirmationDialog.setContentText(deviceTime);
+                }, error -> {
+                    Log.e(TAG, "getDeviceLineStatus: " + error);
+                    sweetDialog.error("加载失败!").show();
+                    btnGetTime.setClickable(true);
+                });
+        handler.postDelayed(this.runnable,1000);
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +169,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
 
     private void init() {
         Intent intent = getIntent();
+        confirmationDialog = new ConfirmationDialog(this);
         Serializable serializable = intent.getSerializableExtra("deviceBean");
         deviceBean = ((DeviceBean) serializable);
         tvName.setText(deviceBean.getName()+getString(R.string.linestatus));
@@ -290,27 +315,33 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     }
 
     private void getTime() {
-        CommandBean commandBean = new CommandBean();
-        StringBuilder commandContent = new StringBuilder();
-        commandBean.setCommand(commandContent.append(Command.READTIME.getCommand()).toString());
-        commandBean.setDeviceName(deviceBean.getName());
-        commandPresenter.getDeviceTime(commandBean)
-                .subscribe(resultModel -> {
-                    String result = ((ResultModel<String>) resultModel).getData();
-                    Log.e(TAG, "getDeviceLineStatus: " + result.trim());
-                    refreshTime(result);
-                }, error -> {
-                    Log.e(TAG, "getDeviceLineStatus: " + error);
-                    sweetDialog.error("加载失败!").show();
-                    btnGetTime.setClickable(true);
-                });
+        handler.postDelayed(runnable,1000);
+        confirmationDialog.setType(ConfirmationDialog.ConfirmationType.Simple);
+        confirmationDialog.setTitle("设备时间");
+        confirmationDialog.setOnButtonClickListener(
+                new ConfirmationDialog.OnButtonClickListener() {
+            @Override
+            public void onConfirmationClick() {
+                btnGetTime.setClickable(true);
+                handler.removeCallbacks(runnable);
+            }
+
+            @Override
+            public void onCancelClick() {
+
+            }
+        });
+        confirmationDialog.setOnDismissListener(listener -> {
+            btnGetTime.setClickable(true);
+            handler.removeCallbacks(runnable);
+        });
+        confirmationDialog.show();
     }
 
-    private void refreshTime(String content) {
+    private String refreshTime(String content) {
         content = content.replace("rt:","");
         String time = DecodeByteArrayUtils.decodeTime(content.getBytes());
-        tvTime.setText(time);
-        btnGetTime.setClickable(true);
+        return time;
     }
 
     private void delaySwitch() {
@@ -426,6 +457,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        handler.removeCallbacks(runnable);
         sweetDialog.close();
     }
 

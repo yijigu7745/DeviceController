@@ -50,7 +50,6 @@ public class ConfirmationDialog extends Dialog {
         this.context = context;
         setContentView(R.layout.confirmation_dialog);
         initLayout();
-        setCanceledOnTouchOutside(true);
     }
 
     @Override
@@ -156,7 +155,7 @@ public class ConfirmationDialog extends Dialog {
         setOnDismissListener(dialogInterface -> {
             if (isCancel) {
                 if (listener != null) {
-                    listener.onCanelClick();
+                    listener.onCancelClick();
                 }
             } else {
                 if (listener != null) {
@@ -219,8 +218,15 @@ public class ConfirmationDialog extends Dialog {
 
 
     public interface OnButtonClickListener{
+        /**
+         * 确定按钮
+         */
         void onConfirmationClick();
-        void onCanelClick();
+
+        /**
+         * 取消按钮
+         */
+        void onCancelClick();
     }
 
 }
