@@ -2,6 +2,7 @@ package com.gh_hitech.devicecontroller.presenter;
 
 import com.gh_hitech.devicecontroller.contract.DeviceContract;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.DeviceSwitchDesc;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.utils.Constants;
 
@@ -63,6 +64,39 @@ public class DevicePresenter implements DeviceContract.Presenter {
                 Constants.getServerUrl(),
                 iView, DeviceContract.Model.class)
                 .updateDevice(deviceBean)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable getDeviceSwitchDesc(Long id) {
+        return RetrofitUtils.getInterface(
+                Constants.getServerUrl(),
+                iView, DeviceContract.Model.class)
+                .getDeviceSwitchDesc(id)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable addDeviceSwitchDesc(DeviceSwitchDesc deviceSwitchDesc) {
+        return RetrofitUtils.getInterface(
+                Constants.getServerUrl(),
+                iView, DeviceContract.Model.class)
+                .addDeviceSwitchDesc(deviceSwitchDesc)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable updateDeviceSwitchDesc(Long id, DeviceSwitchDesc deviceSwitchDesc) {
+        return RetrofitUtils.getInterface(
+                Constants.getServerUrl(),
+                iView, DeviceContract.Model.class)
+                .updateDeviceSwitchDesc(id,deviceSwitchDesc)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -30,7 +30,7 @@
         android:text="@string/tv_manager_device"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/pavilion_manage"
-        app:layout_constraintEnd_toStartOf="@+id/other_manage"
+        app:layout_constraintEnd_toStartOf="@+id/area_manage"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/pavilion_manage"
         app:layout_constraintTop_toTopOf="@+id/pavilion_manage"
@@ -38,12 +38,13 @@
         />
 
     <TextView
-        android:id="@+id/other_manage"
+        android:id="@+id/area_manage"
         android:layout_width="@dimen/image_button_size"
         android:layout_height="@dimen/image_button_size"
-        android:drawableTop="@drawable/other"
+
+        android:drawableTop="@drawable/quyuguanli"
         android:gravity="center"
-        android:text="@string/tv_other"
+        android:text="@string/tv_manage_area"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@+id/device_manage"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,14 +62,15 @@
         app:layout_constraintTop_toBottomOf="@+id/pavilion_manage"/>
 
     <TextView
-        android:id="@+id/area_manage"
+        android:id="@+id/other_manage"
         android:layout_width="@dimen/image_button_size"
         android:layout_height="@dimen/image_button_size"
         android:layout_marginTop="24dp"
-        android:drawableTop="@drawable/quyuguanli"
+        android:drawableTop="@drawable/other"
         android:gravity="center"
-        android:text="@string/tv_manage_area"
+        android:text="@string/tv_other"
         android:textColor="@color/black"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/pavilion_manage"
         app:layout_constraintStart_toStartOf="@+id/pavilion_manage"
         app:layout_constraintTop_toBottomOf="@+id/view2"/>

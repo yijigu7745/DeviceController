@@ -174,7 +174,6 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
                             swipeRefreshLayout.setRefreshing(false);
                         },error ->{
                             sweetDialog.error("加载警银亭列表失败!").show();
-                            Log.e(TAG, "loadData: "+error+" areaBean:"+areaFromIntent +"    areaBean:"+(StringUtils.isNotBlank(areaFromIntent.getAreaName())? "null":areaFromIntent.getAreaName()));
                             swipeRefreshLayout.setRefreshing(false);
                         }
                 );

@@ -7,6 +7,9 @@ import android.view.View;
 
 import java.util.List;
 
+/**
+ * @author yijigu
+ */
 public class DialogFactory {
 
 

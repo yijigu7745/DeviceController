@@ -70,4 +70,8 @@
     <string name="tv_manage_area">区域管理</string>
     <string name="pavilion_list">警银亭列表</string>
     <string name="area_list">区域列表</string>
+    <string name="dialog_title">请输入开关描述</string>
+    <string name="dialog_edit_hint">开关描述</string>
+    <string name="dialog_confirm">确定</string>
+    <string name="dialog_cancel">取消</string>
 </resources>

@@ -36,6 +36,7 @@ public class SwitchButton extends FrameLayout implements Checkable {
     private Context mContext;
 
     private OnCheckedChangeListener mOnCheckedChangeListener;
+    private OnLongClickListener mOnLongClickListener;
     private boolean mChecked;
     private int mDrawableResource;
 
@@ -58,10 +59,16 @@ public class SwitchButton extends FrameLayout implements Checkable {
 
     private void initAndRegister() {
         linearButton.setOnClickListener(onClickListener -> mOnCheckedChangeListener.onCheckedChange(this,mChecked));
+        linearButton.setOnLongClickListener(onLongClickListener -> mOnLongClickListener.onLongClick(this));
     }
 
     public void setOnCheckedChangeListener(OnCheckedChangeListener onClickListener){
         mOnCheckedChangeListener = onClickListener;
+    }
+
+    @Override
+    public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
+        this.mOnLongClickListener = onLongClickListener;
     }
 
     @Override

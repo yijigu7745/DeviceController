@@ -1,6 +1,7 @@
 package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,14 +24,18 @@ import com.gh_hitech.devicecontroller.base.BaseActivity;
 import com.gh_hitech.devicecontroller.model.Command;
 import com.gh_hitech.devicecontroller.model.CommandBean;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.DeviceSwitchDesc;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DeviceCommandPresenter;
+import com.gh_hitech.devicecontroller.presenter.DevicePresenter;
 import com.gh_hitech.devicecontroller.ui.ConfirmationDialog;
+import com.gh_hitech.devicecontroller.ui.EditDialog;
 import com.gh_hitech.devicecontroller.ui.SwitchButton;
 import com.gh_hitech.devicecontroller.utils.ArrayUtils;
 import com.gh_hitech.devicecontroller.utils.Constants;
 import com.gh_hitech.devicecontroller.utils.DecodeByteArrayUtils;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
+import com.gh_hitech.devicecontroller.utils.ToastUtils;
 
 import java.io.Serializable;
 
@@ -44,7 +49,7 @@ import cn.com.yijigu.rxnetwork.view.IView;
  * @author yijigu
  */
 public class ControlActivity extends BaseActivity implements IView, SwitchButton.OnCheckedChangeListener,
-        View.OnClickListener {
+        View.OnClickListener, View.OnLongClickListener {
 
     private final static String TAG = "ControlActivity";
     private final static int LINE_1 = 1;
@@ -101,16 +106,21 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     /**
      * 控制器开关描述
      */
-    private String[] lineDesc;
+    private String[] lineDesc = new String[]{"","","","","","","",""};
+    private String[] lineDescFromServer = new String[]{"","","","","","","",""};
+    private DeviceSwitchDesc deviceSwitchDescFromServer;
     private DeviceBean deviceBean;
     private int selectLine = -1;
     private String deviceTime;
     ConfirmationDialog confirmationDialog;
     private DeviceCommandPresenter commandPresenter;
+    private DevicePresenter devicePresenter;
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
     private ImageView imageView;
+    private EditDialog editDialog;
+    private Context context;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -153,7 +163,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                     sweetDialog.error("加载失败!").show();
                     btnGetTime.setClickable(true);
                 });
-        handler.postDelayed(this.runnable,1000);
+        handler.postDelayed(this.runnable,10000);
     };
 
     @Override
@@ -162,18 +172,20 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         setContentView(R.layout.activity_control);
         ButterKnife.bind(this);
         sweetDialog = SweetDialog.builder(this);
+        context = this;
         init();
         register();
-        getDeviceLineStatus();
     }
 
     private void init() {
         Intent intent = getIntent();
+        editDialog = new EditDialog(this);
         confirmationDialog = new ConfirmationDialog(this);
         Serializable serializable = intent.getSerializableExtra("deviceBean");
         deviceBean = ((DeviceBean) serializable);
         tvName.setText(deviceBean.getName()+getString(R.string.linestatus));
         commandPresenter = new DeviceCommandPresenter(this);
+        devicePresenter = new DevicePresenter(this);
         final String[] spinnerItems = {"请选择","1","2","3","4","5","6","7","8"};
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,spinnerItems);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -192,6 +204,14 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         switch6.setOnCheckedChangeListener(this);
         switch7.setOnCheckedChangeListener(this);
         switch8.setOnCheckedChangeListener(this);
+        switch1.setOnLongClickListener(this);
+        switch2.setOnLongClickListener(this);
+        switch3.setOnLongClickListener(this);
+        switch4.setOnLongClickListener(this);
+        switch5.setOnLongClickListener(this);
+        switch6.setOnLongClickListener(this);
+        switch7.setOnLongClickListener(this);
+        switch8.setOnLongClickListener(this);
         lineSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -220,17 +240,20 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                         sweetDialog.error("加载失败或设备不在线!").show();
                     });
         }
-        if(Constants.TEST_MODE){
-            lineDesc = new String[]{
-                    "开关1",
-                    "开关2",
-                    "开关3",
-                    "开关4",
-                    "开关5",
-                    "开关6",
-                    "开关7",
-                    "开关8"
-            };
+    }
+
+    private void getDeviceSwitchDesc(){
+        if(deviceBean != null){
+            devicePresenter.getDeviceSwitchDesc(deviceBean.getId())
+                    .subscribe(resultModel -> {
+                        deviceSwitchDescFromServer = ((ResultModel<DeviceSwitchDesc>)resultModel).getData();
+                        if(deviceSwitchDescFromServer != null) {
+                            initSwitchDesc(deviceSwitchDescFromServer.getSwitchDesc());
+                        }
+                    },error ->{
+                        Log.e(TAG, "getDeviceSwitchDesc: " + error);
+                        sweetDialog.error("加载设备开关描述失败!").show();
+                    });
         }
     }
 
@@ -259,15 +282,20 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         switch6.setChecked(lineStatusDevice[5] == SWITCH_CHECKED);
         switch7.setChecked(lineStatusDevice[6] == SWITCH_CHECKED);
         switch8.setChecked(lineStatusDevice[7] == SWITCH_CHECKED);
-        switch1.setButtonDesc(lineDesc[0]);
-        switch2.setButtonDesc(lineDesc[1]);
-        switch3.setButtonDesc(lineDesc[2]);
-        switch4.setButtonDesc(lineDesc[3]);
-        switch5.setButtonDesc(lineDesc[4]);
-        switch6.setButtonDesc(lineDesc[5]);
-        switch7.setButtonDesc(lineDesc[6]);
-        switch8.setButtonDesc(lineDesc[7]);
         ArrayUtils.copyIntArray(lineStatusDevice, lineStatusLocal);
+    }
+
+    private void initSwitchDesc(String lineDescString) {
+        String [] lineDescTemp = lineDescString.split(",");
+        ArrayUtils.copyStringArray(lineDescTemp, lineDescFromServer);
+        switch1.setButtonDesc(lineDescTemp[0]);
+        switch2.setButtonDesc(lineDescTemp[1]);
+        switch3.setButtonDesc(lineDescTemp[2]);
+        switch4.setButtonDesc(lineDescTemp[3]);
+        switch5.setButtonDesc(lineDescTemp[4]);
+        switch6.setButtonDesc(lineDescTemp[5]);
+        switch7.setButtonDesc(lineDescTemp[6]);
+        switch8.setButtonDesc(lineDescTemp[7]);
     }
 
     @Override
@@ -315,7 +343,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     }
 
     private void getTime() {
-        handler.postDelayed(runnable,1000);
+        handler.postDelayed(runnable,10000);
         confirmationDialog.setType(ConfirmationDialog.ConfirmationType.Simple);
         confirmationDialog.setTitle("设备时间");
         confirmationDialog.setOnButtonClickListener(
@@ -452,6 +480,8 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     @Override
     protected void onResume() {
         super.onResume();
+        getDeviceLineStatus();
+        getDeviceSwitchDesc();
     }
 
     @Override
@@ -461,4 +491,103 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         sweetDialog.close();
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()){
+            case R.id.switch1:
+                changeSwitchDesc(LINE_1);
+                break;
+            case R.id.switch2:
+                changeSwitchDesc(LINE_2);
+                break;
+            case R.id.switch3:
+                changeSwitchDesc(LINE_3);
+                break;
+            case R.id.switch4:
+                changeSwitchDesc(LINE_4);
+                break;
+            case R.id.switch5:
+                changeSwitchDesc(LINE_5);
+                break;
+            case R.id.switch6:
+                changeSwitchDesc(LINE_6);
+                break;
+            case R.id.switch7:
+                changeSwitchDesc(LINE_7);
+                break;
+            case R.id.switch8:
+                changeSwitchDesc(LINE_8);
+                break;
+                default:
+        }
+        return false;
+    }
+
+    private void changeSwitchDesc(int line) {
+        if(StringUtils.isNotBlank(lineDescFromServer[line-1])){
+            editDialog.setText(lineDescFromServer[line-1]);
+        }
+        editDialog.setOnButtonClickListener(new EditDialog.OnButtonClickListener() {
+            @Override
+            public void onConfirmClick() {
+                if(StringUtils.isNotBlank(editDialog.getText())){
+                    lineDesc[line -1] = editDialog.getText();
+                }
+                updateButtonDesc();
+                editDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelClick() {
+                editDialog.dismiss();
+            }
+        });
+        editDialog.show();
+    }
+
+    private void updateButtonDesc() {
+        StringBuilder buttonDescString = new StringBuilder();
+        for (int i = 0; i < lineDesc.length; i++) {
+            if(i==lineDesc.length-1){
+                if(StringUtils.isNotBlank(lineDesc[i])) {
+                    buttonDescString.append(lineDesc[i]);
+                }else if(StringUtils.isNotBlank(lineDescFromServer[i])){
+                    buttonDescString.append(lineDescFromServer[i]);
+                }else{
+                    buttonDescString.append("开关描述");
+                }
+            }else{
+                if(StringUtils.isNotBlank(lineDesc[i])) {
+                    buttonDescString.append(lineDesc[i]).append(",");
+                }else if(StringUtils.isNotBlank(lineDescFromServer[i])){
+                    buttonDescString.append(lineDescFromServer[i]).append(",");
+                }else{
+                    buttonDescString.append("开关描述");
+                }
+            }
+        }
+        DeviceSwitchDesc deviceSwitchDesc = new DeviceSwitchDesc();
+        deviceSwitchDesc.setDeviceId(deviceBean.getId().intValue());
+        deviceSwitchDesc.setSwitchDesc(buttonDescString.toString());
+
+        //判断有没有自定义的开关，有则更新，没有则新增
+        if(deviceSwitchDescFromServer != null){
+            deviceSwitchDesc.setId(deviceSwitchDescFromServer.getId());
+            devicePresenter.updateDeviceSwitchDesc(deviceBean.getId(),deviceSwitchDesc)
+                    .subscribe(resultModel ->{
+                        if(((ResultModel<Void>)resultModel).getCode().intValue() == 1){
+                            ToastUtils.longTimeText(context,"修改成功");
+                            getDeviceSwitchDesc();
+                        }
+                    });
+        }else {
+            devicePresenter.addDeviceSwitchDesc(deviceSwitchDesc)
+                    .subscribe(resultModel -> {
+                        if (((ResultModel<Void>) resultModel).getCode().intValue() == 1) {
+                            ToastUtils.longTimeText(context, "修改成功");
+                            getDeviceSwitchDesc();
+                        }
+                    });
+        }
+    }
 }

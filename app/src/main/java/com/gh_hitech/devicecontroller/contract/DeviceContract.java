@@ -1,6 +1,7 @@
 package com.gh_hitech.devicecontroller.contract;
 
 import com.gh_hitech.devicecontroller.model.DeviceBean;
+import com.gh_hitech.devicecontroller.model.DeviceSwitchDesc;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 
 import java.util.List;
@@ -48,6 +49,31 @@ public interface DeviceContract {
          */
         @PUT("/device/{id}")
         Observable<ResultModel<Void>> updateDevice(@Body DeviceBean deviceBean);
+
+        /**
+         * 获取设备开关描述
+         * @param id 设备id
+         * @return
+         */
+        @GET("/device/switchDesc/{id}")
+        Observable<ResultModel<DeviceSwitchDesc>> getDeviceSwitchDesc(@Path("id") Long id);
+
+        /**
+         * 新增设备开关描述
+         * @param deviceSwitchDesc 开关描述
+         * @return
+         */
+        @POST("/device/switchDesc")
+        Observable<ResultModel<Void>> addDeviceSwitchDesc(@Body DeviceSwitchDesc deviceSwitchDesc);
+
+        /**
+         * 更新设备开关描述
+         * @param id 设备id
+         * @param deviceSwitchDesc 开关描述
+         * @return
+         */
+        @PUT("/device/switchDesc/{id}")
+        Observable<ResultModel<Void>> updateDeviceSwitchDesc(@Path("id") Long id,@Body DeviceSwitchDesc deviceSwitchDesc);
     }
 
     interface View {
@@ -80,5 +106,26 @@ public interface DeviceContract {
          * @return
          */
         Observable updateDevice(DeviceBean deviceBean);
+
+        /**
+         * 获取设备开关描述
+         * @return
+         */
+        Observable getDeviceSwitchDesc(Long id);
+
+        /**
+         * 新增设备开关描述
+         * @param deviceSwitchDesc 开关描述
+         * @return
+         */
+        Observable addDeviceSwitchDesc(DeviceSwitchDesc deviceSwitchDesc);
+
+        /**
+         * 更新设备开关描述
+         * @param id 设备id
+         * @param deviceSwitchDesc 开关描述
+         * @return
+         */
+        Observable updateDeviceSwitchDesc(Long id,DeviceSwitchDesc deviceSwitchDesc);
     }
 }
