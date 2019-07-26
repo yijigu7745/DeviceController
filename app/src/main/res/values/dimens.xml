@@ -18,4 +18,10 @@
     <dimen name="spacing_1dp">1dp</dimen>
     <dimen name="image_button_size">72dp</dimen>
     <dimen name="btn_height">48dp</dimen>
+
+
+
+    <dimen name="WheelItemSpace">8dp</dimen>
+    <dimen name="WheelPadding">8dp</dimen>
+    <dimen name="WheelTextSize">20sp</dimen>
 </resources>

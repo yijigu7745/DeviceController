@@ -1,6 +1,7 @@
 package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.presenter.DeviceCommandPresenter;
 import com.gh_hitech.devicecontroller.presenter.DevicePresenter;
 import com.gh_hitech.devicecontroller.ui.ConfirmationDialog;
+import com.gh_hitech.devicecontroller.ui.DialogFactory;
 import com.gh_hitech.devicecontroller.ui.EditDialog;
 import com.gh_hitech.devicecontroller.ui.SwitchButton;
 import com.gh_hitech.devicecontroller.utils.ArrayUtils;
@@ -311,10 +313,13 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                 break;
             case R.id.btn_set_time:
                 btnSetTime.setClickable(false);
-                setTime();
+                setTime2();
                 break;
             default:
         }
+    }
+
+    private void setTime2() {
     }
 
     private void setTime() {
