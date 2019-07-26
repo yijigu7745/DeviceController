@@ -35,11 +35,6 @@ public class WheelDayPicker extends WheelCurvedPicker {
         init();
     }
 
-    public WheelDayPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
     private void init() {
         initData();
         setCurrentDay();
@@ -63,6 +58,15 @@ public class WheelDayPicker extends WheelCurvedPicker {
         super.setData(days);
     }
 
+    private void setCurrentDay() {
+        setItemIndex(day - 1);
+    }
+
+    public WheelDayPicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
     @Override
     public void setData(List<String> data) {
         throw new RuntimeException("Set data will not allow here!");
@@ -73,10 +77,6 @@ public class WheelDayPicker extends WheelCurvedPicker {
         day = Math.min(day, maxDay);
         this.day = day;
         setCurrentDay();
-    }
-
-    private void setCurrentDay() {
-        setItemIndex(day - 1);
     }
 
     public void setCurrentMonth(int month) {

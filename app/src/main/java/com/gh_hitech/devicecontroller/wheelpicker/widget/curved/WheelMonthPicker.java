@@ -36,19 +36,9 @@ public class WheelMonthPicker extends WheelCurvedPicker {
         init();
     }
 
-    public WheelMonthPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
     private void init() {
         super.setData(months);
         setCurrentMonth(Calendar.getInstance().get(Calendar.MONTH) + 1);
-    }
-
-    @Override
-    public void setData(List<String> data) {
-        throw new RuntimeException("Set data will not allow here!");
     }
 
     public void setCurrentMonth(int month) {
@@ -56,5 +46,15 @@ public class WheelMonthPicker extends WheelCurvedPicker {
         month = Math.min(month, 12);
         this.month = month;
         setItemIndex(month - 1);
+    }
+
+    public WheelMonthPicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    @Override
+    public void setData(List<String> data) {
+        throw new RuntimeException("Set data will not allow here!");
     }
 }

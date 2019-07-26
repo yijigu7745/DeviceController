@@ -25,8 +25,8 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     @Override
     public Observable getPavilionList() {
         return RetrofitUtils
-                .getInterface(Constants.getServerUrl(),iView,
-                PavilionContract.Model.class).getPavilionList()
+                .getInterface(Constants.getServerUrl(), iView,
+                        PavilionContract.Model.class).getPavilionList()
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -35,7 +35,7 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     @Override
     public Observable selectPavilionListByName(String name) {
         return RetrofitUtils
-                .getInterface(Constants.getServerUrl(),iView,
+                .getInterface(Constants.getServerUrl(), iView,
                         PavilionContract.Model.class)
                 .selectPavilionListByName(name)
                 .subscribeOn(Schedulers.io())
@@ -46,7 +46,7 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     @Override
     public Observable selectPavilionListById(int id) {
         return RetrofitUtils
-                .getInterface(Constants.getServerUrl(),iView,
+                .getInterface(Constants.getServerUrl(), iView,
                         PavilionContract.Model.class)
                 .selectPavilionListById(id)
                 .subscribeOn(Schedulers.io())
@@ -57,7 +57,7 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     @Override
     public Observable<ResultModel<Void>> addPavilion(PavilionBean pavilionBean) {
         return RetrofitUtils
-                .getInterface(Constants.getServerUrl(),iView,
+                .getInterface(Constants.getServerUrl(), iView,
                         PavilionContract.Model.class)
                 .addPavilion(pavilionBean)
                 .subscribeOn(Schedulers.io())
@@ -68,7 +68,7 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     @Override
     public Observable deletePavilion(Long pavilionId) {
         return RetrofitUtils
-                .getInterface(Constants.getServerUrl(),iView,
+                .getInterface(Constants.getServerUrl(), iView,
                         PavilionContract.Model.class)
                 .deletePavilion(pavilionId)
                 .subscribeOn(Schedulers.io())
@@ -79,7 +79,7 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     @Override
     public Observable updatePavilion(PavilionBean pavilionBean) {
         return RetrofitUtils
-                .getInterface(Constants.getServerUrl(),iView,
+                .getInterface(Constants.getServerUrl(), iView,
                         PavilionContract.Model.class)
                 .updatePavilion(pavilionBean)
                 .subscribeOn(Schedulers.io())
@@ -90,7 +90,7 @@ public class PavilionPresenter implements PavilionContract.Presenter {
     @Override
     public Observable countByArea(String areaCode) {
         return RetrofitUtils
-                .getInterface(Constants.getServerUrl(),iView,
+                .getInterface(Constants.getServerUrl(), iView,
                         PavilionContract.Model.class)
                 .countByArea(areaCode)
                 .subscribeOn(Schedulers.io())

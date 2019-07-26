@@ -17,6 +17,14 @@ public class PavilionBean extends IBaseName implements Serializable {
     private String address;
     private AreaBean administrative;
 
+    public PavilionBean(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    public PavilionBean() {
+    }
+
     public AreaBean getPavilionArea() {
         return administrative;
     }
@@ -57,13 +65,5 @@ public class PavilionBean extends IBaseName implements Serializable {
     @Override
     public Long getIid() {
         return id;
-    }
-
-    public PavilionBean(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
-
-    public PavilionBean() {
     }
 }

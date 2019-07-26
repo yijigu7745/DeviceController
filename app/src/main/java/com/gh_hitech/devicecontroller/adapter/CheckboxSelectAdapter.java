@@ -22,13 +22,13 @@ import cn.com.yijigu.rxnetwork.utils.StringUtils;
  */
 public class CheckboxSelectAdapter extends BaseAdapter {
     /**
-     * 填充数据的list
-     */
-    protected List<IBaseName> list;
-    /**
      * 用来控制CheckBox的选中状况
      */
     private static HashMap<Integer, Boolean> isSelected;
+    /**
+     * 填充数据的list
+     */
+    protected List<IBaseName> list;
     private Context context;
     /**
      * 用来导入布局
@@ -51,6 +51,14 @@ public class CheckboxSelectAdapter extends BaseAdapter {
         for (int i = 0; i < list.size(); i++) {
             getIsSelected().put(i, list.get(i).isCheck);
         }
+    }
+
+    public static HashMap<Integer, Boolean> getIsSelected() {
+        return isSelected;
+    }
+
+    public static void setIsSelected(HashMap<Integer, Boolean> isSelected) {
+        CheckboxSelectAdapter.isSelected = isSelected;
     }
 
     @Override
@@ -86,116 +94,116 @@ public class CheckboxSelectAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         // 设置list中TextView的显示
-        holder.tv.setText(list.get(position).getIName()+"");
+        holder.tv.setText(list.get(position).getIName() + "");
         // 根据isSelected来设置checkbox的选中状况
         holder.cb.setChecked(getIsSelected().get(position));
         return convertView;
     }
 
-    public static HashMap<Integer, Boolean> getIsSelected() {
-        return isSelected;
+    public void putAllCheck(boolean toggle, ListView listView) {
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            View view = listView.getChildAt(i);
+            CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
+            holder.cb.setChecked(toggle);
+            isSelected.put(i, holder.cb.isChecked());
+            list.get(i).isCheck = holder.cb.isChecked();
+        }
     }
 
-    public static void setIsSelected(HashMap<Integer, Boolean> isSelected) {
-        CheckboxSelectAdapter.isSelected = isSelected;
+    public void putInvertCheck(ListView listView) {
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            View view = listView.getChildAt(i);
+            CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
+            holder.cb.toggle();
+            isSelected.put(i, holder.cb.isChecked());
+            list.get(i).isCheck = holder.cb.isChecked();
+        }
+    }
+
+    public void putIsCheck(int position, View view) {
+        CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
+        holder.cb.toggle();
+        isSelected.put(position, holder.cb.isChecked());
+        list.get(position).isCheck = holder.cb.isChecked();
+    }
+
+    public void putSingleCheck(int position, View view) {
+        CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
+        holder.cb.toggle();
+        isSelected.put(position, holder.cb.isChecked());
+        list.get(position).isCheck = holder.cb.isChecked();
+        for (int i = 0; i < list.size(); i++) {
+            if (position != i) {
+                list.get(i).isCheck = false;
+            }
+        }
+    }
+
+    public String getCheckName(HashMap<Integer, Boolean> isSelected) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < isSelected.size(); i++) {
+            if (isSelected.get(i)) {
+                addSb(sb, list.get(i).getIName());
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 对StringBuffer进行操作
+     *
+     * @param sb
+     * @param content
+     * @return
+     */
+    public StringBuffer addSb(StringBuffer sb, String content) {
+        if (StringUtils.isEmpty(sb.toString())) {
+            sb.append(content);
+        } else {
+            sb = sb.append("," + content);
+        }
+        return sb;
+    }
+
+    public String getCheckId(HashMap<Integer, Boolean> isSelected) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < isSelected.size(); i++) {
+            if (isSelected.get(i)) {
+                addSb(sb, list.get(i).getIid());
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 对StringBuffer进行操作
+     *
+     * @param sb
+     * @param content
+     * @return
+     */
+    public StringBuffer addSb(StringBuffer sb, Long content) {
+        if (StringUtils.isEmpty(sb.toString())) {
+            sb.append(content);
+        } else {
+            sb = sb.append(",").append(content);
+        }
+        return sb;
+    }
+
+    public int getIsSelectSum() {
+        int temp = 0;
+        for (int i = 0; i < getIsSelected().size(); i++) {
+            if (getIsSelected().get(i)) {
+                temp++;
+            }
+        }
+        return temp;
     }
 
     public static class ViewHolder {
         public TextView tv;
         public CheckBox cb;
-    }
-    public void putAllCheck(boolean toggle, ListView listView){
-        for (int i = 0; i < listView.getChildCount(); i++) {
-            View view = listView.getChildAt(i);
-            CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
-            holder.cb.setChecked(toggle);
-            isSelected.put(i,holder.cb.isChecked());
-            list.get(i).isCheck = holder.cb.isChecked();
-        }
-    }
-    public void putInvertCheck(ListView listView){
-        for (int i = 0; i < listView.getChildCount(); i++) {
-            View view = listView.getChildAt(i);
-            CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
-            holder.cb.toggle();
-            isSelected.put(i,holder.cb.isChecked());
-            list.get(i).isCheck = holder.cb.isChecked();
-        }
-    }
-    public void putIsCheck(int position,View view){
-        CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
-        holder.cb.toggle();
-        isSelected.put(position,holder.cb.isChecked());
-        list.get(position).isCheck = holder.cb.isChecked();
-    }
-    public void putSingleCheck(int position,View view){
-        CheckboxSelectAdapter.ViewHolder holder = (CheckboxSelectAdapter.ViewHolder) view.getTag();
-        holder.cb.toggle();
-        isSelected.put(position,holder.cb.isChecked());
-        list.get(position).isCheck = holder.cb.isChecked();
-        for(int i = 0; i<list.size();i++){
-            if(position != i){
-                list.get(i).isCheck = false;
-            }
-        }
-    }
-    public String  getCheckName(HashMap<Integer, Boolean> isSelected){
-        StringBuffer sb = new StringBuffer();
-        for (int i=0;i<isSelected.size();i++){
-            if (isSelected.get(i)){
-                addSb(sb,list.get(i).getIName());
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * 对StringBuffer进行操作
-     * @param sb
-     * @param content
-     * @return
-     */
-    public StringBuffer addSb(StringBuffer sb, String content){
-        if(StringUtils.isEmpty(sb.toString())){
-            sb.append(content);
-        }else{
-            sb = sb.append(","+content);
-        }
-        return sb;
-    }
-
-    /**
-     * 对StringBuffer进行操作
-     * @param sb
-     * @param content
-     * @return
-     */
-    public StringBuffer addSb(StringBuffer sb, Long content){
-        if(StringUtils.isEmpty(sb.toString())){
-            sb.append(content);
-        }else{
-            sb = sb.append(",").append(content);
-        }
-        return sb;
-    }
-    public String getCheckId(HashMap<Integer, Boolean> isSelected){
-        StringBuffer sb = new StringBuffer();
-        for (int i=0;i<isSelected.size();i++){
-            if (isSelected.get(i)){
-                addSb(sb,list.get(i).getIid());
-            }
-        }
-        return sb.toString();
-    }
-
-    public int getIsSelectSum(){
-        int temp = 0;
-        for(int i=0;i<getIsSelected().size();i++){
-            if(getIsSelected().get(i)){
-                temp++;
-            }
-        }
-        return temp;
     }
 
 }

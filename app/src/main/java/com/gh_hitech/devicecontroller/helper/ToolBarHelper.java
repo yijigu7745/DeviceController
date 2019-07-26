@@ -1,7 +1,6 @@
 package com.gh_hitech.devicecontroller.helper;
 
 
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.Toolbar;
@@ -18,40 +17,34 @@ import com.gh_hitech.devicecontroller.R;
 public class ToolBarHelper {
 
     /**
-    上下文，创建view的时候需要用到
-    *
-    */
-    private Context mContext;
-
-    /**
-     * base view
-     */
-    private FrameLayout mContentView;
-
-    /**用户定义的view
-     *
-     */
-    private View mUserView;
-
-    /**toolbar*
-     *
-     */
-    private Toolbar mToolBar;
-
-    /**视图构造器*
-     *
-     */
-    private LayoutInflater mInflater;
-
-    /**
-    * 两个属性
-    * 1、toolbar是否悬浮在窗口之上
-    * 2、toolbar的高度获取
+     * 两个属性
+     * 1、toolbar是否悬浮在窗口之上
+     * 2、toolbar的高度获取
      */
     private static int[] ATTRS = {
             R.attr.windowActionBarOverlay,
             R.attr.actionBarSize
     };
+    /**
+     * 上下文，创建view的时候需要用到
+     */
+    private Context mContext;
+    /**
+     * base view
+     */
+    private FrameLayout mContentView;
+    /**
+     * 用户定义的view
+     */
+    private View mUserView;
+    /**
+     * toolbar*
+     */
+    private Toolbar mToolBar;
+    /**
+     * 视图构造器*
+     */
+    private LayoutInflater mInflater;
 
     public ToolBarHelper(Context context, int layoutId) {
         this.mContext = context;
@@ -73,12 +66,6 @@ public class ToolBarHelper {
 
     }
 
-    private void initToolBar() {
-        /*通过inflater获取toolbar的布局文件*/
-        View toolbar = mInflater.inflate(R.layout.toolbar, mContentView);
-        mToolBar = (Toolbar) toolbar.findViewById(R.id.id_tool_bar);
-    }
-
     @SuppressWarnings("ResourceType")
     private void initUserView(int id) {
         mUserView = mInflater.inflate(id, null);
@@ -87,13 +74,19 @@ public class ToolBarHelper {
         /*获取主题中定义的悬浮标志*/
         boolean overly = typedArray.getBoolean(0, false);
         /*获取主题中定义的toolbar的高度*/
-        int toolBarSize = (int) typedArray.getDimension(1,(int) mContext.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+        int toolBarSize = (int) typedArray.getDimension(1, (int) mContext.getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         typedArray.recycle();
         /*如果是悬浮状态，则不需要设置间距*/
         params.topMargin = overly ? 0 : toolBarSize;
         mContentView.addView(mUserView, params);
 
+    }
+
+    private void initToolBar() {
+        /*通过inflater获取toolbar的布局文件*/
+        View toolbar = mInflater.inflate(R.layout.toolbar, mContentView);
+        mToolBar = (Toolbar) toolbar.findViewById(R.id.id_tool_bar);
     }
 
     public FrameLayout getContentView() {

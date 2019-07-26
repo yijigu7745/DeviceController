@@ -104,11 +104,6 @@ class OverScrollerCompat implements WheelScroller {
     }
 
     @Override
-    public void setFinalX(int newX) {
-        throw new RuntimeException("OverScrollerCompat not support this method.");
-    }
-
-    @Override
     public void setFinalY(int newY) {
         throw new RuntimeException("OverScrollerCompat not support this method.");
     }
@@ -152,6 +147,11 @@ class OverScrollerCompat implements WheelScroller {
 
     @Override
     public int timePassed() {
+        throw new RuntimeException("OverScrollerCompat not support this method.");
+    }
+
+    @Override
+    public void setFinalX(int newX) {
         throw new RuntimeException("OverScrollerCompat not support this method.");
     }
 }

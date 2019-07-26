@@ -45,11 +45,6 @@ public class WheelTimePicker extends LinearLayout implements IWheelPicker, IDigi
         init();
     }
 
-    public WheelTimePicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
     private void init() {
         setGravity(Gravity.CENTER);
         setOrientation(HORIZONTAL);
@@ -133,29 +128,9 @@ public class WheelTimePicker extends LinearLayout implements IWheelPicker, IDigi
         });
     }
 
-    public void setLabelColor(int labelColor) {
-        this.labelColor = labelColor;
-        invalidate();
-    }
-
-    public void setLabelTextSize(float labelTextSize) {
-        this.labelTextSize = labelTextSize;
-        invalidate();
-    }
-
-    @Override
-    public void setData(List<String> data) {
-        throw new RuntimeException("Set data will not allow here!");
-    }
-
-    public void setCurrentTime(int hour, int minute) {
-        pickerHour.setCurrentHour(hour);
-        pickerMinute.setCurrentMinute(minute);
-    }
-
-    @Override
-    public void setOnWheelChangeListener(AbstractWheelPicker.OnWheelChangeListener listener) {
-        this.listener = listener;
+    private boolean isValidDate() {
+        return pickerHour.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(hour)
+                && pickerMinute.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(minute);
     }
 
     private void checkState(AbstractWheelPicker.OnWheelChangeListener listener) {
@@ -172,9 +147,29 @@ public class WheelTimePicker extends LinearLayout implements IWheelPicker, IDigi
         }
     }
 
-    private boolean isValidDate() {
-        return pickerHour.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(hour)
-                && pickerMinute.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(minute);
+    public WheelTimePicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public void setLabelColor(int labelColor) {
+        this.labelColor = labelColor;
+        invalidate();
+    }
+
+    public void setLabelTextSize(float labelTextSize) {
+        this.labelTextSize = labelTextSize;
+        invalidate();
+    }
+
+    @Override
+    public void setData(List<String> data) {
+        throw new RuntimeException("Set data will not allow here!");
+    }
+
+    @Override
+    public void setOnWheelChangeListener(AbstractWheelPicker.OnWheelChangeListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -225,16 +220,21 @@ public class WheelTimePicker extends LinearLayout implements IWheelPicker, IDigi
         pickerMinute.setWheelDecor(ignorePadding, decor);
     }
 
+    public void setCurrentTime(int hour, int minute) {
+        pickerHour.setCurrentHour(hour);
+        pickerMinute.setCurrentMinute(minute);
+    }
+
     @Override
     public void setDigitType(int type) {
         pickerHour.setDigitType(type);
         pickerMinute.setDigitType(type);
     }
 
-    public void setVisibility(TimeDialog.WheelType wheelType, int visibility){
-        if (wheelType == TimeDialog.WheelType.Hour){
+    public void setVisibility(TimeDialog.WheelType wheelType, int visibility) {
+        if (wheelType == TimeDialog.WheelType.Hour) {
             pickerHour.setVisibility(visibility);
-        }else if(wheelType == TimeDialog.WheelType.Minute){
+        } else if (wheelType == TimeDialog.WheelType.Minute) {
             pickerMinute.setVisibility(visibility);
         }
     }

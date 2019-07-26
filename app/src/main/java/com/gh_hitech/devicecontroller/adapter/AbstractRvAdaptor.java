@@ -12,9 +12,10 @@ import java.util.List;
 
 /**
  * RecyclerView的适配器
+ *
  * @author yijigu
  */
-public abstract class AbstractRvAdaptor<T>  extends RecyclerView.Adapter<RvHolder>{
+public abstract class AbstractRvAdaptor<T> extends RecyclerView.Adapter<RvHolder> {
     protected List<T> mList;
     protected Context mContext;
     protected RvListener listener;
@@ -38,13 +39,13 @@ public abstract class AbstractRvAdaptor<T>  extends RecyclerView.Adapter<RvHolde
     }
 
     @Override
-    public int getItemCount() {
-        return mList.size();
+    public int getItemViewType(int position) {
+        return 0;
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return 0;
+    public int getItemCount() {
+        return mList.size();
     }
 
     protected abstract RvHolder getHolder(ViewGroup parent, int viewType);

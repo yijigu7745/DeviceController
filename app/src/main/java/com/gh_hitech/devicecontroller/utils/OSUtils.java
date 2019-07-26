@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 
 import cn.com.yijigu.rxnetwork.utils.StringUtils;
 
+/**
+ * @author yijigu
+ */
 public class OSUtils {
 
     public static final String ROM_MIUI = "MIUI";
@@ -29,44 +32,6 @@ public class OSUtils {
 
     public static boolean isEmui() {
         return check(ROM_EMUI);
-    }
-
-    public static boolean isMiui() {
-        return check(ROM_MIUI);
-    }
-
-    public static boolean isVivo() {
-        return check(ROM_VIVO);
-    }
-
-    public static boolean isOppo() {
-        return check(ROM_OPPO);
-    }
-
-    public static boolean isFlyme() {
-        return check(ROM_FLYME);
-    }
-
-    public static boolean is360() {
-        return check(ROM_QIKU) || check("360");
-    }
-
-    public static boolean isSmartisan() {
-        return check(ROM_SMARTISAN);
-    }
-
-    public static String getName() {
-        if (sName == null) {
-            check("");
-        }
-        return sName;
-    }
-
-    public static String getVersion() {
-        if (sVersion == null) {
-            check("");
-        }
-        return sVersion;
     }
 
     public static boolean check(String rom) {
@@ -116,5 +81,43 @@ public class OSUtils {
             }
         }
         return line;
+    }
+
+    public static boolean isMiui() {
+        return check(ROM_MIUI);
+    }
+
+    public static boolean isVivo() {
+        return check(ROM_VIVO);
+    }
+
+    public static boolean isOppo() {
+        return check(ROM_OPPO);
+    }
+
+    public static boolean isFlyme() {
+        return check(ROM_FLYME);
+    }
+
+    public static boolean is360() {
+        return check(ROM_QIKU) || check("360");
+    }
+
+    public static boolean isSmartisan() {
+        return check(ROM_SMARTISAN);
+    }
+
+    public static String getName() {
+        if (sName == null) {
+            check("");
+        }
+        return sName;
+    }
+
+    public static String getVersion() {
+        if (sVersion == null) {
+            check("");
+        }
+        return sVersion;
     }
 }

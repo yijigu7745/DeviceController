@@ -18,6 +18,13 @@ public abstract class BaseHolder<Data> {
         mRootView.setTag(this);
     }
 
+    /**
+     * 子类必须覆盖用于实现UI初始化
+     *
+     * @return
+     */
+    protected abstract View initView();
+
     public BaseHolder(Context context) {
         this.context = context;
         mRootView = initView();
@@ -28,21 +35,26 @@ public abstract class BaseHolder<Data> {
         return mRootView;
     }
 
+    public Data getData() {
+        return mData;
+    }
+
     public void setData(Data data) {
         mData = data;
         refreshView();
     }
 
-    public Data getData() {
-        return mData;
+    /**
+     * 子类必须覆盖用于实现UI刷新
+     */
+    public abstract void refreshView();
+
+    public int getPosition() {
+        return mPosition;
     }
 
     public void setPosition(int position) {
         mPosition = position;
-    }
-
-    public int getPosition() {
-        return mPosition;
     }
 
     public int getType() {
@@ -52,18 +64,6 @@ public abstract class BaseHolder<Data> {
     public void setType(int type) {
         this.type = type;
     }
-
-
-    /**
-     * 子类必须覆盖用于实现UI初始化
-     * @return
-     */
-    protected abstract View initView();
-
-    /**
-     * 子类必须覆盖用于实现UI刷新
-     */
-    public abstract void refreshView();
 
     /**
      * 用于回收

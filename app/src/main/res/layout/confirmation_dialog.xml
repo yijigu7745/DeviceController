@@ -1,49 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center">
+              android:id="@+id/ll_main"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:gravity="center">
 
-    <LinearLayout android:layout_width="270dip"
+    <LinearLayout
+        android:layout_width="270dip"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/dialog_bg">
+        android:background="@drawable/dialog_bg"
+        android:orientation="vertical">
 
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dip"
+            android:singleLine="true"
             android:text="消息提醒"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:padding="10dip"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="消息确认内容"
-            android:textColor="#eeeeee"
-            android:textSize="14sp"
             android:gravity="left"
             android:lineSpacingExtra="3dip"
-            android:padding="15dip" />
+            android:padding="15dip"
+            android:text="消息确认内容"
+            android:textColor="#eeeeee"
+            android:textSize="14sp"/>
+
         <ListView
             android:id="@+id/tv_single_list"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_18"
-            android:layout_height="wrap_content" />
+            android:textSize="@dimen/text_size_18"/>
 
         <View
-            style="@style/lineStyle" />
+            style="@style/lineStyle"/>
 
-        <LinearLayout android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
@@ -51,10 +54,10 @@
                 android:id="@+id/cancel"
                 style="@style/dialogButtonStyle"
                 android:layout_weight="1.0"
+                android:background="@drawable/dialog_btn_bg_left"
                 android:text="取消"
                 android:textColor="#5892D2"
-                android:textSize="16.0sp"
-                android:background="@drawable/dialog_btn_bg_left"/>
+                android:textSize="16.0sp"/>
 
             <View
                 android:id="@+id/boss_unipay_id_btnGap"
@@ -66,10 +69,10 @@
                 android:id="@+id/confirmation"
                 style="@style/dialogButtonStyle"
                 android:layout_weight="1.0"
-                android:textColor="#5892D2"
+                android:background="@drawable/dialog_btn_bg_right"
                 android:text="确认"
-                android:textSize="16.0sp"
-                android:background="@drawable/dialog_btn_bg_right"/>
+                android:textColor="#5892D2"
+                android:textSize="16.0sp"/>
         </LinearLayout>
 
     </LinearLayout>

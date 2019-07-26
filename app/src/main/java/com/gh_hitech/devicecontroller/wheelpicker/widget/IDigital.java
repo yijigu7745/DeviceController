@@ -6,7 +6,6 @@ package com.gh_hitech.devicecontroller.wheelpicker.widget;
 public interface IDigital {
 
     /**
-     *
      * @param type
      */
     void setDigitType(int type);

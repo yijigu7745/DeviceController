@@ -38,14 +38,22 @@ public class WheelYearPicker extends WheelCurvedPicker {
         init();
     }
 
-    public WheelYearPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
     private void init() {
         super.setData(years);
         setCurrentYear(Calendar.getInstance().get(Calendar.YEAR));
+    }
+
+    public void setCurrentYear(int year) {
+        year = Math.max(year, from);
+        year = Math.min(year, to);
+        this.year = year;
+        int d = year - from;
+        setItemIndex(d);
+    }
+
+    public WheelYearPicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
     }
 
     @Override
@@ -59,13 +67,5 @@ public class WheelYearPicker extends WheelCurvedPicker {
         years.clear();
         for (int i = yearFrom; i <= yearTo; i++) years.add(String.valueOf(i));
         super.setData(years);
-    }
-
-    public void setCurrentYear(int year) {
-        year = Math.max(year, from);
-        year = Math.min(year, to);
-        this.year = year;
-        int d = year - from;
-        setItemIndex(d);
     }
 }

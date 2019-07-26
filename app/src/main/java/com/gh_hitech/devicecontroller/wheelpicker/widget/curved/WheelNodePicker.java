@@ -25,9 +25,9 @@ import java.util.List;
  *
  * @author AigeStudio 2015-12-03
  * @author AigeStudio 2015-12-08
- *         Init初始化
+ * Init初始化
  * @author AigeStudio 2015-12-12
- *         实现变更
+ * 实现变更
  * @version 1.0.0 beta
  */
 public class WheelNodePicker extends LinearLayout implements IWheelPicker {
@@ -46,11 +46,6 @@ public class WheelNodePicker extends LinearLayout implements IWheelPicker {
         init();
     }
 
-    public WheelNodePicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
     private void init() {
         setGravity(Gravity.CENTER);
         setOrientation(HORIZONTAL);
@@ -65,7 +60,7 @@ public class WheelNodePicker extends LinearLayout implements IWheelPicker {
         pickerDataNode = new WheelNodeDataPicker(getContext());
         pickerDataNode.setData(new ArrayList<String>());
         pickerDataNode.setPadding(0, padding, padding2x, padding);
-        addLabel(pickerDataNode,"环节");
+        addLabel(pickerDataNode, "环节");
 
         addView(pickerDataNode, llParams);
 
@@ -106,6 +101,11 @@ public class WheelNodePicker extends LinearLayout implements IWheelPicker {
         });
     }
 
+    public WheelNodePicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
     public void setLabelColor(int labelColor) {
         this.labelColor = labelColor;
         invalidate();
@@ -119,10 +119,6 @@ public class WheelNodePicker extends LinearLayout implements IWheelPicker {
     @Override
     public void setData(List<String> data) {
         throw new RuntimeException("Set data will not allow here!");
-    }
-
-    public void setCurrentNode(String node) {
-        pickerDataNode.setCurrentNode(node);
     }
 
     @Override
@@ -170,8 +166,12 @@ public class WheelNodePicker extends LinearLayout implements IWheelPicker {
         pickerDataNode.setWheelDecor(ignorePadding, decor);
     }
 
-    public void setVisibility(NodeDialog.WheelType wheelType, int visibility){
-        if (wheelType == NodeDialog.WheelType.Node){
+    public void setCurrentNode(String node) {
+        pickerDataNode.setCurrentNode(node);
+    }
+
+    public void setVisibility(NodeDialog.WheelType wheelType, int visibility) {
+        if (wheelType == NodeDialog.WheelType.Node) {
             pickerDataNode.setVisibility(visibility);
         }
     }

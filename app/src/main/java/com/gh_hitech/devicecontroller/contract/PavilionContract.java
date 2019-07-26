@@ -22,6 +22,7 @@ public interface PavilionContract {
     interface Model {
         /**
          * 获取警银亭列表
+         *
          * @return
          */
         @GET("/pavilion/all")
@@ -29,6 +30,7 @@ public interface PavilionContract {
 
         /**
          * 添加警银亭
+         *
          * @param pavilionBean
          * @return
          */
@@ -37,6 +39,7 @@ public interface PavilionContract {
 
         /**
          * 删除警银亭
+         *
          * @param pavilionId
          * @return
          */
@@ -45,6 +48,7 @@ public interface PavilionContract {
 
         /**
          * 查找警银亭
+         *
          * @param id 警银亭
          * @return
          */
@@ -53,6 +57,7 @@ public interface PavilionContract {
 
         /**
          * 查找警银亭
+         *
          * @param name 警银亭
          * @return
          */
@@ -61,14 +66,16 @@ public interface PavilionContract {
 
         /**
          * 统计区域内警银亭数量
+         *
          * @param areaCode
          * @return
          */
         @GET("/pavilion/countByArea/{areaCode}")
-        Observable<ResultModel<List<Map<String,Integer>>>> countByArea(@Path("areaCode") String areaCode);
+        Observable<ResultModel<List<Map<String, Integer>>>> countByArea(@Path("areaCode") String areaCode);
 
         /**
          * 修改警银亭所属区域
+         *
          * @param pavilionBean
          * @return
          */
@@ -82,12 +89,14 @@ public interface PavilionContract {
     interface Presenter {
         /**
          * 获取警银亭列表
+         *
          * @return
          */
         Observable getPavilionList();
 
         /**
          * 查找警银亭
+         *
          * @param name
          * @return
          */
@@ -95,6 +104,7 @@ public interface PavilionContract {
 
         /**
          * 查找警银亭
+         *
          * @param id
          * @return
          */
@@ -102,6 +112,7 @@ public interface PavilionContract {
 
         /**
          * 添加警银亭
+         *
          * @param pavilionBean
          * @return
          */
@@ -109,6 +120,7 @@ public interface PavilionContract {
 
         /**
          * 删除警银亭
+         *
          * @param pavilionId
          * @return
          */
@@ -116,6 +128,7 @@ public interface PavilionContract {
 
         /**
          * 修改警银亭所属区域
+         *
          * @param pavilionBean
          * @return
          */
@@ -123,6 +136,7 @@ public interface PavilionContract {
 
         /**
          * 统计区域内警银亭数量
+         *
          * @param areaCode
          * @return
          */

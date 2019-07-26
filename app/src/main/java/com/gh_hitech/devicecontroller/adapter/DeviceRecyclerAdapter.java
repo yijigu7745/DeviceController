@@ -25,6 +25,6 @@ public class DeviceRecyclerAdapter extends AbstractRvAdaptor<DeviceBean> {
     @Override
     protected RvHolder getHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.list_device, parent, false);
-        return new DeviceRecyclerHolder(view,viewType, listener);
+        return new DeviceRecyclerHolder(view, viewType, listener);
     }
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_main"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:background="@drawable/dialog_bg"
-    android:gravity="center"
-    android:orientation="vertical">
+              android:id="@+id/ll_main"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:background="@drawable/dialog_bg"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/ll_checkbox"
@@ -39,18 +39,18 @@
                         android:id="@+id/cb_invert"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginStart="15dp"
                         android:layout_marginLeft="15dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/checkbox_selector"
                         android:button="@null"
                         android:clickable="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:textColor="@color/black"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginEnd="5dp"/>
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -58,13 +58,13 @@
                         android:layout_gravity="center"
                         android:text="@string/invert_all"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_medium"/>
                 </LinearLayout>
 
                 <View
                     android:layout_width="1dp"
                     android:layout_height="20dp"
-                    android:background="@color/lg_line_color" />
+                    android:background="@color/lg_line_color"/>
 
                 <LinearLayout
                     android:id="@+id/cb_all_check"
@@ -77,18 +77,18 @@
                         android:id="@+id/cb_all"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginStart="15dp"
                         android:layout_marginLeft="15dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/checkbox_selector"
                         android:button="@null"
                         android:clickable="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:textColor="@color/black"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginEnd="5dp"/>
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -96,7 +96,7 @@
                         android:layout_gravity="center"
                         android:text="@string/select_all"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="@dimen/text_size_medium"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -105,7 +105,7 @@
                 android:layout_height="1dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@color/lg_line_color" />
+                android:background="@color/lg_line_color"/>
         </LinearLayout>
 
 
@@ -123,7 +123,7 @@
     <View
         style="@style/lineStyle"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"/>
 
     <LinearLayout
         android:layout_width="270dip"
@@ -139,13 +139,13 @@
             android:background="@drawable/dialog_btn_bg_left"
             android:text="@string/cancel"
             android:textColor="#5892D2"
-            android:textSize="16.0sp" />
+            android:textSize="16.0sp"/>
 
         <View
             android:id="@+id/boss_unipay_id_btnGap"
             style="@style/lineStyle"
             android:layout_width="0.1dip"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <Button
             android:id="@+id/confirmation"
@@ -154,6 +154,6 @@
             android:background="@drawable/dialog_btn_bg_right"
             android:text="@string/confirm"
             android:textColor="#5892D2"
-            android:textSize="16.0sp" />
+            android:textSize="16.0sp"/>
     </LinearLayout>
 </LinearLayout>

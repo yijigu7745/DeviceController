@@ -11,18 +11,21 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @return
      */
     boolean computeScrollOffset();
 
     /**
      * .
+     *
      * @param extend
      */
     void extendDuration(int extend);
 
     /**
      * .
+     *
      * @param startX
      * @param startY
      * @param velocityX
@@ -36,6 +39,7 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @param startX
      * @param startY
      * @param velocityX
@@ -51,84 +55,98 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @param finished
      */
     void forceFinished(boolean finished);
 
     /**
      * .
+     *
      * @return
      */
     float getCurrVelocity();
 
     /**
      * .
+     *
      * @return
      */
     int getCurrX();
 
     /**
      * .
+     *
      * @return
      */
     int getCurrY();
 
     /**
      * .
+     *
      * @return
      */
     int getDuration();
 
     /**
      * .
+     *
      * @return
      */
     int getFinalX();
 
     /**
      * .
-     * @return
-     */
-    int getFinalY();
-
-    /**
-     *.
-     * @return
-     */
-    int getStartX();
-
-    /**
-     *.
-     * @return
-     */
-    int getStartY();
-
-    /**
-     *.
-     * @return
-     */
-    boolean isFinished();
-
-    /**
-     * .
+     *
      * @param newX
      */
     void setFinalX(int newX);
 
     /**
      * .
+     *
+     * @return
+     */
+    int getFinalY();
+
+    /**
+     * .
+     *
      * @param newY
      */
     void setFinalY(int newY);
 
     /**
-     *.
+     * .
+     *
+     * @return
+     */
+    int getStartX();
+
+    /**
+     * .
+     *
+     * @return
+     */
+    int getStartY();
+
+    /**
+     * .
+     *
+     * @return
+     */
+    boolean isFinished();
+
+    /**
+     * .
+     *
      * @return
      */
     boolean isOverScrolled();
 
     /**
      * .
+     *
      * @param startX
      * @param finalX
      * @param overX
@@ -137,6 +155,7 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @param startY
      * @param finalY
      * @param overY
@@ -145,12 +164,14 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @param friction
      */
     void setFriction(float friction);
 
     /**
      * ..
+     *
      * @param startX
      * @param startY
      * @param minX
@@ -163,6 +184,7 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @param startX
      * @param startY
      * @param dx
@@ -172,6 +194,7 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @param startX
      * @param startY
      * @param dx
@@ -182,6 +205,7 @@ public interface WheelScroller {
 
     /**
      * .
+     *
      * @return
      */
     int timePassed();

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 
-import com.gh_hitech.devicecontroller.R;
 import com.gh_hitech.devicecontroller.helper.ToolBarHelper;
 import com.gh_hitech.devicecontroller.utils.ApplicationUtils;
 import com.gyf.barlibrary.ImmersionBar;
@@ -15,10 +14,14 @@ import com.gyf.barlibrary.ImmersionBar;
  * @author yijigu
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    protected ImmersionBar mImmersionBar;
-    private ToolBarHelper mToolBarHelper ;
-    public Toolbar toolbar;
     private static BaseActivity mForegroundActivity = null;
+    public Toolbar toolbar;
+    protected ImmersionBar mImmersionBar;
+    private ToolBarHelper mToolBarHelper;
+
+    public static BaseActivity getCurrentActivity() {
+        return mForegroundActivity;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,15 +32,22 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void setContentView(int layoutResID) {
-        mToolBarHelper = new ToolBarHelper(this,layoutResID) ;
+        mToolBarHelper = new ToolBarHelper(this, layoutResID);
         toolbar = mToolBarHelper.getToolBar();
         setContentView(mToolBarHelper.getContentView());
         setSupportActionBar(toolbar);
-        onCreateCustomToolBar(toolbar) ;
+        onCreateCustomToolBar(toolbar);
     }
 
-    public void onCreateCustomToolBar(Toolbar toolbar){
-        toolbar.setContentInsetsRelative(0,0);
+    public void onCreateCustomToolBar(Toolbar toolbar) {
+        toolbar.setContentInsetsRelative(0, 0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //将Activity从管理器移除
+        ApplicationUtils.getApplication().addActivity(this);
     }
 
     /**
@@ -55,17 +65,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         mForegroundActivity = this;
         super.onResume();
-    }
-
-    public static BaseActivity getCurrentActivity(){
-        return mForegroundActivity;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //将Activity从管理器移除
-        ApplicationUtils.getApplication().addActivity(this);
     }
 
 }

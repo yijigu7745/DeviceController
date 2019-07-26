@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * 区域列表适配器
+ *
  * @author yijigu
  */
 public class AreaRecyclerAdapter extends AbstractRvAdaptor<AreaBean> {
@@ -23,7 +24,7 @@ public class AreaRecyclerAdapter extends AbstractRvAdaptor<AreaBean> {
 
     @Override
     protected RvHolder getHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.list_area,parent,false);
-        return new AreaRecyclerHolder(view,viewType,listener);
+        View view = mInflater.inflate(R.layout.list_area, parent, false);
+        return new AreaRecyclerHolder(view, viewType, listener);
     }
 }

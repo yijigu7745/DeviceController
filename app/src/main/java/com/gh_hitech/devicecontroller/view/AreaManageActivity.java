@@ -35,27 +35,39 @@ import cn.com.yijigu.rxnetwork.view.IView;
 
 /**
  * 区域管理
+ *
  * @author yijigu
  */
-public class AreaManageActivity extends BaseActivity implements IView, SwipeRefreshLayout.OnRefreshListener{
+public class AreaManageActivity extends BaseActivity implements IView, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.recyclerview_1)
     RecyclerView recyclerView;
     @BindView(R.id.reload_data)
     SwipeRefreshLayout swipeRefreshLayout;
-
-    private TextView tvTitle;
-    private RelativeLayout layoutRight;
-
     AreaRecyclerAdapter areaRecyclerAdapter;
     List<AreaBean> areaList = new ArrayList<>();
-    List<Map<String,Integer>> countByAreaList = new ArrayList<>();
+    List<Map<String, Integer>> countByAreaList = new ArrayList<>();
     SweetDialog sweetDialog;
-    private Context context;
-    private int selectPosition = -1;
     AreaPresenter areaPresenter;
     PavilionPresenter pavilionPresenter;
     SheetPopUpWindow popUpWindow;
+    private TextView tvTitle;
+    private RelativeLayout layoutRight;
+    private Context context;
+    private int selectPosition = -1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_area_manage);
+        context = this;
+        ButterKnife.bind(this);
+        areaPresenter = new AreaPresenter(this);
+        pavilionPresenter = new PavilionPresenter(this);
+        sweetDialog = SweetDialog.builder(this);
+        init();
+        register();
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -75,33 +87,63 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_area_manage);
-        context = this;
-        ButterKnife.bind(this);
-        areaPresenter = new AreaPresenter(this);
-        pavilionPresenter = new PavilionPresenter(this);
-        sweetDialog = SweetDialog.builder(this);
-        init();
-        register();
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    private void loadData() {
+        sweetDialog.progress("正在加载中...").show();
+        areaPresenter.getAreaListByParentCodeLike("3501")
+                .subscribe(resultModel -> {
+                            areaList.clear();
+                            areaList.addAll(((ResultModel<List<AreaBean>>) resultModel).getData());
+                            areaRecyclerAdapter.notifyDataSetChanged();
+                            sweetDialog.close();
+                            ToastUtils.longTimeText(context, "加载成功");
+                            swipeRefreshLayout.setRefreshing(false);
+                        }, error -> {
+                            sweetDialog.error("加载失败!").show();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                );
+        pavilionPresenter.countByArea("350100")
+                .subscribe(resultModel -> {
+                    countByAreaList.clear();
+                    countByAreaList.addAll(((ResultModel<List<Map<String, Integer>>>) resultModel).getData());
+                    for (AreaBean a : areaList) {
+                        for (Map<String, Integer> m : countByAreaList) {
+                            if (m.containsKey(a.getAreaCode())) {
+                                a.setPavilionCount(m.get(a.getAreaCode()));
+                            }
+                        }
+                    }
+                    areaRecyclerAdapter.notifyDataSetChanged();
+                }, error -> {
+                    sweetDialog.error("加载区域详情失败!").show();
+                });
+    }
 
     private void init() {
         final List<String> menu = new ArrayList<>();
         menu.add("查看警银亭");
-        popUpWindow = DialogFactory.createSheetPopUpWindow(context,menu,(pos, value)->{
-            switch(value){
+        popUpWindow = DialogFactory.createSheetPopUpWindow(context, menu, (pos, value) -> {
+            switch (value) {
                 case "查看警银亭":
-                    Intent intent = new Intent(AreaManageActivity.this,PavilionListActivity.class);
-                    intent.putExtra("area",areaList.get(selectPosition));
+                    Intent intent = new Intent(AreaManageActivity.this, PavilionListActivity.class);
+                    intent.putExtra("area", areaList.get(selectPosition));
                     startActivity(intent);
                     break;
                 default:
             }
         });
-        areaRecyclerAdapter = new AreaRecyclerAdapter(context,areaList,(id, position)->{
+        areaRecyclerAdapter = new AreaRecyclerAdapter(context, areaList, (id, position) -> {
             selectPosition = position;
             popUpWindow.showAtLocation(getCurrentActivity()
                             .findViewById(R.id.area_list),
@@ -115,52 +157,8 @@ public class AreaManageActivity extends BaseActivity implements IView, SwipeRefr
         swipeRefreshLayout.setOnRefreshListener(this);
     }
 
-    private void loadData(){
-        sweetDialog.progress("正在加载中...").show();
-        areaPresenter.getAreaListByParentCodeLike("3501")
-                .subscribe(resultModel -> {
-                            areaList.clear();
-                            areaList.addAll(((ResultModel<List<AreaBean>>) resultModel).getData());
-                            areaRecyclerAdapter.notifyDataSetChanged();
-                            sweetDialog.close();
-                            ToastUtils.longTimeText(context,"加载成功");
-                            swipeRefreshLayout.setRefreshing(false);
-                        },error ->{
-                            sweetDialog.error("加载失败!").show();
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                );
-        pavilionPresenter.countByArea("350100")
-                .subscribe(resultModel -> {
-                    countByAreaList.clear();
-                    countByAreaList.addAll(((ResultModel<List<Map<String,Integer>>>)resultModel).getData());
-                    for (AreaBean a:areaList) {
-                        for (Map<String,Integer> m: countByAreaList) {
-                            if(m.containsKey(a.getAreaCode())){
-                                a.setPavilionCount(m.get(a.getAreaCode()));
-                            }
-                        }
-                    }
-                    areaRecyclerAdapter.notifyDataSetChanged();
-                },error ->{
-                    sweetDialog.error("加载区域详情失败!").show();
-                });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadData();
-    }
-
     @Override
     public void onRefresh() {
         loadData();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sweetDialog.close();
     }
 }

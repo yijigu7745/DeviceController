@@ -39,6 +39,7 @@ import cn.com.yijigu.rxnetwork.view.IView;
 
 /**
  * 设备列表
+ *
  * @author yijigu
  */
 public class PavilionListActivity extends BaseActivity implements IView, SwipeRefreshLayout.OnRefreshListener {
@@ -51,10 +52,10 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     PavilionRecyclerAdapter pavilionRecyclerAdapter;
     List<PavilionBean> pavilionList = new ArrayList<>();
     SweetDialog sweetDialog;
-    private Context context;
     PavilionPresenter pavilionPresenter;
     AreaPresenter areaPresenter;
     List<AreaBean> areaList = new ArrayList<>();
+    private Context context;
     private long selectAreaId;
     private int selectPosition = -1;
     private AreaBean areaFromIntent;
@@ -62,6 +63,20 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     private TextView tvTitle;
     private RelativeLayout layoutRight;
     private SheetPopUpWindow popUpWindow;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pavilion_list);
+        ButterKnife.bind(this);
+        context = this;
+        pavilionPresenter = new PavilionPresenter(this);
+        areaPresenter = new AreaPresenter(this);
+        sweetDialog = SweetDialog.builder(this);
+        areaFromIntent = (AreaBean) getIntent().getSerializableExtra("area");
+        init();
+        register();
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -82,17 +97,27 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pavilion_list);
-        ButterKnife.bind(this);
-        context = this;
-        pavilionPresenter = new PavilionPresenter(this);
-        areaPresenter = new AreaPresenter(this);
-        sweetDialog = SweetDialog.builder(this);
-        areaFromIntent = (AreaBean) getIntent().getSerializableExtra("area");
-        init();
-        register();
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+    }
+
+    private void init() {
+        pavilionRecyclerAdapter = new PavilionRecyclerAdapter(this, pavilionList,
+                (id, position) -> {
+                    selectPosition = position;
+                    popUpWindow.showAtLocation(getCurrentActivity()
+                                    .findViewById(R.id.pavilion_list),
+                            Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                });
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setAdapter(pavilionRecyclerAdapter);
     }
 
     private void register() {
@@ -102,15 +127,15 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         menu.add("查看控制器");
         menu.add("修改区域分组");
         menu.add("删除警银亭");
-        popUpWindow = DialogFactory.createSheetPopUpWindow(context,menu,(pos,value)->{
-            switch(value){
+        popUpWindow = DialogFactory.createSheetPopUpWindow(context, menu, (pos, value) -> {
+            switch (value) {
                 case "添加控制器":
-                    Intent intent = new Intent(this,AddDeviceActivity.class);
+                    Intent intent = new Intent(this, AddDeviceActivity.class);
                     startActivity(intent);
                     break;
                 case "查看控制器":
-                    intent = new Intent(this,DeviceListActivity.class);
-                    intent.putExtra("pavilion",pavilionList.get(selectPosition));
+                    intent = new Intent(this, DeviceListActivity.class);
+                    intent.putExtra("pavilion", pavilionList.get(selectPosition));
                     startActivity(intent);
                     break;
                 case "修改区域分组":
@@ -119,89 +144,21 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
                 case "删除警银亭":
                     deleteConfirm();
                     break;
-                    default:
+                default:
             }
         });
     }
 
-    private void init() {
-        pavilionRecyclerAdapter = new PavilionRecyclerAdapter(this, pavilionList,
-                (id, position) -> {
-                    selectPosition = position;
-                    popUpWindow.showAtLocation(getCurrentActivity()
-                            .findViewById(R.id.pavilion_list),
-                            Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        });
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        recyclerView.setAdapter(pavilionRecyclerAdapter);
-    }
-
-    private void deleteConfirm() {
-        sweetDialog.waring("提示",
-                "是否删除警银亭"+ pavilionList.get(selectPosition).getName()+"?",
-                false,true)
-                .setConfirmClickListener(sweetAlertDialog -> deletePavilion(pavilionList.get(selectPosition))).show();
-    }
-
-    private void deletePavilion(PavilionBean pavilionBean) {
-        pavilionPresenter.deletePavilion(pavilionBean.getId())
-                .subscribe(resultModel -> {
-                    sweetDialog.success("删除成功").show();
-                    loadData();
-                },error -> {
-                    sweetDialog.error("删除失败!").show();
-                    swipeRefreshLayout.setRefreshing(false);});
-    }
-
-    private void loadData(){
-        sweetDialog.progress("正在加载中...").show();
-        pavilionPresenter.getPavilionList()
-                .subscribe(resultModel -> {
-                            pavilionList.clear();
-                            if(areaFromIntent != null){
-                                for (PavilionBean p:((ResultModel<List<PavilionBean>>) resultModel).getData()) {
-                                    if((p.getPavilionArea() != null)
-                                            && (areaFromIntent.getId() == p.getPavilionArea().getId())){
-                                        pavilionList.add(p);
-                                    }
-                                }
-                            }else {
-                                pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
-                            }
-                            pavilionRecyclerAdapter.notifyDataSetChanged();
-                            sweetDialog.close();
-                            ToastUtils.longTimeText(context,"加载成功");
-                            swipeRefreshLayout.setRefreshing(false);
-                        },error ->{
-                            sweetDialog.error("加载警银亭列表失败!").show();
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                );
-        areaPresenter.getAreaListByParentCodeLike("3501")
-                .subscribe(resultModel ->{
-                    areaList.clear();
-                    areaList.addAll(((ResultModel<List<AreaBean>>)resultModel).getData());
-                },error -> {
-                    sweetDialog.error("加载区域失败!").show();
-                });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadData();
-    }
-
-    private void selectAreaDialog(){
+    private void selectAreaDialog() {
         List<IBaseName> area = new ArrayList<>();
         area.addAll(areaList);
         final CheckboxDialog checkboxDialog = new CheckboxDialog(context);
-        checkboxDialog.setSingleListBean(area,selectAreaId);
+        checkboxDialog.setSingleListBean(area, selectAreaId);
         checkboxDialog.setOnButtonClickListener(new CheckboxDialog.OnButtonClickListener() {
             @Override
             public void onConfirmationClick() {
                 checkboxDialog.setConfirmation();
-                if(StringUtils.isNotBlank(checkboxDialog.getId())) {
+                if (StringUtils.isNotBlank(checkboxDialog.getId())) {
                     selectAreaId = Long.parseLong(checkboxDialog.getId());
                 }
                 updatePavilionArea();
@@ -215,17 +172,24 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         checkboxDialog.show();
     }
 
-    private void updatePavilionArea(){
-        if(areaList != null){
-            for (AreaBean areaBean:areaList) {
-                if(areaBean.getIid().longValue() == selectAreaId){
+    private void deleteConfirm() {
+        sweetDialog.waring("提示",
+                "是否删除警银亭" + pavilionList.get(selectPosition).getName() + "?",
+                false, true)
+                .setConfirmClickListener(sweetAlertDialog -> deletePavilion(pavilionList.get(selectPosition))).show();
+    }
+
+    private void updatePavilionArea() {
+        if (areaList != null) {
+            for (AreaBean areaBean : areaList) {
+                if (areaBean.getIid().longValue() == selectAreaId) {
                     PavilionBean pavilionBean = pavilionList.get(selectPosition);
                     pavilionBean.setPavilionArea(areaBean);
                     pavilionPresenter.updatePavilion(pavilionBean)
-                            .subscribe(resultModel ->{
+                            .subscribe(resultModel -> {
                                 sweetDialog.success("修改成功").show();
                                 loadData();
-                            },error ->{
+                            }, error -> {
                                 sweetDialog.success("修改失败").show();
                             });
                 }
@@ -233,14 +197,52 @@ public class PavilionListActivity extends BaseActivity implements IView, SwipeRe
         }
     }
 
-    @Override
-    public void onRefresh() {
-        loadData();
+    private void deletePavilion(PavilionBean pavilionBean) {
+        pavilionPresenter.deletePavilion(pavilionBean.getId())
+                .subscribe(resultModel -> {
+                    sweetDialog.success("删除成功").show();
+                    loadData();
+                }, error -> {
+                    sweetDialog.error("删除失败!").show();
+                    swipeRefreshLayout.setRefreshing(false);
+                });
+    }
+
+    private void loadData() {
+        sweetDialog.progress("正在加载中...").show();
+        pavilionPresenter.getPavilionList()
+                .subscribe(resultModel -> {
+                            pavilionList.clear();
+                            if (areaFromIntent != null) {
+                                for (PavilionBean p : ((ResultModel<List<PavilionBean>>) resultModel).getData()) {
+                                    if ((p.getPavilionArea() != null)
+                                            && (areaFromIntent.getId() == p.getPavilionArea().getId())) {
+                                        pavilionList.add(p);
+                                    }
+                                }
+                            } else {
+                                pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
+                            }
+                            pavilionRecyclerAdapter.notifyDataSetChanged();
+                            sweetDialog.close();
+                            ToastUtils.longTimeText(context, "加载成功");
+                            swipeRefreshLayout.setRefreshing(false);
+                        }, error -> {
+                            sweetDialog.error("加载警银亭列表失败!").show();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                );
+        areaPresenter.getAreaListByParentCodeLike("3501")
+                .subscribe(resultModel -> {
+                    areaList.clear();
+                    areaList.addAll(((ResultModel<List<AreaBean>>) resultModel).getData());
+                }, error -> {
+                    sweetDialog.error("加载区域失败!").show();
+                });
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sweetDialog.close();
+    public void onRefresh() {
+        loadData();
     }
 }

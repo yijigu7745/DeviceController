@@ -26,9 +26,9 @@ import java.util.List;
  *
  * @author AigeStudio 2015-12-03
  * @author AigeStudio 2015-12-08
- *         Init初始化
+ * Init初始化
  * @author AigeStudio 2015-12-12
- *         实现变更
+ * 实现变更
  * @version 1.0.0 beta
  */
 public class WheelDatePicker extends LinearLayout implements IWheelPicker {
@@ -46,11 +46,6 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
 
     public WheelDatePicker(Context context) {
         super(context);
-        init();
-    }
-
-    public WheelDatePicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
         init();
     }
 
@@ -129,7 +124,7 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
                         pickerDay.setCurrentYearAndMonth(Integer.valueOf(year),
                                 Integer.valueOf(month));
                     }
-                    if (null != listener){
+                    if (null != listener) {
                         listener.onWheelSelected(-1, year + "-" + month + "-" + day);
                     }
                 }
@@ -153,31 +148,10 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
         });
     }
 
-    public void setLabelColor(int labelColor) {
-        this.labelColor = labelColor;
-        invalidate();
-    }
-
-    public void setLabelTextSize(float labelTextSize) {
-        this.labelTextSize = labelTextSize;
-        invalidate();
-    }
-
-    @Override
-    public void setData(List<String> data) {
-        throw new RuntimeException("Set data will not allow here!");
-    }
-
-    public void setCurrentDate(int year, int month, int day) {
-        pickerYear.setCurrentYear(year);
-        pickerMonth.setCurrentMonth(month);
-        pickerDay.setCurrentYearAndMonth(year, month);
-        pickerDay.setCurrentDay(day);
-    }
-
-    @Override
-    public void setOnWheelChangeListener(AbstractWheelPicker.OnWheelChangeListener listener) {
-        this.listener = listener;
+    private boolean isValidDate() {
+        return pickerYear.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(year)
+                && pickerMonth.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(month)
+                && pickerDay.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(day);
     }
 
     private void checkState(AbstractWheelPicker.OnWheelChangeListener listener) {
@@ -196,10 +170,29 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
         }
     }
 
-    private boolean isValidDate() {
-        return pickerYear.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(year)
-                && pickerMonth.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(month)
-                && pickerDay.getVisibility() == View.GONE ? true : !TextUtils.isEmpty(day);
+    public WheelDatePicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public void setLabelColor(int labelColor) {
+        this.labelColor = labelColor;
+        invalidate();
+    }
+
+    public void setLabelTextSize(float labelTextSize) {
+        this.labelTextSize = labelTextSize;
+        invalidate();
+    }
+
+    @Override
+    public void setData(List<String> data) {
+        throw new RuntimeException("Set data will not allow here!");
+    }
+
+    @Override
+    public void setOnWheelChangeListener(AbstractWheelPicker.OnWheelChangeListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -258,12 +251,19 @@ public class WheelDatePicker extends LinearLayout implements IWheelPicker {
         pickerDay.setWheelDecor(ignorePadding, decor);
     }
 
-    public void setVisibility(TimeDialog.WheelType wheelType, int visibility){
-        if (wheelType == TimeDialog.WheelType.Year){
+    public void setCurrentDate(int year, int month, int day) {
+        pickerYear.setCurrentYear(year);
+        pickerMonth.setCurrentMonth(month);
+        pickerDay.setCurrentYearAndMonth(year, month);
+        pickerDay.setCurrentDay(day);
+    }
+
+    public void setVisibility(TimeDialog.WheelType wheelType, int visibility) {
+        if (wheelType == TimeDialog.WheelType.Year) {
             pickerYear.setVisibility(visibility);
-        }else if(wheelType == TimeDialog.WheelType.Month){
+        } else if (wheelType == TimeDialog.WheelType.Month) {
             pickerMonth.setVisibility(visibility);
-        }else if(wheelType == TimeDialog.WheelType.Day){
+        } else if (wheelType == TimeDialog.WheelType.Day) {
             pickerDay.setVisibility(visibility);
         }
     }

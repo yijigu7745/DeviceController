@@ -25,22 +25,76 @@ import cn.com.yijigu.rxnetwork.application.RetrofitUtilsApplication;
  */
 public class ApplicationUtils extends Application {
     protected static Context mContext;
-
+    private static ApplicationUtils mInstance;
+    /**
+     * 主线程ID
+     */
+    private static int mMainThreadId = -1;
+    /**
+     * 主线程ID
+     */
+    private static Thread mMainThread;
+    /**
+     * 主线程Handler
+     */
+    private static Handler mMainThreadHandler;
+    /**
+     * 主线程Looper
+     */
+    private static Looper mMainLooper;
     private List<Activity> activities = new LinkedList<Activity>();
 
-    private static ApplicationUtils mInstance;
-    /** 主线程ID */
-    private static int mMainThreadId = -1;
-    /** 主线程ID */
-    private static Thread mMainThread;
-    /** 主线程Handler */
-    private static Handler mMainThreadHandler;
-    /** 主线程Looper */
-    private static Looper mMainLooper;
+    public static Context getAppContext() {
+        return mContext;
+    }
+
+    public static ApplicationUtils getApplication() {
+        return mInstance;
+    }
+
+    /**
+     * 获取主线程ID
+     */
+    public static int getMainThreadId() {
+        return mMainThreadId;
+    }
+
+    /**
+     * 获取主线程
+     */
+    public static Thread getMainThread() {
+        return mMainThread;
+    }
+
+    /**
+     * 获取主线程的handler
+     */
+    public static Handler getMainThreadHandler() {
+        return mMainThreadHandler;
+    }
+
+    /**
+     * 获取主线程的looper
+     */
+    public static Looper getMainThreadLooper() {
+        return mMainLooper;
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        //非默认值
+        if (res.getConfiguration().fontScale != 1) {
+            Configuration newConfig = new Configuration();
+            newConfig.setToDefaults();//设置默认
+            res.updateConfiguration(newConfig, res.getDisplayMetrics());
+        }
+        return res;
     }
 
     @Override
@@ -63,12 +117,6 @@ public class ApplicationUtils extends Application {
         strategy.setUploadProcess(processName == null || processName.equals(packageName));
         // 初始化Bugly
         CrashReport.initCrashReport(context, "9f04daab78", Constants.TEST_MODE, strategy);
-    }
-
-    public void removeActivity(Activity activity) {
-        if (activity != null) {
-            activities.remove(activity);
-        }
     }
 
     /**
@@ -100,7 +148,6 @@ public class ApplicationUtils extends Application {
         return null;
     }
 
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         //非默认值
@@ -109,20 +156,11 @@ public class ApplicationUtils extends Application {
         }
         super.onConfigurationChanged(newConfig);
     }
-    @Override
-    public Resources getResources() {
-        Resources res = super.getResources();
-        //非默认值
-        if (res.getConfiguration().fontScale != 1) {
-            Configuration newConfig = new Configuration();
-            newConfig.setToDefaults();//设置默认
-            res.updateConfiguration(newConfig, res.getDisplayMetrics());
-        }
-        return res;
-    }
 
-    public static Context getAppContext() {
-        return mContext;
+    public void removeActivity(Activity activity) {
+        if (activity != null) {
+            activities.remove(activity);
+        }
     }
 
     /***
@@ -143,9 +181,9 @@ public class ApplicationUtils extends Application {
         }
     }
 
-        /***
-         * 退出应用
-         */
+    /***
+     * 退出应用
+     */
     public void exitApp() {
         for (Activity activity : activities) {
             activity.finish();
@@ -156,39 +194,16 @@ public class ApplicationUtils extends Application {
         ActivityManager activityMgr = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         activityMgr.restartPackage(getPackageName());
     }
+
     /***
      * 退出应用
      */
     public Activity getOneActity(Class cls) {
         for (Activity activity : activities) {
-            if(activity.getClass() == cls){
-                return  activity;
+            if (activity.getClass() == cls) {
+                return activity;
             }
         }
         return null;
-    }
-
-    public static ApplicationUtils getApplication() {
-        return mInstance;
-    }
-
-    /** 获取主线程ID */
-    public static int getMainThreadId() {
-        return mMainThreadId;
-    }
-
-    /** 获取主线程 */
-    public static Thread getMainThread() {
-        return mMainThread;
-    }
-
-    /** 获取主线程的handler */
-    public static Handler getMainThreadHandler() {
-        return mMainThreadHandler;
-    }
-
-    /** 获取主线程的looper */
-    public static Looper getMainThreadLooper() {
-        return mMainLooper;
     }
 }

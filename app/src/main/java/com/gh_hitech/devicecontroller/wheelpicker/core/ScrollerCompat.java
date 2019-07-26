@@ -101,11 +101,6 @@ class ScrollerCompat implements WheelScroller {
     }
 
     @Override
-    public void setFinalX(int newX) {
-        mScroller.setFinalX(newX);
-    }
-
-    @Override
     public void setFinalY(int newY) {
         mScroller.setFinalY(newY);
     }
@@ -149,5 +144,10 @@ class ScrollerCompat implements WheelScroller {
     @Override
     public int timePassed() {
         return mScroller.timePassed();
+    }
+
+    @Override
+    public void setFinalX(int newX) {
+        mScroller.setFinalX(newX);
     }
 }

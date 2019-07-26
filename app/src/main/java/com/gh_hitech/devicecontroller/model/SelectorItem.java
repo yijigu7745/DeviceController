@@ -2,6 +2,7 @@ package com.gh_hitech.devicecontroller.model;
 
 /**
  * 删除选项
+ *
  * @author yijigu
  */
 public class SelectorItem extends IBaseName {

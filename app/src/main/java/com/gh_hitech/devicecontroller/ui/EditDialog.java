@@ -30,12 +30,46 @@ public class EditDialog extends Dialog {
     Button btnConfirm;
     @BindView(R.id.btn_cancel)
     Button btnCancel;
-    private String text,title,confirmText,cancelText;
+    private String text, title, confirmText, cancelText;
 
     private OnButtonClickListener onButtonClickListener;
 
     public EditDialog(Context context) {
         super(context);
+    }
+
+    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
+        this.onButtonClickListener = onButtonClickListener;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setConfirmText(String confirmText) {
+        this.confirmText = confirmText;
+    }
+
+    public void setCancelText(String cancelText) {
+        this.cancelText = cancelText;
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = 580;
+        getWindow().getDecorView().setPadding(0, 0, 0, 0);
+        getWindow().setAttributes(layoutParams);
     }
 
     @Override
@@ -51,14 +85,29 @@ public class EditDialog extends Dialog {
         initEvent();
     }
 
+    private void initData() {
+        if (StringUtils.isNotBlank(text)) {
+            editText.setText(text);
+        }
+        if (StringUtils.isNotBlank(title)) {
+            titleText.setText(title);
+        }
+        if (StringUtils.isNotBlank(confirmText)) {
+            btnConfirm.setText(confirmText);
+        }
+        if (StringUtils.isNotBlank(cancelText)) {
+            btnCancel.setText(cancelText);
+        }
+    }
+
     private void initEvent() {
         btnConfirm.setOnClickListener(v -> {
-            if(onButtonClickListener != null){
+            if (onButtonClickListener != null) {
                 onButtonClickListener.onConfirmClick();
             }
         });
         btnCancel.setOnClickListener(v -> {
-            if(onButtonClickListener != null){
+            if (onButtonClickListener != null) {
                 onButtonClickListener.onCancelClick();
             }
         });
@@ -80,46 +129,7 @@ public class EditDialog extends Dialog {
         });
     }
 
-    private void initData() {
-        if(StringUtils.isNotBlank(text)){
-            editText.setText(text);
-        }
-        if(StringUtils.isNotBlank(title)){
-            titleText.setText(title);
-        }
-        if(StringUtils.isNotBlank(confirmText)){
-            btnConfirm.setText(confirmText);
-        }
-        if(StringUtils.isNotBlank(cancelText)){
-            btnCancel.setText(cancelText);
-        }
-    }
-
-    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
-        this.onButtonClickListener = onButtonClickListener;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setConfirmText(String confirmText) {
-        this.confirmText = confirmText;
-    }
-
-    public void setCancelText(String cancelText) {
-        this.cancelText = cancelText;
-    }
-
-    public interface OnButtonClickListener{
+    public interface OnButtonClickListener {
         /**
          * “确认”按钮点击事件
          */
@@ -129,15 +139,5 @@ public class EditDialog extends Dialog {
          * “取消”按钮点击事件
          */
         void onCancelClick();
-    }
-
-    @Override
-    public void show() {
-        super.show();
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        layoutParams.width= ViewGroup.LayoutParams.WRAP_CONTENT;
-        layoutParams.height= 580;
-        getWindow().getDecorView().setPadding(0, 0, 0, 0);
-        getWindow().setAttributes(layoutParams);
     }
 }

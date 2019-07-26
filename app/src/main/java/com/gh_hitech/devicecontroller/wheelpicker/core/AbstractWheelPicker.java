@@ -24,9 +24,11 @@ import java.util.List;
  * @author AigeStudio 2015-12-12
  */
 public abstract class AbstractWheelPicker extends View implements IWheelPicker {
+    public static final int SCROLL_STATE_IDLE = 0;
+    public static final int SCROLL_STATE_DRAGGING = 1;
+    public static final int SCROLL_STATE_SCROLLING = 2;
     private static final int TOUCH_DISTANCE_MINIMUM = 8;
     private static final int VELOCITY_TRACKER_UNITS = 150;
-
     protected VelocityTracker mTracker;
     protected WheelScroller mScroller;
     protected TextPaint mTextPaint;
@@ -36,11 +38,8 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     protected Handler mHandler;
     protected OnWheelChangeListener mListener;
     protected AbstractWheelDecor mWheelDecor;
-
     protected List<String> data;
-
     protected String curData;
-
     protected int state = SCROLL_STATE_IDLE;
     protected int itemCount;
     protected int itemIndex;
@@ -51,51 +50,15 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     protected int maxTextWidth, maxTextHeight;
     protected int wheelContentWidth, wheelContentHeight;
     protected int wheelCenterX, wheelCenterY, wheelCenterTextY;
-
     protected int lastX, lastY;
     protected int diSingleMoveX, diSingleMoveY;
     protected int disTotalMoveX, disTotalMoveY;
-
     protected boolean ignorePadding;
     protected boolean hasSameSize;
-
-    public static final int SCROLL_STATE_IDLE = 0;
-    public static final int SCROLL_STATE_DRAGGING = 1;
-    public static final int SCROLL_STATE_SCROLLING = 2;
-
-    public interface OnWheelChangeListener {
-        void onWheelScrolling(float deltaX, float deltaY);
-
-        void onWheelSelected(int index, String data);
-
-        void onWheelScrollStateChanged(int state);
-    }
-
-    public static class SimpleWheelChangeListener implements OnWheelChangeListener {
-        @Override
-        public void onWheelScrolling(float deltaX, float deltaY) {
-
-        }
-
-        @Override
-        public void onWheelSelected(int index, String data) {
-
-        }
-
-        @Override
-        public void onWheelScrollStateChanged(int state) {
-
-        }
-    }
 
     public AbstractWheelPicker(Context context) {
         super(context);
         init(null);
-    }
-
-    public AbstractWheelPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(attrs);
     }
 
     private void init(AttributeSet attrs) {
@@ -199,67 +162,10 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
-        int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
-
-        int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
-
-        int resultWidth = wheelContentWidth, resultHeight = wheelContentHeight;
-        resultWidth += (getPaddingLeft() + getPaddingRight());
-        resultHeight += (getPaddingTop() + getPaddingBottom());
-
-        resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
-        resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
-
-        setMeasuredDimension(resultWidth, resultHeight);
+    public AbstractWheelPicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(attrs);
     }
-
-    private int measureSize(int mode, int sizeExpect, int sizeActual) {
-        int realSize;
-        if (mode == MeasureSpec.EXACTLY) {
-            realSize = sizeExpect;
-        } else {
-            realSize = sizeActual;
-            if (mode == MeasureSpec.AT_MOST) {
-                realSize = Math.min(realSize, sizeExpect);
-            }
-        }
-        return realSize;
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
-        onWheelSelected(itemIndex, data.get(itemIndex));
-
-        mDrawBound.set(getPaddingLeft(), getPaddingTop(), w - getPaddingRight(),
-                h - getPaddingBottom());
-
-        wheelCenterX = mDrawBound.centerX();
-        wheelCenterY = mDrawBound.centerY();
-        wheelCenterTextY = (int) (wheelCenterY - (mTextPaint.ascent() +
-                mTextPaint.descent()) / 2);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        drawBackground(canvas);
-
-        canvas.save();
-        canvas.clipRect(mDrawBound);
-        drawItems(canvas);
-        canvas.restore();
-
-        drawForeground(canvas);
-    }
-
-    protected abstract void drawBackground(Canvas canvas);
-
-    protected abstract void drawItems(Canvas canvas);
-
-    protected abstract void drawForeground(Canvas canvas);
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -301,25 +207,96 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
                 mTracker.recycle();
                 mTracker = null;
                 break;
-                default:
+            default:
         }
         return true;
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        onWheelSelected(itemIndex, data.get(itemIndex));
+
+        mDrawBound.set(getPaddingLeft(), getPaddingTop(), w - getPaddingRight(),
+                h - getPaddingBottom());
+
+        wheelCenterX = mDrawBound.centerX();
+        wheelCenterY = mDrawBound.centerY();
+        wheelCenterTextY = (int) (wheelCenterY - (mTextPaint.ascent() +
+                mTextPaint.descent()) / 2);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        drawBackground(canvas);
+
+        canvas.save();
+        canvas.clipRect(mDrawBound);
+        drawItems(canvas);
+        canvas.restore();
+
+        drawForeground(canvas);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
+        int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
+
+        int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        int resultWidth = wheelContentWidth, resultHeight = wheelContentHeight;
+        resultWidth += (getPaddingLeft() + getPaddingRight());
+        resultHeight += (getPaddingTop() + getPaddingBottom());
+
+        resultWidth = measureSize(modeWidth, sizeWidth, resultWidth);
+        resultHeight = measureSize(modeHeight, sizeHeight, resultHeight);
+
+        setMeasuredDimension(resultWidth, resultHeight);
+    }
+
+    private int measureSize(int mode, int sizeExpect, int sizeActual) {
+        int realSize;
+        if (mode == MeasureSpec.EXACTLY) {
+            realSize = sizeExpect;
+        } else {
+            realSize = sizeActual;
+            if (mode == MeasureSpec.AT_MOST) {
+                realSize = Math.min(realSize, sizeExpect);
+            }
+        }
+        return realSize;
+    }
+
+    protected abstract void drawBackground(Canvas canvas);
+
+    protected abstract void drawItems(Canvas canvas);
+
+    protected abstract void drawForeground(Canvas canvas);
+
+    protected void onWheelSelected(int index, String data) {
+        if (null != mListener) {
+            mListener.onWheelSelected(index, data);
+        }
+    }
+
     /**
      * 按下
+     *
      * @param event
      */
     protected abstract void onTouchDown(MotionEvent event);
 
     /**
      * 移动
+     *
      * @param event
      */
     protected abstract void onTouchMove(MotionEvent event);
 
     /**
      * 按起
+     *
      * @param event
      */
     protected abstract void onTouchUp(MotionEvent event);
@@ -328,23 +305,17 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
         return isEventValidVer() || isEventValidHor();
     }
 
-    protected boolean isEventValidHor() {
-        return Math.abs(diSingleMoveX) > TOUCH_DISTANCE_MINIMUM;
-    }
-
     protected boolean isEventValidVer() {
         return Math.abs(diSingleMoveY) > TOUCH_DISTANCE_MINIMUM;
+    }
+
+    protected boolean isEventValidHor() {
+        return Math.abs(diSingleMoveX) > TOUCH_DISTANCE_MINIMUM;
     }
 
     protected void onWheelScrolling(float deltaX, float deltaY) {
         if (null != mListener) {
             mListener.onWheelScrolling(deltaX, deltaY);
-        }
-    }
-
-    protected void onWheelSelected(int index, String data) {
-        if (null != mListener) {
-            mListener.onWheelSelected(index, data);
         }
     }
 
@@ -413,5 +384,30 @@ public abstract class AbstractWheelPicker extends View implements IWheelPicker {
     public void setWheelDecor(boolean ignorePadding, AbstractWheelDecor decor) {
         this.ignorePadding = ignorePadding;
         mWheelDecor = decor;
+    }
+
+    public interface OnWheelChangeListener {
+        void onWheelScrolling(float deltaX, float deltaY);
+
+        void onWheelSelected(int index, String data);
+
+        void onWheelScrollStateChanged(int state);
+    }
+
+    public static class SimpleWheelChangeListener implements OnWheelChangeListener {
+        @Override
+        public void onWheelScrolling(float deltaX, float deltaY) {
+
+        }
+
+        @Override
+        public void onWheelSelected(int index, String data) {
+
+        }
+
+        @Override
+        public void onWheelScrollStateChanged(int state) {
+
+        }
     }
 }

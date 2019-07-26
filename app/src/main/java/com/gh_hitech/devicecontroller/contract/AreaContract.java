@@ -1,16 +1,13 @@
 package com.gh_hitech.devicecontroller.contract;
 
 import com.gh_hitech.devicecontroller.model.AreaBean;
-import com.gh_hitech.devicecontroller.model.DeviceBean;
 import com.gh_hitech.devicecontroller.model.ResultModel;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * @author yijigu
@@ -19,6 +16,7 @@ public interface AreaContract {
     interface Model {
         /**
          * 获取区域列表
+         *
          * @return
          */
         @GET("/area/all")
@@ -26,6 +24,7 @@ public interface AreaContract {
 
         /**
          * 查询区域
+         *
          * @param areaCode
          * @return
          */
@@ -34,6 +33,7 @@ public interface AreaContract {
 
         /**
          * 模糊查询区域列表
+         *
          * @param parentCode
          * @return
          */
@@ -47,12 +47,14 @@ public interface AreaContract {
     interface Presenter {
         /**
          * 获取区域列表
+         *
          * @return
          */
         Observable getAreaList();
 
         /**
          * 查询区域
+         *
          * @param areaCode
          * @return
          */
@@ -60,9 +62,10 @@ public interface AreaContract {
 
         /**
          * 模糊查询区域列表
+         *
          * @param parentCode
          * @return
          */
-        Observable getAreaListByParentCodeLike(String parentCode );
+        Observable getAreaListByParentCodeLike(String parentCode);
     }
 }

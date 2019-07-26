@@ -2,7 +2,6 @@ package com.gh_hitech.devicecontroller.view;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -32,20 +31,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.com.yijigu.rxnetwork.utils.StringUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 添加设备及警银亭界面
+ *
  * @author yijigu
  */
-public class AddDeviceActivity extends BaseActivity implements IView , View.OnClickListener{
-
-    DeviceContract.Presenter addPresenter;
-    PavilionContract.Presenter pavilionPresenter;
+public class AddDeviceActivity extends BaseActivity implements IView, View.OnClickListener {
 
     final private String TAG = "AddDeviceActivity";
-
+    DeviceContract.Presenter addPresenter;
+    PavilionContract.Presenter pavilionPresenter;
     @BindView(R.id.btn_add_device_and_kiosk)
     Button btnAddDeviceAndKiosk;
     @BindView(R.id.btn_add_device_and_bind_kiosk)
@@ -79,6 +75,17 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
     private TextView tvTitle;
     private RelativeLayout layoutRight;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_device);
+        ButterKnife.bind(this);
+        addPresenter = new DevicePresenter(this);
+        pavilionPresenter = new PavilionPresenter(this);
+        sweetDialog = SweetDialog.builder(this);
+        register();
+    }
+
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreateCustomToolBar(Toolbar toolbar) {
@@ -103,17 +110,12 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_device);
-        ButterKnife.bind(this);
-        addPresenter = new DevicePresenter(this);
-        pavilionPresenter = new PavilionPresenter(this);
-        sweetDialog = SweetDialog.builder(this);
-        register();
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
     }
 
-    private void register(){
+    private void register() {
         btnAddDeviceAndKiosk.setOnClickListener(this);
         btnAddDeviceAndBindKiosk.setOnClickListener(this);
         btnSelectKiosk.setOnClickListener(this);
@@ -121,16 +123,16 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_add_device_and_kiosk:
                 PavilionBean pavilionBean = new PavilionBean();
                 pavilionBean.setAddress(etKioskAddress.getText().toString());
                 pavilionBean.setName(etKioskName.getText().toString());
-                if(StringUtils.isBlank(etKioskName.getText().toString())){
+                if (StringUtils.isBlank(etKioskName.getText().toString())) {
                     sweetDialog.error("请填写警银亭名称！").show();
                     return;
                 }
-                if(StringUtils.isBlank(etKioskAddress.getText().toString())){
+                if (StringUtils.isBlank(etKioskAddress.getText().toString())) {
                     sweetDialog.error("请填写警银亭地址！").show();
                     return;
                 }
@@ -138,20 +140,20 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                 pavilionPresenter.addPavilion(pavilionBean)
                         .subscribe(resultModel -> {
                             sweetDialog.success("添加成功").show();
-                        },error ->{
+                        }, error -> {
                             sweetDialog.error("连接失败").show();
-                            Log.e(TAG, "error: " + error );
+                            Log.e(TAG, "error: " + error);
                         });
                 break;
             case R.id.btn_add_device_and_bind_kiosk:
                 pavilionBean = new PavilionBean();
                 pavilionBean.setId(checkId);
                 DeviceBean deviceBean = new DeviceBean();
-                if(StringUtils.isBlank(etDeviceName2.getText().toString())){
+                if (StringUtils.isBlank(etDeviceName2.getText().toString())) {
                     sweetDialog.error("请填写设备名！").show();
                     return;
                 }
-                if(checkId == Constants.NO_KIOSK.longValue()){
+                if (checkId == Constants.NO_KIOSK.longValue()) {
                     sweetDialog.error("请选择绑定警银亭！").show();
                     return;
                 }
@@ -161,24 +163,24 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
                 addPresenter.addDevice(deviceBean)
                         .subscribe(resultModel -> {
                             sweetDialog.success("添加成功").show();
-                            Log.i(TAG, "msg: " +resultModel.toString());
-                        },error ->{
+                            Log.i(TAG, "msg: " + resultModel.toString());
+                        }, error -> {
                             sweetDialog.error("连接失败").show();
-                            Log.e(TAG, "error: " + error );
+                            Log.e(TAG, "error: " + error);
                         });
                 break;
-                case R.id.btn_select_kiosk:
-                    //选择警银亭并将名称显示在前台
-                    pavilionPresenter.getPavilionList()
-                            .subscribe(resultModel -> {
-                                pavilionBeanList = ((ResultModel<List<PavilionBean>>)resultModel).getData();
-                                Log.i(TAG, "msg: " +resultModel.toString());
-                                showPavilionSelectDialog();
-                            },error ->{
-                                sweetDialog.error("连接失败").show();
-                                Log.e(TAG, "error: " + error );
-                            });
-                default:
+            case R.id.btn_select_kiosk:
+                //选择警银亭并将名称显示在前台
+                pavilionPresenter.getPavilionList()
+                        .subscribe(resultModel -> {
+                            pavilionBeanList = ((ResultModel<List<PavilionBean>>) resultModel).getData();
+                            Log.i(TAG, "msg: " + resultModel.toString());
+                            showPavilionSelectDialog();
+                        }, error -> {
+                            sweetDialog.error("连接失败").show();
+                            Log.e(TAG, "error: " + error);
+                        });
+            default:
         }
     }
 
@@ -186,15 +188,15 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
         List<IBaseName> list = new ArrayList<>();
         list.addAll(pavilionBeanList);
         CheckboxDialog checkboxDialog = new CheckboxDialog(this);
-        checkboxDialog.setSingleListBean(list,checkId);
+        checkboxDialog.setSingleListBean(list, checkId);
         checkboxDialog.setOnButtonClickListener(new CheckboxDialog.OnButtonClickListener() {
             @Override
             public void onConfirmationClick() {
                 checkboxDialog.setConfirmation();
-                if(StringUtils.isNotBlank(checkboxDialog.getId())) {
+                if (StringUtils.isNotBlank(checkboxDialog.getId())) {
                     checkId = Long.parseLong(checkboxDialog.getId());
                     bindKioskName.setText(checkboxDialog.getName());
-                }else{
+                } else {
                     checkId = Constants.NO_KIOSK;
                     bindKioskName.setText(Constants.NULL_STRING);
                 }
@@ -206,11 +208,5 @@ public class AddDeviceActivity extends BaseActivity implements IView , View.OnCl
             }
         });
         checkboxDialog.show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sweetDialog.close();
     }
 }

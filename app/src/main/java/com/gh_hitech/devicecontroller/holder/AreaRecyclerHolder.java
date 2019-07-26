@@ -13,6 +13,7 @@ import cn.com.yijigu.rxnetwork.utils.StringUtils;
 
 /**
  * 区域列表Holder
+ *
  * @author yijigu
  */
 public class AreaRecyclerHolder extends RvHolder<AreaBean> {
@@ -20,27 +21,28 @@ public class AreaRecyclerHolder extends RvHolder<AreaBean> {
     TextView areaName;
     @BindView(R.id.pavilion_count)
     TextView pavilionCount;
+
     public AreaRecyclerHolder(View itemView, int type, RvListener listener) {
         super(itemView, type, listener);
-        ButterKnife.bind(this,itemView);
+        ButterKnife.bind(this, itemView);
     }
 
     @Override
     public void bindHolder(AreaBean areaBean, int position) {
-        if(StringUtils.isNotBlank(areaBean.getDistrict())){
+        if (StringUtils.isNotBlank(areaBean.getDistrict())) {
             areaName.setVisibility(View.VISIBLE);
-            areaName.setText("区域： "+areaBean.getDistrict());
-        }else if(StringUtils.isNotBlank(areaBean.getCity())){
+            areaName.setText("区域： " + areaBean.getDistrict());
+        } else if (StringUtils.isNotBlank(areaBean.getCity())) {
             areaName.setVisibility(View.VISIBLE);
-            areaName.setText("区域： "+areaBean.getCity());
-        } else if(StringUtils.isNotBlank(areaBean.getProvince())){
+            areaName.setText("区域： " + areaBean.getCity());
+        } else if (StringUtils.isNotBlank(areaBean.getProvince())) {
             areaName.setVisibility(View.VISIBLE);
-            areaName.setText("区域： "+areaBean.getProvince());
+            areaName.setText("区域： " + areaBean.getProvince());
         }
-        if(areaBean.getPavilionCount() != 0 ){
+        if (areaBean.getPavilionCount() != 0) {
             pavilionCount.setVisibility(View.VISIBLE);
-            pavilionCount.setText("亭体数量："+areaBean.getPavilionCount());
-        }else{
+            pavilionCount.setText("亭体数量：" + areaBean.getPavilionCount());
+        } else {
             pavilionCount.setVisibility(View.GONE);
         }
     }

@@ -4,15 +4,15 @@
     <item android:state_pressed="true">
         <shape>
             <solid android:color="#DEDEDE"/>
-            <corners android:bottomRightRadius="5dip"
-                android:bottomLeftRadius="5dip"/>
+            <corners android:bottomLeftRadius="5dip"
+                     android:bottomRightRadius="5dip"/>
         </shape>
     </item>
     <item android:state_focused="false">
         <shape>
             <solid android:color="#F3F3F3"/>
-            <corners android:bottomRightRadius="5dip"
-                android:bottomLeftRadius="5dip"/>
+            <corners android:bottomLeftRadius="5dip"
+                     android:bottomRightRadius="5dip"/>
         </shape>
     </item>
 

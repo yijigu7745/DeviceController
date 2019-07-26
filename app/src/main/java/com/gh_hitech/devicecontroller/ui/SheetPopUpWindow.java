@@ -19,27 +19,22 @@ import com.gh_hitech.devicecontroller.utils.PxUtils;
 
 import java.util.List;
 
+/**
+ * @author yijigu
+ */
 public class SheetPopUpWindow extends PopupWindow {
     Button btnCancel;
     LinearLayout llMain;
     LinearLayout popLayout;
+    List<String> data;
     private View mMenuView;
     private OnItemSelectListener listener;
-    List<String> data;
     private Context mCtx;
-
-    public static SheetPopUpWindow  createSheetPopUpWindow(Context context,List<String> data, OnItemSelectListener itemsOnClick){
-        SheetPopUpWindow popUpWindow=new SheetPopUpWindow(context,itemsOnClick);
-        popUpWindow.setData(data);
-        return  popUpWindow;
-    }
-
-
 
     private SheetPopUpWindow(Context context, OnItemSelectListener itemsOnClick) {
         super(context);
-        this.mCtx=context;
-        this.listener=itemsOnClick;
+        this.mCtx = context;
+        this.listener = itemsOnClick;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.pop_sheet_layout, null);
         //设置SelectPicPopupWindow的View
@@ -73,16 +68,22 @@ public class SheetPopUpWindow extends PopupWindow {
 
     }
 
-    public void setData(List<String> data){
+    public static SheetPopUpWindow createSheetPopUpWindow(Context context, List<String> data, OnItemSelectListener itemsOnClick) {
+        SheetPopUpWindow popUpWindow = new SheetPopUpWindow(context, itemsOnClick);
+        popUpWindow.setData(data);
+        return popUpWindow;
+    }
+
+    public void setData(List<String> data) {
         if (data != null && data.size() > 0) {
             this.data = data;
             layoutView();
         }
     }
 
-    private void layoutView(){
-        int marginsTop= PxUtils.dp2px(mCtx,15);
-        if (data != null && data.size() > 0){
+    private void layoutView() {
+        int marginsTop = PxUtils.dp2px(mCtx, 15);
+        if (data != null && data.size() > 0) {
             for (int i = 0; i < data.size(); i++) {
                 Button tv = new Button(mCtx);
                 tv.setBackgroundDrawable(mCtx.getResources().getDrawable(R.drawable.btn_background));
@@ -91,12 +92,12 @@ public class SheetPopUpWindow extends PopupWindow {
                 tv.setTextColor(Color.WHITE);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0,marginsTop,0,0);
+                lp.setMargins(0, marginsTop, 0, 0);
                 tv.setLayoutParams(lp);
                 tv.setTag(i);
                 tv.setOnClickListener(v -> {
                     int tag = (int) v.getTag();
-                    if (listener != null){
+                    if (listener != null) {
                         dismiss();
                         listener.itemSelect(tag, data.get(tag));
                     }
@@ -104,15 +105,14 @@ public class SheetPopUpWindow extends PopupWindow {
                 });
                 llMain.addView(tv);
             }
-        }else{
+        } else {
             llMain.removeAllViews();
         }
     }
 
 
-    public  interface OnItemSelectListener {
+    public interface OnItemSelectListener {
         /**
-         *
          * @param pos
          * @param value
          */

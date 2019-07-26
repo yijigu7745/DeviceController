@@ -23,6 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * @author yijigu
+ */
 public class TimeDialog extends Dialog {
     private Context context;
     private Button btnCanel;
@@ -32,21 +35,6 @@ public class TimeDialog extends Dialog {
     private String day;
     private String time;
     private TimeType timeType = TimeType.Both;
-
-    public enum TimeType {
-        Day,
-        Time,
-        Both
-    }
-
-    public enum WheelType {
-        Year,
-        Month,
-        Day,
-        Hour,
-        Minute
-    }
-
     private OnTimeSelectListener onTimeSelectListener;
 
     public TimeDialog(Context context) {
@@ -58,24 +46,12 @@ public class TimeDialog extends Dialog {
         setCanceledOnTouchOutside(true);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setGravity(Gravity.BOTTOM);
-        getWindow().setWindowAnimations(R.style.dialogWindowAnim);
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = PxUtils.dp2px(180);
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        getWindow().setAttributes(params);
-    }
-
     private void initTime() {
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         day = dayFormat.format(Calendar.getInstance().getTime());
         time = timeFormat.format(Calendar.getInstance().getTime());
     }
-
 
     private void initLayout() {
         btnCanel = findViewById(R.id.btn_canel);
@@ -101,8 +77,7 @@ public class TimeDialog extends Dialog {
                 String newData = DateUtil.changeTimeFormat("y-M-d", data, "yyyy-MM-dd");
                 if (TextUtils.isEmpty(newData)) {
                     day = data;
-                }
-                else {
+                } else {
                     day = newData;
                 }
             }
@@ -120,10 +95,11 @@ public class TimeDialog extends Dialog {
             @Override
             public void onWheelSelected(int index, String data) {
                 String newData = DateUtil.changeTimeFormat("H:m", data, "HH:mm");
-                if (TextUtils.isEmpty(newData))
+                if (TextUtils.isEmpty(newData)) {
                     time = data;
-                else
+                } else {
                     time = newData;
+                }
 
             }
 
@@ -136,10 +112,21 @@ public class TimeDialog extends Dialog {
         btnOk.setOnClickListener(v -> {
             dismiss();
             if (onTimeSelectListener != null) {
-                onTimeSelectListener.onSelect(day + " " + time);
+                onTimeSelectListener.onSelect(day + " " + time + ":00");
             }
         });
         btnCanel.setOnClickListener(v -> dismiss());
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setGravity(Gravity.BOTTOM);
+        getWindow().setWindowAnimations(R.style.dialogWindowAnim);
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.height = PxUtils.dp2px(180);
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        getWindow().setAttributes(params);
     }
 
     /**
@@ -177,10 +164,6 @@ public class TimeDialog extends Dialog {
         this.onTimeSelectListener = onItemSelectLinstener;
     }
 
-    public interface OnTimeSelectListener {
-        void onSelect(String time);
-    }
-
     public void setTimeType(TimeType timeType) {
         this.timeType = timeType;
         if (timeType == TimeType.Day) {
@@ -201,6 +184,24 @@ public class TimeDialog extends Dialog {
         } else {
             wheelpickerTime.setVisibility(wheelType, visibility);
         }
+    }
+
+    public enum TimeType {
+        Day,
+        Time,
+        Both
+    }
+
+    public enum WheelType {
+        Year,
+        Month,
+        Day,
+        Hour,
+        Minute
+    }
+
+    public interface OnTimeSelectListener {
+        void onSelect(String time);
     }
 }
 

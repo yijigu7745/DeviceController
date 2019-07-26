@@ -64,6 +64,15 @@ public class MainActivity extends BaseActivity implements IView, View.OnClickLis
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
+    }
+
+    private void init() {
+    }
+
     private void register() {
         btnManageDevice.setOnClickListener(this);
         btnManageArea.setOnClickListener(this);
@@ -71,34 +80,25 @@ public class MainActivity extends BaseActivity implements IView, View.OnClickLis
         btnManageOther.setOnClickListener(this);
     }
 
-    private void init() {
-    }
-
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.device_manage:
-                intent = new Intent(mContext,DeviceListActivity.class);
+                intent = new Intent(mContext, DeviceListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.pavilion_manage:
-                intent = new Intent(mContext,PavilionListActivity.class);
+                intent = new Intent(mContext, PavilionListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.other_manage:
                 break;
             case R.id.area_manage:
-                intent = new Intent(mContext,AreaManageActivity.class);
+                intent = new Intent(mContext, AreaManageActivity.class);
                 startActivity(intent);
                 break;
             default:
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sweetDialog.close();
     }
 }

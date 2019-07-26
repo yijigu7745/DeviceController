@@ -3,10 +3,7 @@ package com.gh_hitech.devicecontroller.presenter;
 import com.gh_hitech.devicecontroller.contract.DeviceContract;
 import com.gh_hitech.devicecontroller.model.DeviceBean;
 import com.gh_hitech.devicecontroller.model.DeviceSwitchDesc;
-import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.utils.Constants;
-
-import java.util.List;
 
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
@@ -96,7 +93,7 @@ public class DevicePresenter implements DeviceContract.Presenter {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, DeviceContract.Model.class)
-                .updateDeviceSwitchDesc(id,deviceSwitchDesc)
+                .updateDeviceSwitchDesc(id, deviceSwitchDesc)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

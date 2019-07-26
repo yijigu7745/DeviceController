@@ -124,8 +124,7 @@ public class WheelCurvedPicker extends WheelCrossPicker {
         if (Math.abs(curDis) >= radius) {
             if (curDis >= 0) {
                 degreeIndex++;
-            }
-            else {
+            } else {
                 degreeIndex--;
             }
             diSingleMoveX = 0;

@@ -39,6 +39,7 @@ import cn.com.yijigu.rxnetwork.view.IView;
 
 /**
  * 设备列表
+ *
  * @author yijigu
  */
 public class DeviceListActivity extends BaseActivity implements IView, SwipeRefreshLayout.OnRefreshListener {
@@ -53,8 +54,8 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
     List<DeviceBean> deviceList = new ArrayList<>();
     List<PavilionBean> pavilionList = new ArrayList<>();
     SweetDialog sweetDialog;
-    private Context context;
     DevicePresenter devicePresenter;
+    private Context context;
     private int selectPosition = -1;
     private PavilionBean pavilionFromIntent;
     private long selectPavilionId;
@@ -62,6 +63,19 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
     private TextView tvTitle;
     private RelativeLayout layoutRight;
     private SheetPopUpWindow popUpWindow;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_device_list);
+        ButterKnife.bind(this);
+        context = this;
+        devicePresenter = new DevicePresenter(this);
+        pavilionPresenter = new PavilionPresenter(this);
+        sweetDialog = SweetDialog.builder(this);
+        init();
+        register();
+    }
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -82,20 +96,15 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_list);
-        ButterKnife.bind(this);
-        context = this;
-        devicePresenter = new DevicePresenter(this);
-        pavilionPresenter = new PavilionPresenter(this);
-        sweetDialog = SweetDialog.builder(this);
-        init();
-        register();
+    protected void onDestroy() {
+        super.onDestroy();
+        sweetDialog.close();
     }
 
-    private void register() {
-        swipeRefreshLayout.setOnRefreshListener(this);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
     }
 
     private void init() {
@@ -104,11 +113,11 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
         menu.add("控制面板");
         menu.add("修改设备所属警银亭");
         menu.add("删除设备");
-        popUpWindow = DialogFactory.createSheetPopUpWindow(context,menu,(pos, value)->{
-            switch(value){
+        popUpWindow = DialogFactory.createSheetPopUpWindow(context, menu, (pos, value) -> {
+            switch (value) {
                 case "控制面板":
-                    Intent intent = new Intent(DeviceListActivity.this,ControlActivity.class);
-                    intent.putExtra("deviceBean",deviceList.get(selectPosition));
+                    Intent intent = new Intent(DeviceListActivity.this, ControlActivity.class);
+                    intent.putExtra("deviceBean", deviceList.get(selectPosition));
                     startActivity(intent);
                     break;
                 case "修改设备所属警银亭":
@@ -120,7 +129,7 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
                 default:
             }
         });
-        deviceRecyclerAdapter = new DeviceRecyclerAdapter(context,deviceList,(id, position) ->{
+        deviceRecyclerAdapter = new DeviceRecyclerAdapter(context, deviceList, (id, position) -> {
             selectPosition = position;
             popUpWindow.showAtLocation(getCurrentActivity()
                             .findViewById(R.id.device_list),
@@ -130,69 +139,20 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
         recyclerView.setAdapter(deviceRecyclerAdapter);
     }
 
-    private void deleteConfirm() {
-        sweetDialog.waring("提示",
-                "是否删除设备"+ deviceList.get(selectPosition).getName()+"?",
-                false,true)
-                .setConfirmClickListener(sweetAlertDialog -> deleteDevice(deviceList.get(selectPosition))).show();
+    private void register() {
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
-    private void deleteDevice(DeviceBean deviceBean) {
-        devicePresenter.deleteDevice(deviceBean.getId())
-                .subscribe(resultModel -> {
-                    sweetDialog.success("删除成功").show();
-                    loadData();
-                },error -> {
-                    sweetDialog.error("删除失败!").show();
-                    swipeRefreshLayout.setRefreshing(false);});
-    }
-
-    private void loadData(){
-        sweetDialog.progress("正在加载中...").show();
-        devicePresenter.getDeviceList()
-                .subscribe(resultModel -> {
-                            deviceList.clear();
-                            if(pavilionFromIntent != null){
-                                for (DeviceBean d:((ResultModel<List<DeviceBean>>) resultModel).getData()) {
-                                    if((d.getPavilionBean() != null)
-                                            && (pavilionFromIntent.getId().equals(d.getPavilionBean().getId()))){
-                                        deviceList.add(d);
-                                    }
-                                }
-                            }else {
-                                deviceList.addAll(((ResultModel<List<DeviceBean>>) resultModel).getData());
-                            }
-                            deviceRecyclerAdapter.notifyDataSetChanged();
-                            sweetDialog.close();
-                            ToastUtils.longTimeText(context,"加载成功");
-                            swipeRefreshLayout.setRefreshing(false);
-                        },error ->{
-                            Log.e(TAG, "loadData: "+error);
-                            sweetDialog.error("加载失败!").show();
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                );
-        pavilionPresenter.getPavilionList()
-                .subscribe(resultModel -> {
-                            pavilionList.clear();
-                            pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
-                        },error ->{
-                            sweetDialog.error("加载警银亭失败!").show();
-                        }
-                );
-    }
-
-
-    private void selectPavilionDialog(){
+    private void selectPavilionDialog() {
         List<IBaseName> pavilion = new ArrayList<>();
         pavilion.addAll(pavilionList);
         final CheckboxDialog checkboxDialog = new CheckboxDialog(context);
-        checkboxDialog.setSingleListBean(pavilion,selectPavilionId);
+        checkboxDialog.setSingleListBean(pavilion, selectPavilionId);
         checkboxDialog.setOnButtonClickListener(new CheckboxDialog.OnButtonClickListener() {
             @Override
             public void onConfirmationClick() {
                 checkboxDialog.setConfirmation();
-                if(StringUtils.isNotBlank(checkboxDialog.getId())) {
+                if (StringUtils.isNotBlank(checkboxDialog.getId())) {
                     selectPavilionId = Long.parseLong(checkboxDialog.getId());
                 }
                 updateDevicePavilion();
@@ -206,17 +166,24 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
         checkboxDialog.show();
     }
 
-    private void updateDevicePavilion(){
-        if(pavilionList != null){
-            for (PavilionBean pavilionBean:pavilionList) {
-                if(pavilionBean.getIid().longValue() == selectPavilionId){
+    private void deleteConfirm() {
+        sweetDialog.waring("提示",
+                "是否删除设备" + deviceList.get(selectPosition).getName() + "?",
+                false, true)
+                .setConfirmClickListener(sweetAlertDialog -> deleteDevice(deviceList.get(selectPosition))).show();
+    }
+
+    private void updateDevicePavilion() {
+        if (pavilionList != null) {
+            for (PavilionBean pavilionBean : pavilionList) {
+                if (pavilionBean.getIid().longValue() == selectPavilionId) {
                     DeviceBean deviceBean = deviceList.get(selectPosition);
                     deviceBean.setPavilionBean(pavilionBean);
                     devicePresenter.updateDevice(deviceBean)
                             .subscribe(resultModel -> {
                                 sweetDialog.success("修改成功").show();
                                 loadData();
-                            },error ->{
+                            }, error -> {
                                 sweetDialog.success("修改失败").show();
                             });
                 }
@@ -224,20 +191,54 @@ public class DeviceListActivity extends BaseActivity implements IView, SwipeRefr
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadData();
+    private void deleteDevice(DeviceBean deviceBean) {
+        devicePresenter.deleteDevice(deviceBean.getId())
+                .subscribe(resultModel -> {
+                    sweetDialog.success("删除成功").show();
+                    loadData();
+                }, error -> {
+                    sweetDialog.error("删除失败!").show();
+                    swipeRefreshLayout.setRefreshing(false);
+                });
+    }
+
+    private void loadData() {
+        sweetDialog.progress("正在加载中...").show();
+        devicePresenter.getDeviceList()
+                .subscribe(resultModel -> {
+                            deviceList.clear();
+                            if (pavilionFromIntent != null) {
+                                for (DeviceBean d : ((ResultModel<List<DeviceBean>>) resultModel).getData()) {
+                                    if ((d.getPavilionBean() != null)
+                                            && (pavilionFromIntent.getId().equals(d.getPavilionBean().getId()))) {
+                                        deviceList.add(d);
+                                    }
+                                }
+                            } else {
+                                deviceList.addAll(((ResultModel<List<DeviceBean>>) resultModel).getData());
+                            }
+                            deviceRecyclerAdapter.notifyDataSetChanged();
+                            sweetDialog.close();
+                            ToastUtils.longTimeText(context, "加载成功");
+                            swipeRefreshLayout.setRefreshing(false);
+                        }, error -> {
+                            Log.e(TAG, "loadData: " + error);
+                            sweetDialog.error("加载失败!").show();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                );
+        pavilionPresenter.getPavilionList()
+                .subscribe(resultModel -> {
+                            pavilionList.clear();
+                            pavilionList.addAll(((ResultModel<List<PavilionBean>>) resultModel).getData());
+                        }, error -> {
+                            sweetDialog.error("加载警银亭失败!").show();
+                        }
+                );
     }
 
     @Override
     public void onRefresh() {
         loadData();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sweetDialog.close();
     }
 }

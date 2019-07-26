@@ -6,15 +6,15 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_settings"
+        android:icon="@drawable/num_1"
         android:orderInCategory="100"
         android:title="测试1"
-        android:icon="@drawable/num_1"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_share"
+        android:icon="@drawable/num_2"
         android:orderInCategory="100"
         android:title="测试2"
-        android:icon="@drawable/num_2"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_search"

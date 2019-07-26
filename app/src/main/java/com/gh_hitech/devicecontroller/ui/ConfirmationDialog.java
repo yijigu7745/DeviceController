@@ -38,13 +38,6 @@ public class ConfirmationDialog extends Dialog {
     private Effects effects;
     private int mDuration = 400;
 
-
-    public enum  ConfirmationType{
-        Simple,
-        TwoButton
-    }
-
-
     public ConfirmationDialog(Context context) {
         super(context, R.style.CustomDialogStyle);
         this.context = context;
@@ -52,84 +45,7 @@ public class ConfirmationDialog extends Dialog {
         initLayout();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.height = (int) (UiUtils.getResolution()[1] * 0.8);
-        params.width  = ViewGroup.LayoutParams.MATCH_PARENT;
-        getWindow().setAttributes( params);
-    }
-
-    public ConfirmationDialog setOnButtonClickListener(OnButtonClickListener listener) {
-        this.listener = listener;
-        return this;
-    }
-
-    /** 设置对话框类型 */
-    public ConfirmationDialog setType(ConfirmationType type){
-        this.type = type;
-        changeType();
-        return this;
-    }
-
-    /**设置出现动画 */
-    public ConfirmationDialog setEffectstype(Effects effects){
-        this.effects = effects;
-        return this;
-    }
-
-    /**是否显示title */
-    public ConfirmationDialog isShowTitle(boolean isShowTitle){
-        this.isShowTitle = isShowTitle;
-        if(isShowTitle){
-            tv_title.setVisibility(View.VISIBLE);
-        }else{
-            tv_title.setVisibility(View.GONE);
-        }
-        return this;
-    }
-
-    /**设置title内容 */
-    public ConfirmationDialog setTitle(String title) {
-        if (TextUtils.isEmpty(title) || tv_title == null){
-            this.isShowTitle(false);
-            return this;
-        }
-        tv_title.setText(title);
-        return this;
-    }
-
-    /**设置内容 */
-    public ConfirmationDialog setContentText(String text){
-        if(TextUtils.isEmpty(text) || tv_content == null){
-            tv_content.setText("");
-            return this;
-        }
-        tv_content.setTextColor(Color.BLACK);
-        tv_content.setText(text);
-        return this;
-    }
-
-    public TextView getContentView(){
-        return tv_content;
-    }
-    public TextView getTitleView(){
-        return tv_title;
-    }
-
-    /**设置内容 颜色*/
-    public ConfirmationDialog setContentText(int color,String text){
-        if(TextUtils.isEmpty(text) || tv_content == null){
-            tv_content.setText("");
-            return this;
-        }
-        tv_content.setTextColor(color);
-        tv_content.setText(text);
-        return this;
-    }
-
-    private void initLayout(){
+    private void initLayout() {
         isCancel = true;
         ll_main = findViewById(R.id.ll_main);
         cancel = findViewById(R.id.cancel);
@@ -172,17 +88,34 @@ public class ConfirmationDialog extends Dialog {
         });
     }
 
+    @Override
+    public void dismiss() {
+        if (effects == null) {
+            effects = Effects.scaleIn;
+        }
+        startOutAnim(effects);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.height = (int) (UiUtils.getResolution()[1] * 0.8);
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        getWindow().setAttributes(params);
+    }
+
     private void startInAnim(Effects type) {
         BaseEffect animator = type.getAnimator();
-        if(mDuration != -1){
+        if (mDuration != -1) {
             animator.setDuration(Math.abs(mDuration));
         }
         animator.in(ll_main);
     }
 
-    private void startOutAnim(Effects type){
+    private void startOutAnim(Effects type) {
         BaseEffect animator = type.getAnimator();
-        if(mDuration != -1){
+        if (mDuration != -1) {
             animator.setDuration(Math.abs(mDuration));
         }
         animator.out(ll_main);
@@ -195,29 +128,107 @@ public class ConfirmationDialog extends Dialog {
         });
     }
 
-    @Override
-    public void dismiss() {
-        if (effects == null) {
-            effects = Effects.scaleIn;
-        }
-        startOutAnim(effects);
+    public ConfirmationDialog setOnButtonClickListener(OnButtonClickListener listener) {
+        this.listener = listener;
+        return this;
     }
 
-    private  void changeType(){
-        if(type == ConfirmationType.Simple){
+    /**
+     * 设置对话框类型
+     */
+    public ConfirmationDialog setType(ConfirmationType type) {
+        this.type = type;
+        changeType();
+        return this;
+    }
+
+    private void changeType() {
+        if (type == ConfirmationType.Simple) {
             cancel.setVisibility(View.GONE);
             confirmation.setVisibility(View.VISIBLE);
             confirmation.setBackgroundResource(R.drawable.dialog_btn_bg_both);
             line.setVisibility(View.GONE);
-        }else if(type == ConfirmationType.TwoButton){
+        } else if (type == ConfirmationType.TwoButton) {
             cancel.setVisibility(View.VISIBLE);
             confirmation.setVisibility(View.VISIBLE);
             line.setVisibility(View.VISIBLE);
         }
     }
 
+    /**
+     * 设置出现动画
+     */
+    public ConfirmationDialog setEffectstype(Effects effects) {
+        this.effects = effects;
+        return this;
+    }
 
-    public interface OnButtonClickListener{
+    /**
+     * 设置title内容
+     */
+    public ConfirmationDialog setTitle(String title) {
+        if (TextUtils.isEmpty(title) || tv_title == null) {
+            this.isShowTitle(false);
+            return this;
+        }
+        tv_title.setText(title);
+        return this;
+    }
+
+    /**
+     * 是否显示title
+     */
+    public ConfirmationDialog isShowTitle(boolean isShowTitle) {
+        this.isShowTitle = isShowTitle;
+        if (isShowTitle) {
+            tv_title.setVisibility(View.VISIBLE);
+        } else {
+            tv_title.setVisibility(View.GONE);
+        }
+        return this;
+    }
+
+    /**
+     * 设置内容
+     */
+    public ConfirmationDialog setContentText(String text) {
+        if (TextUtils.isEmpty(text) || tv_content == null) {
+            tv_content.setText("");
+            return this;
+        }
+        tv_content.setTextColor(Color.BLACK);
+        tv_content.setText(text);
+        return this;
+    }
+
+    public TextView getContentView() {
+        return tv_content;
+    }
+
+    public TextView getTitleView() {
+        return tv_title;
+    }
+
+    /**
+     * 设置内容 颜色
+     */
+    public ConfirmationDialog setContentText(int color, String text) {
+        if (TextUtils.isEmpty(text) || tv_content == null) {
+            tv_content.setText("");
+            return this;
+        }
+        tv_content.setTextColor(color);
+        tv_content.setText(text);
+        return this;
+    }
+
+    public enum ConfirmationType {
+        Simple,
+        TwoButton
+    }
+
+
+    public interface OnButtonClickListener {
         /**
          * 确定按钮
          */

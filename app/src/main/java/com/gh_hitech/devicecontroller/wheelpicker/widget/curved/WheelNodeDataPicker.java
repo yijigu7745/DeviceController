@@ -27,20 +27,21 @@ public class WheelNodeDataPicker extends WheelCurvedPicker {
         init();
     }
 
+    private void init() {
+        super.setData(node);
+    }
+
     public WheelNodeDataPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
-    }
-
-    private void init() {
-        super.setData(node);
     }
 
     @Override
     public void setData(List<String> data) {
         throw new RuntimeException("Set data will not allow here!");
     }
-    public void setCurrentNode(String node){
+
+    public void setCurrentNode(String node) {
 
     }
 

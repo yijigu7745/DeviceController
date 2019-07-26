@@ -18,6 +18,7 @@ import com.gh_hitech.devicecontroller.R;
  */
 public class ImageAndTextView extends View {
 
+    private final int SPACING = 16;
     private Context mContext;
     private String mText;
     private float mTextSize;
@@ -26,21 +27,18 @@ public class ImageAndTextView extends View {
     private Paint mPaint = new Paint();
     private Rect textRect = new Rect();
     private Rect imageRect = new Rect();
-    private final int SPACING = 16;
-
-    private int imageId, imageId_pressed,imageId_not_click,imageId_selector,mTextColor;
+    private int imageId, imageId_pressed, imageId_not_click, imageId_selector, mTextColor;
 
     public ImageAndTextView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ImageAndTextView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageAndTextView);
         mText = a.getString(R.styleable.ImageAndTextView_android_text);
-        if (mText == null)
-        {
+        if (mText == null) {
             mText = "Text";
         }
         mTextColor = a.getColor(R.styleable.ImageAndTextView_textColor,
@@ -65,46 +63,9 @@ public class ImageAndTextView extends View {
         mPaint.getTextBounds(mText, 0, mText.length(), textRect);
     }
 
-    public void setChecked(boolean checked) {
-        mChecked = checked;
-    }
-
-    public boolean isChecked(){
-        return mChecked;
-    }
-
-    public void toggle(){
-        setChecked(!mChecked);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width;
-        int height;
-        int specMode = MeasureSpec.getMode(widthMeasureSpec);
-        int specize = MeasureSpec.getSize(widthMeasureSpec);
-        if(specMode == MeasureSpec.EXACTLY){
-            width = specize;
-        }else{
-            int widthByImage = 0;
-            int widthByText = 0;
-            widthByImage = getPaddingLeft()+getPaddingRight()+mImage.getWidth();
-            widthByText=getPaddingLeft()+getPaddingRight()+textRect.width();
-            int w = Math.max(widthByImage,widthByText);
-            width = Math.min(w,specize);
-        }
-
-        specMode = MeasureSpec.getMode(heightMeasureSpec);
-        specize = MeasureSpec.getSize(heightMeasureSpec);
-        if(specMode == MeasureSpec.EXACTLY){
-            height = specize;
-        }else{
-            int h = getPaddingBottom()+getPaddingTop()+mImage.getHeight()+textRect.height()+SPACING;
-            height = Math.min(h,specize);
-        }
-
-        setMeasuredDimension(width,height);
+    public ImageAndTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mContext = context;
     }
 
     @Override
@@ -116,35 +77,90 @@ public class ImageAndTextView extends View {
         mPaint.setColor(mTextColor);
         mPaint.setTextSize(mTextSize);
         mPaint.setStyle(Paint.Style.FILL);
-        canvas.drawText(mText,mWidth/2-textRect.width()/2,(textRect.height()+SPACING)*2+mImage.getHeight(),mPaint);
+        canvas.drawText(mText, mWidth / 2 - textRect.width() / 2, (textRect.height() + SPACING) * 2 + mImage.getHeight(), mPaint);
 
-        imageRect.left = mWidth/2-mImage.getWidth()/2;
-        imageRect.right = mWidth/2+mImage.getWidth()/2;
+        imageRect.left = mWidth / 2 - mImage.getWidth() / 2;
+        imageRect.right = mWidth / 2 + mImage.getWidth() / 2;
 //        imageRect.top = (mHeight-textRect.height()-SPACING)/2-mImage.getHeight()/2;
-        imageRect.top = (textRect.height()+SPACING)/2;
-        imageRect.bottom = (textRect.height()+SPACING)/2+mImage.getHeight();
+        imageRect.top = (textRect.height() + SPACING) / 2;
+        imageRect.bottom = (textRect.height() + SPACING) / 2 + mImage.getHeight();
 
-        canvas.drawBitmap(mImage,null,imageRect,mPaint);
+        canvas.drawBitmap(mImage, null, imageRect, mPaint);
     }
 
-    public ImageAndTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        mContext = context;
-    }
-
-    public void setText(String text){
-        mText = text;
-        mPaint.getTextBounds(mText,0,mText.length(),textRect);
+    @Override
+    protected void drawableStateChanged() {
+        super.drawableStateChanged();
+        if (isFocused()) {
+            mImage = BitmapFactory.decodeResource(getResources(), imageId_selector);
+        } else if (isChecked()) {
+            if (!isEnabled()) {
+                return;
+            }
+            toggle();
+            mImage = BitmapFactory.decodeResource(getResources(), imageId_pressed);
+        } else {
+            if (isEnabled()) {
+                toggle();
+                mImage = BitmapFactory.decodeResource(getResources(), imageId);
+                mTextColor = Color.BLACK;
+            } else {
+                mImage = BitmapFactory.decodeResource(getResources(), imageId_not_click);
+                mTextColor = Color.GRAY;
+            }
+        }
         invalidate();
     }
 
-    public String getText(){
+    public boolean isChecked() {
+        return mChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        mChecked = checked;
+    }
+
+    public void toggle() {
+        setChecked(!mChecked);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width;
+        int height;
+        int specMode = MeasureSpec.getMode(widthMeasureSpec);
+        int specize = MeasureSpec.getSize(widthMeasureSpec);
+        if (specMode == MeasureSpec.EXACTLY) {
+            width = specize;
+        } else {
+            int widthByImage = 0;
+            int widthByText = 0;
+            widthByImage = getPaddingLeft() + getPaddingRight() + mImage.getWidth();
+            widthByText = getPaddingLeft() + getPaddingRight() + textRect.width();
+            int w = Math.max(widthByImage, widthByText);
+            width = Math.min(w, specize);
+        }
+
+        specMode = MeasureSpec.getMode(heightMeasureSpec);
+        specize = MeasureSpec.getSize(heightMeasureSpec);
+        if (specMode == MeasureSpec.EXACTLY) {
+            height = specize;
+        } else {
+            int h = getPaddingBottom() + getPaddingTop() + mImage.getHeight() + textRect.height() + SPACING;
+            height = Math.min(h, specize);
+        }
+
+        setMeasuredDimension(width, height);
+    }
+
+    public String getText() {
         return mText;
     }
 
-    public void setTextColor(int textColor){
-        mTextColor = textColor;
-        mPaint.setColor(mTextColor);
+    public void setText(String text) {
+        mText = text;
+        mPaint.getTextBounds(mText, 0, mText.length(), textRect);
         invalidate();
     }
 
@@ -172,27 +188,9 @@ public class ImageAndTextView extends View {
 //        return super.onTouchEvent(event);
 //    }
 
-    @Override
-    protected void drawableStateChanged() {
-        super.drawableStateChanged();
-        if(isFocused()){
-            mImage = BitmapFactory.decodeResource(getResources(),imageId_selector);
-        }else if(isChecked()){
-            if(!isEnabled()){
-                return;
-            }
-            toggle();
-            mImage = BitmapFactory.decodeResource(getResources(), imageId_pressed);
-        }else{
-            if(isEnabled()){
-                toggle();
-                mImage = BitmapFactory.decodeResource(getResources(),imageId);
-                mTextColor = Color.BLACK;
-            }else{
-                mImage = BitmapFactory.decodeResource(getResources(),imageId_not_click);
-                mTextColor = Color.GRAY;
-            }
-        }
+    public void setTextColor(int textColor) {
+        mTextColor = textColor;
+        mPaint.setColor(mTextColor);
         invalidate();
     }
 }

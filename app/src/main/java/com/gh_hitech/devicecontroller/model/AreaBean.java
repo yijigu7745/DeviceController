@@ -32,30 +32,6 @@ public class AreaBean extends IBaseName implements Serializable {
         this.id = id;
     }
 
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
     public String getAreaCode() {
         return areaCode;
     }
@@ -74,31 +50,55 @@ public class AreaBean extends IBaseName implements Serializable {
 
     @Override
     public String getIName() {
-        if(StringUtils.isNotBlank(getDistrict())){
+        if (StringUtils.isNotBlank(getDistrict())) {
             return getDistrict();
-        }else if(StringUtils.isNotBlank(getCity())){
+        } else if (StringUtils.isNotBlank(getCity())) {
             return getCity();
-        }else if(StringUtils.isNotBlank(getProvince())){
+        } else if (StringUtils.isNotBlank(getProvince())) {
             return getProvince();
-        }else{
+        } else {
             return "错误的地区";
         }
     }
 
-    public String getAreaName(){
-        if(StringUtils.isNotBlank(getDistrict())){
-            return getDistrict();
-        }else if(StringUtils.isNotBlank(getCity())){
-            return getCity();
-        }else if(StringUtils.isNotBlank(getProvince())){
-            return getProvince();
-        }else{
-            return "错误的地区";
-        }
+    public String getDistrict() {
+        return district;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
     @Override
     public Long getIid() {
-        return new Long((long)id);
+        return new Long((long) id);
+    }
+
+    public String getAreaName() {
+        if (StringUtils.isNotBlank(getDistrict())) {
+            return getDistrict();
+        } else if (StringUtils.isNotBlank(getCity())) {
+            return getCity();
+        } else if (StringUtils.isNotBlank(getProvince())) {
+            return getProvince();
+        } else {
+            return "错误的地区";
+        }
     }
 }

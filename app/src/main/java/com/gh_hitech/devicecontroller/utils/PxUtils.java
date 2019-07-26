@@ -1,9 +1,12 @@
 package com.gh_hitech.devicecontroller.utils;
+
 import android.content.Context;
 
 /**
  * Describe：尺寸工具类
- * Created by 吴天强 on 2017/9/19.
+ *
+ * @author 吴天强
+ * @date 2017/9/19
  */
 
 public class PxUtils {
@@ -22,18 +25,18 @@ public class PxUtils {
     }
 
     /**
-     * 得到设备的密度
-     */
-    public static float getScreenDensity(Context context) {
-        return context.getResources().getDisplayMetrics().density;
-    }
-
-    /**
      * 把密度转换为像素
      */
     public static int dp2px(Context context, float dipValue) {
         final float scale = getScreenDensity(context);
         return (int) (dipValue * scale + 0.5);
+    }
+
+    /**
+     * 得到设备的密度
+     */
+    public static float getScreenDensity(Context context) {
+        return context.getResources().getDisplayMetrics().density;
     }
 
     public static int dp2px(float dipValue) {

@@ -40,19 +40,9 @@ public class WheelMinutePicker extends WheelCurvedPicker implements IDigital {
         init();
     }
 
-    public WheelMinutePicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
     private void init() {
         super.setData(minutes);
         setCurrentMinute(Calendar.getInstance().get(Calendar.MINUTE));
-    }
-
-    @Override
-    public void setData(List<String> data) {
-        throw new RuntimeException("Set data will not allow here!");
     }
 
     public void setCurrentMinute(int minute) {
@@ -60,6 +50,16 @@ public class WheelMinutePicker extends WheelCurvedPicker implements IDigital {
         minute = Math.min(minute, 59);
         this.minute = minute;
         setItemIndex(minute);
+    }
+
+    public WheelMinutePicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    @Override
+    public void setData(List<String> data) {
+        throw new RuntimeException("Set data will not allow here!");
     }
 
     @Override

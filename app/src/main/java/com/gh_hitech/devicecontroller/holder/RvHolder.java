@@ -1,6 +1,5 @@
 package com.gh_hitech.devicecontroller.holder;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -19,7 +18,6 @@ public abstract class RvHolder<T> extends RecyclerView.ViewHolder {
     }
 
     /**
-     *
      * @param t
      * @param position
      */

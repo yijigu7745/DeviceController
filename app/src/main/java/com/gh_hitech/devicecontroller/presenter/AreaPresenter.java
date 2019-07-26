@@ -1,11 +1,7 @@
 package com.gh_hitech.devicecontroller.presenter;
 
 import com.gh_hitech.devicecontroller.contract.AreaContract;
-import com.gh_hitech.devicecontroller.model.AreaBean;
-import com.gh_hitech.devicecontroller.model.ResultModel;
 import com.gh_hitech.devicecontroller.utils.Constants;
-
-import java.util.List;
 
 import cn.com.yijigu.rxnetwork.retrofit.RetrofitUtils;
 import cn.com.yijigu.rxnetwork.view.IView;
@@ -36,22 +32,22 @@ public class AreaPresenter implements AreaContract.Presenter {
     }
 
     @Override
-    public Observable getAreaListByParentCodeLike(String parentCode) {
+    public Observable getAreaByAreaCode(String areaCode) {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, AreaContract.Model.class)
-                .getAreaListByParentCodeLike(parentCode)
+                .getAreaByAreaCode(areaCode)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public Observable getAreaByAreaCode(String areaCode) {
+    public Observable getAreaListByParentCodeLike(String parentCode) {
         return RetrofitUtils.getInterface(
                 Constants.getServerUrl(),
                 iView, AreaContract.Model.class)
-                .getAreaByAreaCode(areaCode)
+                .getAreaListByParentCodeLike(parentCode)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -14,7 +14,8 @@ public interface DeviceCommandContract {
     interface Model {
         /**
          * 获取设备时间
-         * @param commandBean  指令
+         *
+         * @param commandBean 指令
          * @return
          */
         @POST("/device/control")
@@ -22,6 +23,7 @@ public interface DeviceCommandContract {
 
         /**
          * 获取继电器各路状态
+         *
          * @param commandBean 指令
          * @return
          */
@@ -30,6 +32,7 @@ public interface DeviceCommandContract {
 
         /**
          * 设置设备时间
+         *
          * @param commandBean 指令
          * @return
          */
@@ -38,6 +41,7 @@ public interface DeviceCommandContract {
 
         /**
          * 打开单路继电器
+         *
          * @param commandBean 指令
          * @return
          */
@@ -46,6 +50,7 @@ public interface DeviceCommandContract {
 
         /**
          * 关闭单路继电器
+         *
          * @param commandBean 指令
          * @return
          */
@@ -54,6 +59,7 @@ public interface DeviceCommandContract {
 
         /**
          * 延时控制单路继电器
+         *
          * @param commandBean 指令
          * @return
          */
@@ -62,6 +68,7 @@ public interface DeviceCommandContract {
 
         /**
          * 控制所有继电器状态
+         *
          * @param commandBean 指令
          * @return
          */
@@ -76,13 +83,15 @@ public interface DeviceCommandContract {
     interface Presenter {
         /**
          * 获取设备时间
-         * @param commandBean  指令
+         *
+         * @param commandBean 指令
          * @return
          */
         Observable getDeviceTime(CommandBean commandBean);
 
         /**
          * 获取继电器各路状态
+         *
          * @param commandBean 指令
          * @return
          */
@@ -90,6 +99,7 @@ public interface DeviceCommandContract {
 
         /**
          * 设置设备时间
+         *
          * @param commandBean 指令
          * @return
          */
@@ -97,6 +107,7 @@ public interface DeviceCommandContract {
 
         /**
          * 打开单路继电器
+         *
          * @param commandBean 指令
          * @return
          */
@@ -104,6 +115,7 @@ public interface DeviceCommandContract {
 
         /**
          * 关闭单路继电器
+         *
          * @param commandBean 指令
          * @return
          */
@@ -111,6 +123,7 @@ public interface DeviceCommandContract {
 
         /**
          * 延时控制单路继电器
+         *
          * @param commandBean 指令
          * @return
          */
@@ -118,6 +131,7 @@ public interface DeviceCommandContract {
 
         /**
          * 控制所有继电器状态
+         *
          * @param commandBean 指令
          * @return
          */

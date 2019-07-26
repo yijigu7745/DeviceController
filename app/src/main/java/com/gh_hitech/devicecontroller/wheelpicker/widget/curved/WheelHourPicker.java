@@ -39,19 +39,9 @@ public class WheelHourPicker extends WheelCurvedPicker implements IDigital {
         init();
     }
 
-    public WheelHourPicker(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
     private void init() {
         super.setData(hours);
         setCurrentHour(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
-    }
-
-    @Override
-    public void setData(List<String> data) {
-        throw new RuntimeException("Set data will not allow here!");
     }
 
     public void setCurrentHour(int hour) {
@@ -59,6 +49,16 @@ public class WheelHourPicker extends WheelCurvedPicker implements IDigital {
         hour = Math.min(hour, 23);
         this.hour = hour;
         setItemIndex(hour);
+    }
+
+    public WheelHourPicker(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    @Override
+    public void setData(List<String> data) {
+        throw new RuntimeException("Set data will not allow here!");
     }
 
     @Override

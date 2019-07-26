@@ -21,6 +21,7 @@ public interface DeviceContract {
     interface Model {
         /**
          * 获取设备列表
+         *
          * @return
          */
         @GET("/device/all")
@@ -28,6 +29,7 @@ public interface DeviceContract {
 
         /**
          * 添加设备
+         *
          * @param deviceBean 设备
          * @return
          */
@@ -36,6 +38,7 @@ public interface DeviceContract {
 
         /**
          * 删除设备
+         *
          * @param id 设备ID
          * @return
          */
@@ -44,6 +47,7 @@ public interface DeviceContract {
 
         /**
          * 更新设备
+         *
          * @param deviceBean
          * @return
          */
@@ -52,6 +56,7 @@ public interface DeviceContract {
 
         /**
          * 获取设备开关描述
+         *
          * @param id 设备id
          * @return
          */
@@ -60,6 +65,7 @@ public interface DeviceContract {
 
         /**
          * 新增设备开关描述
+         *
          * @param deviceSwitchDesc 开关描述
          * @return
          */
@@ -68,12 +74,13 @@ public interface DeviceContract {
 
         /**
          * 更新设备开关描述
-         * @param id 设备id
+         *
+         * @param id               设备id
          * @param deviceSwitchDesc 开关描述
          * @return
          */
         @PUT("/device/switchDesc/{id}")
-        Observable<ResultModel<Void>> updateDeviceSwitchDesc(@Path("id") Long id,@Body DeviceSwitchDesc deviceSwitchDesc);
+        Observable<ResultModel<Void>> updateDeviceSwitchDesc(@Path("id") Long id, @Body DeviceSwitchDesc deviceSwitchDesc);
     }
 
     interface View {
@@ -82,12 +89,14 @@ public interface DeviceContract {
     interface Presenter {
         /**
          * 获取设备列表
+         *
          * @return
          */
         Observable getDeviceList();
 
         /**
          * 添加设备
+         *
          * @param deviceBean
          * @return
          */
@@ -95,6 +104,7 @@ public interface DeviceContract {
 
         /**
          * 删除设备
+         *
          * @param id
          * @return
          */
@@ -102,6 +112,7 @@ public interface DeviceContract {
 
         /**
          * 更新设备
+         *
          * @param deviceBean
          * @return
          */
@@ -109,12 +120,14 @@ public interface DeviceContract {
 
         /**
          * 获取设备开关描述
+         *
          * @return
          */
         Observable getDeviceSwitchDesc(Long id);
 
         /**
          * 新增设备开关描述
+         *
          * @param deviceSwitchDesc 开关描述
          * @return
          */
@@ -122,10 +135,11 @@ public interface DeviceContract {
 
         /**
          * 更新设备开关描述
-         * @param id 设备id
+         *
+         * @param id               设备id
          * @param deviceSwitchDesc 开关描述
          * @return
          */
-        Observable updateDeviceSwitchDesc(Long id,DeviceSwitchDesc deviceSwitchDesc);
+        Observable updateDeviceSwitchDesc(Long id, DeviceSwitchDesc deviceSwitchDesc);
     }
 }
