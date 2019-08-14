@@ -1,5 +1,13 @@
 package com.gh_hitech.devicecontroller.utils;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import static android.support.constraint.Constraints.TAG;
+
 /**
  * @author yijigu
  */
@@ -90,6 +98,41 @@ public class DecodeByteArrayUtils {
             timeByte[6] = (byte) year;
             timeContent.append(new String(timeByte));
         }
+        return timeContent.toString();
+    }
+
+    /**
+     * 将传入的时间按格式变成设备可识别的字符串并传给设备
+     *
+     * @param time 传入时间格式：yy-MM-dd HH:mm:ss
+     * @return
+     */
+    public static String encodeTimeByFormat(String time,String timeFormat){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(dateFormat.parse(time));
+        } catch (ParseException e) {
+            Log.e(TAG, "encodeTimeByFormat: 转换失败");
+            e.printStackTrace();
+        }
+        StringBuilder timeContent = new StringBuilder();
+        byte[] timeByte = new byte[7];
+        int week = calendar.get(Calendar.DAY_OF_WEEK);
+        int second = timeByteContent[calendar.get(Calendar.SECOND)];
+        int minute = timeByteContent[calendar.get(Calendar.MINUTE)];
+        int hour = timeByteContent[calendar.get(Calendar.HOUR)];
+        int day = timeByteContent[calendar.get(Calendar.DATE)];
+        int month = timeByteContent[calendar.get(Calendar.MONTH)+1];
+        int year = timeByteContent[calendar.get(Calendar.YEAR)-2000];
+        timeByte[0] = (byte) second;
+        timeByte[1] = (byte) minute;
+        timeByte[2] = (byte) hour;
+        timeByte[3] = (byte) week;
+        timeByte[4] = (byte) day;
+        timeByte[5] = (byte) month;
+        timeByte[6] = (byte) year;
+        timeContent.append(new String(timeByte));
         return timeContent.toString();
     }
 }

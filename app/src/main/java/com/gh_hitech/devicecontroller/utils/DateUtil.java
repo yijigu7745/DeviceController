@@ -53,10 +53,11 @@ public class DateUtil {
         try {
             Date date = new Date(time);
             SimpleDateFormat formatter = null;
-            if (TextUtils.isEmpty(format))
+            if (TextUtils.isEmpty(format)) {
                 formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            else
+            }else {
                 formatter = new SimpleDateFormat(format);
+            }
             String formatTime = formatter.format(date);
             return formatTime;
         } catch (Exception e) {

@@ -112,11 +112,12 @@
                 android:id="@+id/btn_set_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
                 android:text="@string/set_time"
-                app:layout_constraintBottom_toBottomOf="@+id/et_enter_time"
-                app:layout_constraintEnd_toEndOf="@+id/btn_delay_switch"
-                app:layout_constraintStart_toStartOf="@+id/btn_delay_switch"
-                app:layout_constraintTop_toTopOf="@+id/et_enter_time"/>
+                app:layout_constraintBottom_toBottomOf="@+id/btn_get_time"
+                app:layout_constraintStart_toEndOf="@+id/btn_get_time"
+                app:layout_constraintTop_toTopOf="@+id/btn_get_time"/>
 
             <TextView
                 android:id="@+id/tv_time"
@@ -137,6 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="@string/time_format"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/et_enter_time"
                 app:layout_constraintTop_toBottomOf="@+id/et_delay_time"/>
 
@@ -149,6 +151,7 @@
                 android:ems="10"
                 android:hint="@string/hint_enter_time"
                 android:inputType="textPersonName"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/et_delay_time"
                 app:layout_constraintTop_toBottomOf="@+id/textView9"
                 tools:targetApi="o"/>

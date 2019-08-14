@@ -174,7 +174,6 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         tvTitle.setText("控制面板");
         // 右键点击
         layoutRight = toolbar.findViewById(R.id.right_layout);
-        imageView = toolbar.findViewById(R.id.iv_add);
         layoutRight.setVisibility(View.GONE);
     }
 
@@ -333,7 +332,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     }
 
     private void getTime() {
-        handler.postDelayed(runnable, 10000);
+        handler.postDelayed(runnable, 1000);
         confirmationDialog.setType(ConfirmationDialog.ConfirmationType.Simple);
         confirmationDialog.setTitle("设备时间");
         confirmationDialog.setOnButtonClickListener(
@@ -391,7 +390,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
 
     private void showTimeSelectDialog() {
         TimeDialog timeDialog = DialogFactory.createTimeSelectDialog(context, time -> {
-            ToastUtils.longTimeText(context, time);
+            setTime(time);
         });
         timeDialog.setOnDismissListener(dialog -> {
             btnSetTime.setClickable(true);
@@ -405,7 +404,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         }
         CommandBean commandBean = new CommandBean();
         StringBuilder commandContent = new StringBuilder();
-        String encodeTime = DecodeByteArrayUtils.encodeTime(time);
+        String encodeTime = DecodeByteArrayUtils.encodeTimeByFormat(time,"yyyy-MM-dd HH:mm:ss");
         if (StringUtils.isBlank(encodeTime)) {
             sweetDialog.waring("解析失败！请重新选择！", false).show();
         }
