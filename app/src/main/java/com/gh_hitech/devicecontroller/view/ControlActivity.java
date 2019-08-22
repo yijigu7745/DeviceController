@@ -187,6 +187,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
     @Override
     protected void onResume() {
         super.onResume();
+        sweetDialog.progress("加载中").show();
         getDeviceLineStatus();
         getDeviceSwitchDesc();
     }
@@ -200,6 +201,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                     .subscribe(resultModel -> {
                         String result = ((ResultModel<String>) resultModel).getData();
                         Log.e(TAG, "getDeviceLineStatus: " + result.trim());
+                        sweetDialog.success("加载成功").show();
                         initSwitchStatus(result.trim());
                     }, error -> {
                         Log.e(TAG, "getDeviceLineStatus: " + error);
@@ -470,6 +472,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
         CommandBean commandBean = new CommandBean();
         StringBuilder commandContent = new StringBuilder();
         commandBean.setDeviceName(deviceBean.getName());
+        sweetDialog.progress("操作加载中").show();
         switch (lineStatusLocal[line - 1]) {
             case Constants.LINE_OFF:
                 commandContent.append(Command.OFF.getCommand()).append(line);
@@ -572,7 +575,7 @@ public class ControlActivity extends BaseActivity implements IView, SwitchButton
                 } else if (StringUtils.isNotBlank(lineDescFromServer[i])) {
                     buttonDescString.append(lineDescFromServer[i]).append(",");
                 } else {
-                    buttonDescString.append("开关描述");
+                    buttonDescString.append("开关描述").append(",");
                 }
             }
         }
