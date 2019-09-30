@@ -1,4 +1,4 @@
-package com.gh_hitech.devicecontroller.factory;
+package com.gh_hitech.devicecontroller.retrofit.factory;
 
 import android.util.Log;
 

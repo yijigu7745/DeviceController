@@ -74,4 +74,35 @@
     <string name="dialog_edit_hint">开关描述</string>
     <string name="dialog_confirm">确定</string>
     <string name="dialog_cancel">取消</string>
+
+
+
+    <string name="text_send_msg">发消息</string>
+    <string name="text_login">登录</string>
+    <string name="text_msg_queue">循环发消息</string>
+    <string name="text_send_msg_to_fans">发消息给粉丝</string>
+    <string name="text_re_send_msg_to_fans">重复发消息给粉丝</string>
+    <string name="text_weibo_login_9_9_3">微博登陆9.9.3</string>
+    <string name="text_friend_fans">好友粉丝</string>
+    <string name="option_menu">功能菜单</string>
+    <string name="text_qq">QQ</string>
+    <string name="text_weibo">微博</string>
+    <string name="text_tiktok">抖音</string>
+    <string name="text_red">小红书</string>
+    <string name="text_test">测试</string>
+    <string name="tiktok_8_0_0">抖音8.0.0</string>
+    <string name="user_name">用户名</string>
+    <string name="btn_login">登录</string>
+    <string name="password">密码</string>
+    <string name="hint_password">请输入密码</string>
+    <string name="hint_user_name">请输入用户名</string>
+    <string name="device_alias">设备别名</string>
+    <string name="hint_device_alias">请输入设备别名</string>
+    <string name="remark">备注</string>
+    <string name="hint_remark">备注</string>
+    <string name="imei">IEMI</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_get_mission">获取任务</string>
 </resources>
