@@ -5,22 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gh_hitech.devicecontroller.R;
 import com.gh_hitech.devicecontroller.base.BaseActivity;
+import com.gh_hitech.devicecontroller.model.CardListBean;
+import com.gh_hitech.devicecontroller.presenter.CardListPresenter;
 import com.gh_hitech.devicecontroller.utils.SweetDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.com.yijigu.rxnetwork.view.IView;
+import io.reactivex.functions.Consumer;
 
 /**
  * @author yijigu
  */
 public class MainActivity extends BaseActivity implements IView, View.OnClickListener {
+
+    public static final String TAG = "MainActivity";
 
     @BindView(R.id.pavilion_manage)
     TextView btnManagePavilion;
@@ -35,6 +41,8 @@ public class MainActivity extends BaseActivity implements IView, View.OnClickLis
 
     private TextView tvTitle;
     private RelativeLayout layoutRight;
+
+    CardListPresenter cardListPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +79,24 @@ public class MainActivity extends BaseActivity implements IView, View.OnClickLis
     }
 
     private void init() {
+        cardListPresenter = new CardListPresenter(this);
     }
 
     private void register() {
-        btnManageDevice.setOnClickListener(this);
-        btnManageArea.setOnClickListener(this);
-        btnManagePavilion.setOnClickListener(this);
-        btnManageOther.setOnClickListener(this);
+
+        cardListPresenter.getCardList().subscribe((Consumer<CardListBean>) resultModel ->{
+            if(resultModel != null){
+                for(CardListBean.CardsBean cardsBean:resultModel.getCards()){
+                    for(CardListBean.CardsBean.CardGroupBean cardGroupBean :cardsBean.getCard_group()){
+                        Log.i(TAG, "UserId:"+cardGroupBean.getUser().getId()+"---UserName:"+cardGroupBean.getUser().getName());
+                    }
+                }
+            }
+        });
+//        btnManageDevice.setOnClickListener(this);
+//        btnManageArea.setOnClickListener(this);
+//        btnManagePavilion.setOnClickListener(this);
+//        btnManageOther.setOnClickListener(this);
     }
 
     @Override
